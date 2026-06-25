@@ -1,7 +1,28 @@
 (function () {
     'use strict';
 
-    var labels, activeWatches = {};
+    var labels, activeWatches = {}, currentPanel = null;
+
+    /* ============================================================
+       MODE DATA
+       ============================================================ */
+
+    var modeData = {
+        convert: {
+            title:     'Batch Convert Existing Images',
+            desc:      'Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.',
+            scanBtn:   'Scan Media Library',
+            queueText: 'Queue Conversion Job',
+            labelKey:  'qConvert'
+        },
+        recompress: {
+            title:     'Re-compress Oversized Images',
+            desc:      'Detect oversized attachments and re-run compression in the background using the current output settings.',
+            scanBtn:   'Scan Oversized Images',
+            queueText: 'Queue Re-compression Job',
+            labelKey:  'qRecompress'
+        }
+    };
 
     function init() {
         if (!window.WPOKUtils || !window.wpokAdmin || !window.wpokAdmin.labels) {
@@ -10,32 +31,99 @@
 
         labels = window.wpokAdmin.labels;
 
-        var app = document.querySelector('[data-wpok-image-app]');
+        currentPanel = document.querySelector('[data-scan-panel]');
 
-        if (app) {
-            app.querySelectorAll('[data-job-panel]').forEach(function (panel) {
-                bindPanel(panel);
-            });
+        if (currentPanel) {
+            bindModeToggle();
+            bindScanPanelEvents();
         }
 
         initImageJobs();
     }
 
     /* ============================================================
-       PANEL CODE (scan + queue submission)
+       MODE TOGGLE
        ============================================================ */
 
-    function bindPanel(panel) {
-        panel.addEventListener('click', function (event) {
+    function bindModeToggle() {
+        var toggle = document.querySelector('[data-scan-mode-toggle]');
+
+        if (!toggle) {
+            return;
+        }
+
+        toggle.addEventListener('click', function (event) {
+            var btn = event.target.closest('[data-scan-mode]');
+
+            if (!btn || btn.classList.contains('is-active')) {
+                return;
+            }
+
+            /* Update active state */
+            toggle.querySelectorAll('[data-scan-mode]').forEach(function (b) {
+                b.classList.remove('is-active');
+            });
+            btn.classList.add('is-active');
+
+            /* Clear previous results */
+            var results = currentPanel.querySelector('[data-role="results"]');
+            var toolbar = currentPanel.querySelector('[data-role="toolbar"]');
+
+            results.innerHTML = '';
+            toolbar.hidden = true;
+
+            /* Update title, description, scan button text */
+            var mode = btn.getAttribute('data-scan-mode');
+            var data = modeData[mode];
+
+            if (data) {
+                currentPanel.querySelector('[data-mode-title]').textContent = data.title;
+                currentPanel.querySelector('[data-mode-desc]').textContent = data.desc;
+                currentPanel.querySelector('[data-action="scan"]').textContent = data.scanBtn;
+            }
+        });
+    }
+
+    function getActiveMode() {
+        var active = document.querySelector('[data-scan-mode-toggle] [data-scan-mode].is-active');
+
+        return active ? active.getAttribute('data-scan-mode') : 'convert';
+    }
+
+    function getActiveEndpoint() {
+        var active = document.querySelector('[data-scan-mode-toggle] [data-scan-mode].is-active');
+
+        return active ? active.getAttribute('data-scan-endpoint') : 'images/scans/non-webp';
+    }
+
+    function getActiveJobType() {
+        var active = document.querySelector('[data-scan-mode-toggle] [data-scan-mode].is-active');
+
+        return active ? active.getAttribute('data-job-type') : 'image_convert';
+    }
+
+    function getActiveQueueLabel() {
+        var m = getActiveMode();
+        var data = modeData[m];
+
+        return data ? (labels[data.labelKey] || data.queueText) : 'Queue Job';
+    }
+
+    /* ============================================================
+       PANEL EVENTS (scan + queue submission)
+       ============================================================ */
+
+    function bindScanPanelEvents() {
+        currentPanel.addEventListener('click', function (event) {
             var target = event.target;
 
             if (target.closest('[data-action="scan"]')) {
-                scanPanel(panel);
+                scanPanel();
                 return;
             }
 
             if (target.closest('[data-action="start"]')) {
-                startJob(panel);
+                startJob();
                 return;
             }
 
@@ -48,14 +136,14 @@
             }
         });
 
-        panel.addEventListener('change', function (event) {
+        currentPanel.addEventListener('change', function (event) {
             var target = event.target;
 
             if (target.matches('[data-role="select-all"]')) {
-                panel.querySelectorAll('.wpok-job-item input[type="checkbox"], .wpok-job-directory-head input[type="checkbox"]').forEach(function (checkbox) {
+                currentPanel.querySelectorAll('.wpok-job-item input[type="checkbox"], .wpok-job-directory-head input[type="checkbox"]').forEach(function (checkbox) {
                     checkbox.checked = target.checked;
                 });
-                updateActionLabel(panel);
+                updateActionLabel();
                 return;
             }
 
@@ -64,36 +152,36 @@
                 directory.querySelectorAll('.wpok-job-item input[type="checkbox"]').forEach(function (checkbox) {
                     checkbox.checked = target.checked;
                 });
-                updateActionLabel(panel);
+                updateActionLabel();
                 return;
             }
 
             if (target.matches('.wpok-job-item input[type="checkbox"]')) {
-                updateActionLabel(panel);
+                updateActionLabel();
             }
         });
     }
 
-    function scanPanel(panel) {
-        var endpoint = panel.getAttribute('data-scan-endpoint');
-        var results = panel.querySelector('[data-role="results"]');
-        var toolbar = panel.querySelector('[data-role="toolbar"]');
+    function scanPanel() {
+        var endpoint = getActiveEndpoint();
+        var results = currentPanel.querySelector('[data-role="results"]');
+        var toolbar = currentPanel.querySelector('[data-role="toolbar"]');
 
         results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.scanning || 'Scanning...') + '</div>';
         toolbar.hidden = true;
 
         window.WPOKUtils.request(endpoint, { method: 'POST', body: {} })
             .then(function (response) {
-                renderScanResults(panel, response.directories || {});
+                renderScanResults(response.directories || {});
             })
             .catch(function (error) {
                 results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
             });
     }
 
-    function renderScanResults(panel, directories) {
-        var results = panel.querySelector('[data-role="results"]');
-        var toolbar = panel.querySelector('[data-role="toolbar"]');
+    function renderScanResults(directories) {
+        var results = currentPanel.querySelector('[data-role="results"]');
+        var toolbar = currentPanel.querySelector('[data-role="toolbar"]');
         var directoryNames = Object.keys(directories || {});
 
         if (directoryNames.length === 0) {
@@ -110,7 +198,7 @@
         html += '</div>';
         html += '<ul class="wpok-job-tree-list">';
 
-        directoryNames.forEach(function (directoryName, index) {
+        directoryNames.forEach(function (directoryName) {
             var items = directories[directoryName] || [];
             total += items.length;
             html += '<li class="wpok-job-directory">';
@@ -140,19 +228,19 @@
 
         results.innerHTML = html;
         toolbar.hidden = false;
-        updateActionLabel(panel);
+        updateActionLabel();
     }
 
-    function startJob(panel) {
+    function startJob() {
         var ids = Array.prototype.map.call(
-            panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked'),
+            currentPanel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked'),
             function (checkbox) {
                 return parseInt(checkbox.closest('.wpok-job-item').getAttribute('data-attachment-id'), 10);
             }
         ).filter(Boolean);
 
         if (ids.length === 0) {
-            panel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(labels.selectOne || 'Select at least one attachment first.') + '</div>');
+            currentPanel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(labels.selectOne || 'Select at least one attachment first.') + '</div>');
             return;
         }
 
@@ -160,30 +248,27 @@
             method: 'POST',
             body: {
                 module: 'image',
-                job_type: panel.getAttribute('data-job-type'),
+                job_type: getActiveJobType(),
                 attachment_ids: ids
             }
         }).then(function (response) {
             addNewJobToList(response.job);
         }).catch(function (error) {
-            panel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>');
+            currentPanel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>');
         });
     }
 
-    function updateActionLabel(panel) {
-        var button = panel.querySelector('[data-action="start"]');
+    function updateActionLabel() {
+        var button = currentPanel.querySelector('[data-action="start"]');
 
         if (!button) {
             return;
         }
 
-        var total = panel.querySelectorAll('.wpok-job-item').length;
-        var selected = panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
-        var baseLabel = panel.getAttribute('data-job-type') === 'image_convert'
-            ? (labels.qConvert || 'Queue Conversion Job')
-            : (labels.qRecompress || 'Queue Re-compression Job');
+        var total = currentPanel.querySelectorAll('.wpok-job-item').length;
+        var selected = currentPanel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
 
-        button.textContent = baseLabel + ' (' + selected + '/' + total + ')';
+        button.textContent = getActiveQueueLabel() + ' (' + selected + '/' + total + ')';
     }
 
     /* ============================================================
@@ -257,14 +342,12 @@
             return;
         }
 
-        /* Remove empty-state placeholder */
         var empty = container.querySelector('.wpok-image-jobs-empty');
 
         if (empty) {
             empty.remove();
         }
 
-        /* Ensure table exists */
         var table = container.querySelector('.wpok-image-jobs-table');
         var content = container.querySelector('[data-role="image-jobs-content"]');
 
@@ -330,7 +413,6 @@
         var processed = parseInt(job.processed_items, 10) || 0;
         var percent = total > 0 ? Math.round((processed / total) * 100) : 0;
 
-        /* Update status badge */
         var badge = row.querySelector('.wpok-job-status');
 
         if (badge) {
@@ -338,21 +420,18 @@
             badge.textContent = window.WPOKUtils.humanizeJobStatus(job.status);
         }
 
-        /* Update progress bar */
         var barSpan = row.querySelector('.wpok-progress-bar span');
 
         if (barSpan) {
             barSpan.style.width = percent + '%';
         }
 
-        /* Update count */
         var count = row.querySelector('.wpok-progress-count');
 
         if (count) {
             count.textContent = processed + ' / ' + total;
         }
 
-        /* Update action cell when job reaches terminal status */
         if (!isActiveStatus(job.status)) {
             var actionCell = row.querySelector('.wpok-job-actions-cell');
 
@@ -360,6 +439,61 @@
                 actionCell.innerHTML = '<span class="description">' + escapeHtml(labels.noAction || '-') + '</span>';
             }
         }
+    }
+
+    /* ============================================================
+       TREE ITEM UPDATES
+       ============================================================ */
+
+    function updateScanResults(items) {
+        items.forEach(function (item) {
+            var row = document.querySelector('.wpok-job-item[data-attachment-id="' + item.object_id + '"]');
+
+            if (!row) {
+                return;
+            }
+
+            row.classList.remove('is-pending', 'is-processing', 'is-succeeded', 'is-failed', 'is-skipped', 'is-cancelled', 'is-unchanged');
+            row.classList.add('is-' + item.status);
+
+            var statusNode = row.querySelector('.wpok-job-item-status');
+            statusNode.textContent = humanizeItemStatus(item.status);
+
+            if (item.result && typeof item.result.new_size_bytes !== 'undefined') {
+                var oldSize = parseInt(item.result.old_size_bytes || 0, 10) || 0;
+                var newSize = parseInt(item.result.new_size_bytes || 0, 10) || 0;
+                var delta = Math.abs(oldSize - newSize);
+                var newSizeClass = 'wpok-item-size-new';
+
+                if (getActiveJobType() === 'image_recompress' && item.status === 'succeeded' && delta < 1024) {
+                    row.classList.add('is-unchanged');
+                    statusNode.textContent = labels.noChange || 'No change';
+                    newSizeClass = 'wpok-item-size-new wpok-item-size-neutral';
+                }
+
+                row.querySelector('.wpok-job-item-size').innerHTML =
+                    '<span class="wpok-item-size-old">' + escapeHtml(window.WPOKUtils.formatBytes(oldSize)) + '</span>' +
+                    '<span class="wpok-item-size-arrow">' + escapeHtml(labels.sizeArrow || '->') + '</span>' +
+                    '<span class="' + newSizeClass + '">' + escapeHtml(window.WPOKUtils.formatBytes(newSize)) + '</span>';
+            }
+
+            if (item.last_error) {
+                statusNode.textContent = humanizeItemStatus(item.status) + ': ' + item.last_error;
+            }
+        });
+    }
+
+    function humanizeItemStatus(status) {
+        var map = {
+            pending: labels.statusPending,
+            processing: labels.statusProcessing,
+            succeeded: labels.statusSucceeded,
+            failed: labels.statusFailed,
+            skipped: labels.statusSkipped,
+            cancelled: labels.statusCancelled
+        };
+
+        return map[status] || status;
     }
 
     function renderJobsList(container, jobs) {
@@ -397,7 +531,7 @@
     }
 
     /* ============================================================
-       POLLING — one interval per active job
+       POLLING
        ============================================================ */
 
     function startWatching(jobId) {
@@ -406,10 +540,13 @@
         }
 
         activeWatches[jobId] = window.setInterval(function () {
-            window.WPOKUtils.request('jobs/' + jobId).then(function (response) {
-                updateJobRow(response.job);
+            window.WPOKUtils.request('jobs/' + jobId + '/items').then(function (payload) {
+                var job = payload.job || {};
 
-                if (!isActiveStatus(response.job.status)) {
+                updateJobRow(job);
+                updateScanResults(payload.items || []);
+
+                if (!isActiveStatus(job.status)) {
                     stopWatching(jobId);
                 }
             }).catch(function () {
@@ -440,7 +577,7 @@
     }
 
     /* ============================================================
-       CANCEL — delegated click on workspace cancel buttons
+       CANCEL — delegated click
        ============================================================ */
 
     document.addEventListener('click', function (event) {

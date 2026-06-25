@@ -86,35 +86,27 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <h2><?php esc_html_e('Image Jobs', 'wp-optikit'); ?></h2>
             </div>
         </div>
-        <p class="description"><?php esc_html_e('Use scan workflows to find target files, then send selected items to the background queue for processing.', 'wp-optikit'); ?></p>
 
-        <div class="wpok-job-panels">
-            <div class="wpok-job-panel" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
-                <div class="wpok-job-panel-head">
-                    <div>
-                        <h3><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
-                        <p><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
-                    </div>
-                    <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
+        <div class="wpok-scan-mode-toggle" data-scan-mode-toggle>
+            <button type="button" class="wpok-scan-mode-btn is-active" data-scan-mode="convert" data-scan-endpoint="images/scans/non-webp" data-job-type="image_convert">
+                <?php esc_html_e('Batch Convert', 'wp-optikit'); ?>
+            </button>
+            <button type="button" class="wpok-scan-mode-btn" data-scan-mode="recompress" data-scan-endpoint="images/scans/oversized" data-job-type="image_recompress">
+                <?php esc_html_e('Re-compress', 'wp-optikit'); ?>
+            </button>
+        </div>
+
+        <div class="wpok-scan-panel" data-scan-panel>
+            <div class="wpok-scan-panel-head" data-scan-panel-head>
+                <div>
+                    <h3 data-mode-title><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
+                    <p data-mode-desc><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
                 </div>
-                <div class="wpok-job-results" data-role="results"></div>
-                <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-                    <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
-                </div>
+                <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
             </div>
-
-            <div class="wpok-job-panel" data-job-panel="recompress" data-job-type="image_recompress" data-scan-endpoint="images/scans/oversized">
-                <div class="wpok-job-panel-head">
-                    <div>
-                        <h3><?php esc_html_e('Re-compress Oversized Images', 'wp-optikit'); ?></h3>
-                        <p><?php esc_html_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?></p>
-                    </div>
-                    <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Oversized Images', 'wp-optikit'); ?></button>
-                </div>
-                <div class="wpok-job-results" data-role="results"></div>
-                <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-                    <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Re-compression Job', 'wp-optikit'); ?></button>
-                </div>
+            <div class="wpok-job-results" data-role="results"></div>
+            <div class="wpok-job-toolbar" data-role="toolbar" hidden>
+                <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
             </div>
         </div>
     </section>

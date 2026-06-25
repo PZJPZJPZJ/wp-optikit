@@ -477,6 +477,73 @@
     background: #fff;
 }
 
+.wpok-scan-mode-toggle {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 12px;
+    background: #f0f4f9;
+    margin-bottom: 16px;
+}
+
+.wpok-scan-mode-btn {
+    flex: 1;
+    appearance: none;
+    border: 0;
+    border-radius: 9px;
+    padding: 9px 14px;
+    background: transparent;
+    color: #3c4858;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.wpok-scan-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.55);
+    color: #12385c;
+}
+
+.wpok-scan-mode-btn.is-active {
+    background: #fff;
+    color: #0f4c81;
+    box-shadow: 0 4px 10px rgba(16, 71, 119, 0.10);
+}
+
+.wpok-scan-panel {
+    border: 1px solid #d7dee7;
+    border-radius: 16px;
+    padding: 16px;
+    background: linear-gradient(180deg, #fbfdff 0%, #f7fafe 100%);
+}
+
+.wpok-scan-panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.wpok-scan-panel-head > div {
+    min-width: 0;
+}
+
+.wpok-scan-panel-head .button {
+    flex-shrink: 0;
+}
+
+.wpok-scan-panel-head h3 {
+    margin: 0 0 6px;
+}
+
+.wpok-scan-panel-head p {
+    margin: 0;
+    color: #566271;
+    line-height: 1.6;
+}
+
 .wpok-job-panels {
     display: grid;
     gap: 20px;
