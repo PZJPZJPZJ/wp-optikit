@@ -118,10 +118,10 @@
         directoryNames.forEach(function (directoryName, index) {
             var items = directories[directoryName] || [];
             total += items.length;
-            html += '<li class="wpok-job-directory ' + (index === 0 ? 'is-open' : '') + '">';
+            html += '<li class="wpok-job-directory">';
             html += '<div class="wpok-job-directory-head">';
             html += '<input type="checkbox" checked>';
-            html += '<span class="wpok-job-directory-toggle">' + (index === 0 ? '-' : '+') + '</span>';
+            html += '<span class="wpok-job-directory-toggle">+</span>';
             html += '<span class="wpok-job-directory-name">' + escapeHtml(directoryName) + '</span>';
             html += '<span class="wpok-job-directory-meta">' + items.length + ' ' + escapeHtml(labels.items || 'items') + '</span>';
             html += '</div>';
