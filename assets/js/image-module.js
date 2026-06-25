@@ -3,27 +3,6 @@
 
     var labels, activeWatches = {}, currentPanel = null;
 
-    /* ============================================================
-       MODE DATA
-       ============================================================ */
-
-    var modeData = {
-        convert: {
-            title:     'Batch Convert Existing Images',
-            desc:      'Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.',
-            scanBtn:   'Scan Media Library',
-            queueText: 'Queue Conversion Job',
-            labelKey:  'qConvert'
-        },
-        recompress: {
-            title:     'Re-compress Oversized Images',
-            desc:      'Detect oversized attachments and re-run compression in the background using the current output settings.',
-            scanBtn:   'Scan Oversized Images',
-            queueText: 'Queue Re-compression Job',
-            labelKey:  'qRecompress'
-        }
-    };
-
     function init() {
         if (!window.WPOKUtils || !window.wpokAdmin || !window.wpokAdmin.labels) {
             return;
@@ -72,14 +51,21 @@
             results.innerHTML = '';
             toolbar.hidden = true;
 
-            /* Update title, description, scan button text */
-            var mode = btn.getAttribute('data-scan-mode');
-            var data = modeData[mode];
+            /* Update title, description, scan button from data attributes */
+            var title = btn.getAttribute('data-mode-title');
+            var desc = btn.getAttribute('data-mode-desc');
+            var scanBtn = btn.getAttribute('data-scan-btn');
 
-            if (data) {
-                currentPanel.querySelector('[data-mode-title]').textContent = data.title;
-                currentPanel.querySelector('[data-mode-desc]').textContent = data.desc;
-                currentPanel.querySelector('[data-action="scan"]').textContent = data.scanBtn;
+            if (title) {
+                currentPanel.querySelector('[data-mode-title]').textContent = title;
+            }
+
+            if (desc) {
+                currentPanel.querySelector('[data-mode-desc]').textContent = desc;
+            }
+
+            if (scanBtn) {
+                currentPanel.querySelector('[data-action="scan"]').textContent = scanBtn;
             }
         });
     }
@@ -103,10 +89,9 @@
     }
 
     function getActiveQueueLabel() {
-        var m = getActiveMode();
-        var data = modeData[m];
-
-        return data ? (labels[data.labelKey] || data.queueText) : 'Queue Job';
+        return getActiveMode() === 'recompress'
+            ? (labels.qRecompress || 'Queue Re-compression Job')
+            : (labels.qConvert || 'Queue Conversion Job');
     }
 
     /* ============================================================

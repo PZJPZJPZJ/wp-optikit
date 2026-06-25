@@ -88,10 +88,22 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </div>
 
         <div class="wpok-scan-mode-toggle" data-scan-mode-toggle>
-            <button type="button" class="wpok-scan-mode-btn is-active" data-scan-mode="convert" data-scan-endpoint="images/scans/non-webp" data-job-type="image_convert">
+            <button type="button" class="wpok-scan-mode-btn is-active"
+                data-scan-mode="convert"
+                data-scan-endpoint="images/scans/non-webp"
+                data-job-type="image_convert"
+                data-mode-title="<?php esc_attr_e('Batch Convert Existing Images', 'wp-optikit'); ?>"
+                data-mode-desc="<?php esc_attr_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?>"
+                data-scan-btn="<?php esc_attr_e('Scan Media Library', 'wp-optikit'); ?>">
                 <?php esc_html_e('Batch Convert', 'wp-optikit'); ?>
             </button>
-            <button type="button" class="wpok-scan-mode-btn" data-scan-mode="recompress" data-scan-endpoint="images/scans/oversized" data-job-type="image_recompress">
+            <button type="button" class="wpok-scan-mode-btn"
+                data-scan-mode="recompress"
+                data-scan-endpoint="images/scans/oversized"
+                data-job-type="image_recompress"
+                data-mode-title="<?php esc_attr_e('Re-compress Oversized Images', 'wp-optikit'); ?>"
+                data-mode-desc="<?php esc_attr_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?>"
+                data-scan-btn="<?php esc_attr_e('Scan Oversized Images', 'wp-optikit'); ?>">
                 <?php esc_html_e('Re-compress', 'wp-optikit'); ?>
             </button>
         </div>

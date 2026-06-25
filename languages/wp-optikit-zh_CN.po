@@ -72,6 +72,54 @@ msgid "Platform Status"
 msgstr "平台状态"
 
 #: templates/tabs/overview.php
+msgid "Jobs Status"
+msgstr "任务状态"
+
+#: templates/tabs/overview.php
+msgid "Unknown"
+msgstr "未知"
+
+#: templates/tabs/overview.php
+msgid "No"
+msgstr "否"
+
+#: templates/tabs/overview.php
+msgid "Not Writable"
+msgstr "不可写"
+
+#: templates/tabs/overview.php
+msgid "Not Connected"
+msgstr "未连接"
+
+#: templates/tabs/overview.php
+msgid "Active"
+msgstr "启用"
+
+#: templates/tabs/overview.php
+msgid "Image Format Auto Conversion"
+msgstr "图片格式自动转换"
+
+#: templates/tabs/overview.php
+msgid "Auto-convert uploads to the selected output format when enabled."
+msgstr "启用后自动将上传文件转换为选定的输出格式。"
+
+#: templates/tabs/overview.php
+msgid "Disabled. Enable in image settings to auto-convert uploads."
+msgstr "已禁用。在图片设置中启用即可自动转换上传文件。"
+
+#: templates/tabs/overview.php
+msgid "Enabled"
+msgstr "已启用"
+
+#: templates/tabs/overview.php
+msgid "Disabled"
+msgstr "已禁用"
+
+#: templates/tabs/overview.php
+msgid "Plain"
+msgstr "朴素"
+
+#: templates/tabs/overview.php
 msgid "Run optimization work from one place"
 msgstr "从同一位置运行优化工作"
 
@@ -96,8 +144,180 @@ msgid "Successful recent runs"
 msgstr "最近成功运行"
 
 #: templates/tabs/overview.php
-msgid "Image module"
+msgid "Image Module"
 msgstr "图片模块"
+
+#: templates/tabs/overview.php
+msgid "Server Environment"
+msgstr "服务器环境"
+
+#: templates/tabs/overview.php
+msgid "System & Runtime"
+msgstr "系统与运行时"
+
+#: templates/tabs/overview.php
+msgid "Operating System"
+msgstr "操作系统"
+
+#: templates/tabs/overview.php
+msgid "Recommended: Linux"
+msgstr "推荐：Linux"
+
+#: templates/tabs/overview.php
+msgid "Software"
+msgstr "服务器软件"
+
+#: templates/tabs/overview.php
+msgid "Recommended: nginx or Apache"
+msgstr "推荐：nginx 或 Apache"
+
+#: templates/tabs/overview.php
+msgid "Version"
+msgstr "版本"
+
+#: templates/tabs/overview.php
+msgid "Recommended: MySQL 8.0+ or MariaDB 10.4+"
+msgstr "推荐：MySQL 8.0+ 或 MariaDB 10.4+"
+
+#: templates/tabs/overview.php
+msgid "Memory Limit"
+msgstr "内存限制"
+
+#: templates/tabs/overview.php
+msgid "Recommended: 256M or higher"
+msgstr "推荐：256M 或更高"
+
+#: templates/tabs/overview.php
+msgid "Max Input Vars"
+msgstr "最大输入变量数"
+
+#: templates/tabs/overview.php
+msgid "Recommended: 1000 or higher"
+msgstr "推荐：1000 或更高"
+
+#: templates/tabs/overview.php
+msgid "Max Post Size"
+msgstr "最大 POST 大小"
+
+#: templates/tabs/overview.php
+msgid "Recommended: 32M or higher"
+msgstr "推荐：32M 或更高"
+
+#: templates/tabs/overview.php
+msgid "Installed"
+msgstr "已安装"
+
+#: templates/tabs/overview.php
+msgid "Required for image processing"
+msgstr "图片处理所需"
+
+#: templates/tabs/overview.php
+msgid "Required for package operations"
+msgstr "包操作所需"
+
+#: templates/tabs/overview.php
+msgid "Write Permissions"
+msgstr "写入权限"
+
+#: templates/tabs/overview.php
+msgid "All Right"
+msgstr "全部正常"
+
+#: templates/tabs/overview.php
+msgid "Required for file operations"
+msgstr "文件操作所需"
+
+#: templates/tabs/overview.php
+msgid "Library"
+msgstr "库连接"
+
+#: templates/tabs/overview.php
+msgid "Connected"
+msgstr "已连接"
+
+#: templates/tabs/overview.php
+msgid "Required for Elementor integration"
+msgstr "Elementor 集成所需"
+
+#: templates/tabs/overview.php
+msgid "WordPress Environment"
+msgstr "WordPress 环境"
+
+#: templates/tabs/overview.php
+msgid "Site & Configuration"
+msgstr "站点与配置"
+
+#: templates/tabs/overview.php
+msgid "Recommended: 6.7+"
+msgstr "推荐：6.7+"
+
+#: templates/tabs/overview.php
+msgid "Site URL"
+msgstr "站点 URL"
+
+#: templates/tabs/overview.php
+msgid "Home URL"
+msgstr "首页 URL"
+
+#: templates/tabs/overview.php
+msgid "Multisite"
+msgstr "多站点"
+
+#: templates/tabs/overview.php
+msgid "Recommended: No (for this setup)"
+msgstr "推荐：否（针对当前设置）"
+
+#: templates/tabs/overview.php
+msgid "Max Upload Size"
+msgstr "最大上传大小"
+
+#: templates/tabs/overview.php
+msgid "Recommended: 32 MB or higher"
+msgstr "推荐：32 MB 或更高"
+
+#: templates/tabs/overview.php
+msgid "Max Memory Limit"
+msgstr "最大内存限制"
+
+#: templates/tabs/overview.php
+msgid "Permalink Structure"
+msgstr "固定链接结构"
+
+#: templates/tabs/overview.php
+msgid "Recommended: /%postname%/"
+msgstr "推荐：/%postname%/"
+
+#: templates/tabs/overview.php
+msgid "Language"
+msgstr "语言"
+
+#: templates/tabs/overview.php
+msgid "Timezone"
+msgstr "时区"
+
+#: templates/tabs/overview.php
+msgid "Admin Email"
+msgstr "管理员邮箱"
+
+#: templates/tabs/overview.php
+msgid "Debug Mode"
+msgstr "调试模式"
+
+#: templates/tabs/overview.php
+msgid "Inactive"
+msgstr "未启用"
+
+#: templates/tabs/overview.php
+msgid "Recommended: Inactive on production"
+msgstr "推荐：生产环境禁用"
+
+#: templates/tabs/images.php
+msgid "Batch Convert"
+msgstr "批量转换"
+
+#: templates/tabs/images.php
+msgid "Re-compress"
+msgstr "重新压缩"
 
 #: templates/tabs/overview.php
 msgid "Available"
