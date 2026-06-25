@@ -145,9 +145,20 @@
     gap: 20px;
 }
 
-.wpok-grid-overview,
-.wpok-grid-images {
+.wpok-grid-overview {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    margin-bottom: 20px;
+}
+
+.wpok-grid-images {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 20px;
+}
+
+.wpok-grid-images-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     margin-bottom: 20px;
 }
 
@@ -564,71 +575,62 @@
     background: #fff;
 }
 
-.wpok-scan-mode-toggle {
+.wpok-cleanup-toolbar {
     display: flex;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 12px;
-    background: #f0f4f9;
-    margin-bottom: 16px;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.wpok-scan-mode-btn {
-    flex: 1;
-    appearance: none;
-    border: 0;
-    border-radius: 9px;
-    padding: 9px 14px;
-    background: transparent;
-    color: #3c4858;
-    font-weight: 600;
-    font-size: 13px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+.wpok-btn-danger {
+    background: #dc2626 !important;
+    border-color: #b91c1c !important;
+    color: #fff !important;
 }
 
-.wpok-scan-mode-btn:hover {
-    background: rgba(255, 255, 255, 0.55);
-    color: #12385c;
+.wpok-btn-danger:hover {
+    background: #b91c1c !important;
 }
 
-.wpok-scan-mode-btn.is-active {
+.wpok-btn-danger:disabled {
+    background: #f87171 !important;
+    border-color: #f87171 !important;
+}
+
+.wpok-scan-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 18px;
+    border: 1px dashed #c3c4c7;
+    border-radius: 14px;
     background: #fff;
-    color: #0f4c81;
-    box-shadow: 0 4px 10px rgba(16, 71, 119, 0.10);
+    color: #646970;
 }
 
-.wpok-scan-panel {
-    border: 1px solid #d7dee7;
-    border-radius: 16px;
-    padding: 16px;
-    background: linear-gradient(180deg, #fbfdff 0%, #f7fafe 100%);
+.wpok-scan-progress-bar {
+    width: 100%;
+    max-width: 280px;
+    height: 6px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
 }
 
-.wpok-scan-panel-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: flex-start;
+.wpok-scan-progress-bar span {
+    display: block;
+    width: 30%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2563eb, #0ea5e9);
+    animation: wpok-scan-indeterminate 1.2s ease-in-out infinite;
 }
 
-.wpok-scan-panel-head > div {
-    min-width: 0;
-}
-
-.wpok-scan-panel-head .button {
-    flex-shrink: 0;
-}
-
-.wpok-scan-panel-head h3 {
-    margin: 0 0 6px;
-}
-
-.wpok-scan-panel-head p {
-    margin: 0;
-    color: #566271;
-    line-height: 1.6;
+@keyframes wpok-scan-indeterminate {
+    0%   { transform: translateX(-100%); width: 30%; }
+    50%  { width: 50%; }
+    100% { transform: translateX(400%); width: 30%; }
 }
 
 .wpok-job-panels {
@@ -907,6 +909,12 @@
     }
 }
 
+@media (max-width: 1100px) {
+    .wpok-grid-images-bottom {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 720px) {
     .wpok-admin-hero {
         padding: 22px 20px;
@@ -914,7 +922,8 @@
 
     .wpok-jobs-status-grid,
     .wpok-grid-overview,
-    .wpok-grid-images {
+    .wpok-grid-images,
+    .wpok-grid-images-bottom {
         grid-template-columns: 1fr;
     }
 

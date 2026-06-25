@@ -13,6 +13,10 @@ use WPOptiKit\Core\Storage\OptionStore;
 use WPOptiKit\Core\Storage\SchemaManager;
 use WPOptiKit\Core\Updater\GithubUpdater;
 use WPOptiKit\Modules\Image\ImageModule;
+use WPOptiKit\Modules\MediaUnused\MediaUnusedRestController;
+use WPOptiKit\Modules\MediaUnused\MediaUnusedScanner;
+use WPOptiKit\Modules\MediaOrphan\MediaOrphanRestController;
+use WPOptiKit\Modules\MediaOrphan\MediaOrphanScanner;
 use WPOptiKit\Modules\Support\PlannedModule;
 
 final class Plugin
@@ -46,6 +50,13 @@ final class Plugin
         /** @var JobsController $jobsController */
         $jobsController = $this->container->get('jobs_controller');
         $jobsController->boot();
+
+        /* Boot media cleanup REST controllers */
+        $wpdb           = $GLOBALS['wpdb'];
+        $unusedScanner  = new MediaUnusedScanner($wpdb);
+        (new MediaUnusedRestController($unusedScanner))->boot();
+        $orphanScanner  = new MediaOrphanScanner($wpdb);
+        (new MediaOrphanRestController($orphanScanner))->boot();
 
         /** @var AdminPageRegistry $adminRegistry */
         $adminRegistry = $this->container->get('admin_registry');

@@ -6,6 +6,7 @@ $formats = (array) ($imageSettings['formats'] ?? array());
 $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
 ?>
 <div class="wpok-grid wpok-grid-images">
+    <!-- 1. Configuration -->
     <section class="wpok-card">
         <div class="wpok-card-heading">
             <div>
@@ -79,50 +80,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </form>
     </section>
 
-    <section class="wpok-card wpok-image-app" data-wpok-image-app>
-        <div class="wpok-card-heading">
-            <div>
-                <span class="wpok-card-kicker"><?php esc_html_e('Scan & Queue', 'wp-optikit'); ?></span>
-                <h2><?php esc_html_e('Image Jobs', 'wp-optikit'); ?></h2>
-            </div>
-        </div>
-
-        <div class="wpok-scan-mode-toggle" data-scan-mode-toggle>
-            <button type="button" class="wpok-scan-mode-btn is-active"
-                data-scan-mode="convert"
-                data-scan-endpoint="images/scans/non-webp"
-                data-job-type="image_convert"
-                data-mode-title="<?php esc_attr_e('Batch Convert Existing Images', 'wp-optikit'); ?>"
-                data-mode-desc="<?php esc_attr_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?>"
-                data-scan-btn="<?php esc_attr_e('Scan Media Library', 'wp-optikit'); ?>">
-                <?php esc_html_e('Batch Convert', 'wp-optikit'); ?>
-            </button>
-            <button type="button" class="wpok-scan-mode-btn"
-                data-scan-mode="recompress"
-                data-scan-endpoint="images/scans/oversized"
-                data-job-type="image_recompress"
-                data-mode-title="<?php esc_attr_e('Re-compress Oversized Images', 'wp-optikit'); ?>"
-                data-mode-desc="<?php esc_attr_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?>"
-                data-scan-btn="<?php esc_attr_e('Scan Oversized Images', 'wp-optikit'); ?>">
-                <?php esc_html_e('Re-compress', 'wp-optikit'); ?>
-            </button>
-        </div>
-
-        <div class="wpok-scan-panel" data-scan-panel>
-            <div class="wpok-scan-panel-head" data-scan-panel-head>
-                <div>
-                    <h3 data-mode-title><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
-                    <p data-mode-desc><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
-                </div>
-                <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
-            </div>
-            <div class="wpok-job-results" data-role="results"></div>
-            <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-                <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
-            </div>
-        </div>
-    </section>
-
+    <!-- 2. Images Workspace (was #3, moved to #2) -->
     <section class="wpok-card wpok-image-jobs-card" data-image-jobs>
         <div class="wpok-card-toolbar">
             <div>
@@ -134,5 +92,62 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             </div>
         </div>
         <div data-role="image-jobs-content"></div>
+    </section>
+</div>
+<div class="wpok-grid wpok-grid-images-bottom">
+    <!-- 3. Batch Convert -->
+    <section class="wpok-card" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
+        <div class="wpok-job-panel-head">
+            <div>
+                <h3><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
+                <p><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
+            </div>
+            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
+        </div>
+        <div class="wpok-job-results" data-role="results"></div>
+        <div class="wpok-job-toolbar" data-role="toolbar" hidden>
+            <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
+        </div>
+    </section>
+
+    <!-- 4. Re-compress -->
+    <section class="wpok-card" data-job-panel="recompress" data-job-type="image_recompress" data-scan-endpoint="images/scans/oversized">
+        <div class="wpok-job-panel-head">
+            <div>
+                <h3><?php esc_html_e('Re-compress Oversized Images', 'wp-optikit'); ?></h3>
+                <p><?php esc_html_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?></p>
+            </div>
+            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Oversized Images', 'wp-optikit'); ?></button>
+        </div>
+        <div class="wpok-job-results" data-role="results"></div>
+        <div class="wpok-job-toolbar" data-role="toolbar" hidden>
+            <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Re-compression Job', 'wp-optikit'); ?></button>
+        </div>
+    </section>
+
+    <!-- 5. Unused Media -->
+    <section class="wpok-card wpok-cleanup-card" data-cleanup-panel="unused" data-delete-endpoint="media-unused/delete" data-scan-endpoint="media-unused/scan">
+        <div class="wpok-job-panel-head">
+            <div>
+                <h3><?php esc_html_e('Unused Media', 'wp-optikit'); ?></h3>
+                <p><?php esc_html_e('Find media library attachments that are not referenced by any post or page.', 'wp-optikit'); ?></p>
+            </div>
+            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Unused Media', 'wp-optikit'); ?></button>
+        </div>
+        <div class="wpok-job-results" data-role="results"></div>
+        <div class="wpok-job-toolbar" data-role="toolbar" hidden></div>
+    </section>
+
+    <!-- 6. Orphan Files -->
+    <section class="wpok-card wpok-cleanup-card" data-cleanup-panel="orphan" data-delete-endpoint="media-orphan/delete" data-scan-endpoint="media-orphan/scan">
+        <div class="wpok-job-panel-head">
+            <div>
+                <h3><?php esc_html_e('Orphan Files', 'wp-optikit'); ?></h3>
+                <p><?php esc_html_e('Find files in the uploads directory that have no corresponding attachment record in the database.', 'wp-optikit'); ?></p>
+            </div>
+            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Orphan Files', 'wp-optikit'); ?></button>
+        </div>
+        <div class="wpok-job-results" data-role="results"></div>
+        <div class="wpok-job-toolbar" data-role="toolbar" hidden></div>
     </section>
 </div>

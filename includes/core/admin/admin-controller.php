@@ -103,8 +103,20 @@ final class AdminController
                     'cancelReq'     => __('Job cancellation requested.', 'wp-optikit'),
                     'qConvert'      => __('Queue Conversion Job', 'wp-optikit'),
                     'qRecompress'   => __('Queue Re-compression Job', 'wp-optikit'),
-                    'sizeArrow'     => __('->', 'wp-optikit'),
-                    'noChange'      => __('No change', 'wp-optikit'),
+                    'sizeArrow'       => __('->', 'wp-optikit'),
+                    'noChange'        => __('No change', 'wp-optikit'),
+
+                    // Cleanup panels
+                    'noUnusedFound'   => __('No unused files were found.', 'wp-optikit'),
+                    'trashSelected'   => __('Trash Selected', 'wp-optikit'),
+                    'deletePermanent' => __('Delete Permanently', 'wp-optikit'),
+                    'confirmTrash'    => __('Move %d files to trash? They can be restored later.', 'wp-optikit'),
+                    'confirmPermanent' => __('This will permanently delete %d files. This cannot be undone. Continue?', 'wp-optikit'),
+                    'deleting'        => __('Deleting...', 'wp-optikit'),
+                    'deleteResult'    => __('Delete completed.', 'wp-optikit'),
+                    'successLower'    => __('succeeded', 'wp-optikit'),
+                    'failedLower'     => __('failed', 'wp-optikit'),
+                    'orphanScanning'  => __('files scanning...', 'wp-optikit'),
                 ),
             )
         );
