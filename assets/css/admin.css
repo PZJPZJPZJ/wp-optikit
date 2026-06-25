@@ -1,0 +1,484 @@
+.wpok-admin-wrap {
+    max-width: none;
+    margin-right: 20px;
+}
+
+.wpok-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 24px 0 18px;
+    gap: 20px;
+}
+
+.wpok-admin-header h1 {
+    margin: 0 0 6px;
+}
+
+.wpok-admin-header p {
+    margin: 0;
+    color: #50575e;
+}
+
+.wpok-admin-badge {
+    background: #135e96;
+    color: #fff;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.wpok-admin-content {
+    margin-top: 18px;
+}
+
+.wpok-admin-tabs {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 8px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #edf4fb 0%, #e5edf7 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.wpok-admin-tab {
+    flex: 1 1 0;
+    appearance: none;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #3c4858;
+    font-weight: 600;
+    text-align: center;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.wpok-admin-tab:hover {
+    background: rgba(255, 255, 255, 0.55);
+    color: #12385c;
+}
+
+.wpok-admin-tab.is-active {
+    background: #fff;
+    color: #0f4c81;
+    box-shadow: 0 8px 18px rgba(16, 71, 119, 0.12);
+}
+
+.wpok-admin-tab:focus {
+    outline: 2px solid #0f4c81;
+    outline-offset: 2px;
+}
+
+.wpok-tab-panel[hidden] {
+    display: none !important;
+}
+
+.wpok-tab-panel.is-active {
+    display: block;
+}
+
+.wpok-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.wpok-grid-overview,
+.wpok-grid-images {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    margin-bottom: 20px;
+}
+
+.wpok-card {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.wpok-card h2,
+.wpok-card h3 {
+    margin-top: 0;
+}
+
+.wpok-card-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.wpok-card-toolbar h2 {
+    margin-bottom: 0;
+}
+
+.wpok-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.wpok-stat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+
+.wpok-stat-list li {
+    display: grid;
+    gap: 2px;
+}
+
+.wpok-stat-list span {
+    color: #646970;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.wpok-stat-list strong {
+    font-size: 16px;
+}
+
+.wpok-stat-list small {
+    color: #646970;
+}
+
+.wpok-module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.wpok-module-card {
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    padding: 16px;
+    background: #f6f7f7;
+}
+
+.wpok-module-card.is-enabled {
+    background: #f0f6fc;
+    border-color: #8fbce6;
+}
+
+.wpok-module-card.is-planned {
+    background: #fcf9e8;
+    border-color: #dfcc74;
+}
+
+.wpok-module-card p {
+    min-height: 38px;
+}
+
+.wpok-module-state,
+.wpok-job-status {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.wpok-module-state {
+    background: #fff;
+}
+
+.wpok-job-status.is-pending {
+    background: #eef4ff;
+    color: #1d4ed8;
+}
+
+.wpok-job-status.is-processing {
+    background: #fff6d8;
+    color: #9a6700;
+}
+
+.wpok-job-status.is-cancelling {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.wpok-job-status.is-succeeded {
+    background: #ecfdf3;
+    color: #166534;
+}
+
+.wpok-job-status.is-failed,
+.wpok-job-status.is-cancelled {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.wpok-inline-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+}
+
+.wpok-progress-count {
+    white-space: nowrap;
+    font-weight: 600;
+    color: #334155;
+}
+
+.wpok-job-actions-col,
+.wpok-job-actions-cell {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.wpok-settings-form {
+    display: grid;
+    gap: 16px;
+}
+
+.wpok-field-row {
+    display: grid;
+    gap: 8px;
+}
+
+.wpok-field-row input[type="number"] {
+    max-width: 180px;
+}
+
+.wpok-inline-toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.wpok-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.wpok-pill {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid #c3c4c7;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: #fff;
+}
+
+.wpok-radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.wpok-radio-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #c3c4c7;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: #fff;
+}
+
+.wpok-job-panels {
+    display: grid;
+    gap: 20px;
+}
+
+.wpok-job-panel {
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fbfbfb;
+}
+
+.wpok-job-panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.wpok-job-results {
+    margin-top: 16px;
+}
+
+.wpok-job-tree {
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+}
+
+.wpok-job-tree-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: #f6f7f7;
+    border-bottom: 1px solid #dcdcde;
+    flex: 0 0 auto;
+}
+
+.wpok-job-tree-list,
+.wpok-job-item-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.wpok-job-tree-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1 1 auto;
+}
+
+.wpok-job-directory {
+    border-top: 1px solid #f0f0f1;
+}
+
+.wpok-job-directory:first-child {
+    border-top: 0;
+}
+
+.wpok-job-directory-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+}
+
+.wpok-job-directory.is-open .wpok-job-item-list {
+    display: block;
+}
+
+.wpok-job-directory-toggle {
+    width: 16px;
+    color: #646970;
+}
+
+.wpok-job-directory-name {
+    flex: 1;
+    font-weight: 600;
+}
+
+.wpok-job-directory-meta {
+    color: #646970;
+    font-size: 12px;
+}
+
+.wpok-job-item-list {
+    display: none;
+    background: #fcfcfd;
+}
+
+.wpok-job-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 18px 10px 42px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.wpok-job-item-name {
+    flex: 1;
+}
+
+.wpok-job-item-size {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.wpok-item-size-old {
+    color: #b91c1c;
+}
+
+.wpok-item-size-new {
+    color: #15803d;
+}
+
+.wpok-item-size-neutral {
+    color: #1f2937;
+}
+
+.wpok-item-size-arrow {
+    color: #646970;
+    margin: 0 4px;
+}
+
+.wpok-job-item-status {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    min-width: 86px;
+    text-align: right;
+}
+
+.wpok-job-item.is-succeeded .wpok-job-item-status {
+    color: #15803d;
+}
+
+.wpok-job-item.is-unchanged .wpok-job-item-status {
+    color: #1f2937;
+}
+
+.wpok-job-item.is-failed .wpok-job-item-status,
+.wpok-job-item.is-cancelled .wpok-job-item-status {
+    color: #b91c1c;
+}
+
+.wpok-job-toolbar,
+.wpok-job-progress {
+    margin-top: 14px;
+}
+
+.wpok-job-progress-meta,
+.wpok-job-progress-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.wpok-progress-bar {
+    margin: 12px 0 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.wpok-progress-bar span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #0ea5e9);
+}
+
+.wpok-progress-bar.is-compact {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 100px;
+}
+
+.wpok-job-empty {
+    padding: 18px;
+    border: 1px dashed #c3c4c7;
+    border-radius: 8px;
+    background: #fff;
+    color: #646970;
+}
