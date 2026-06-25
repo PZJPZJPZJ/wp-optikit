@@ -8,17 +8,17 @@ $activeTab  = $context['active_tab'];
 <div class="wrap wpok-admin-wrap">
     <div class="wpok-admin-hero">
         <div class="wpok-admin-hero-copy">
-            <span class="wpok-admin-kicker">Performance Operations Platform</span>
+            <span class="wpok-admin-kicker"><?php echo esc_html__( 'Performance Operations Platform', 'wp-optikit' ); ?></span>
             <h1>OptiKit</h1>
-            <p>Run media optimization, queue orchestration, cache workflows, and maintenance operations from one focused WordPress workspace.</p>
+            <p><?php echo esc_html__( 'Run media optimization, queue orchestration, cache workflows, and maintenance operations from one focused WordPress workspace.', 'wp-optikit' ); ?></p>
         </div>
         <div class="wpok-admin-hero-side">
             <span class="wpok-admin-badge">v<?php echo esc_html($context['plugin_version']); ?></span>
-            <span class="wpok-admin-hero-meta">WordPress performance workspace</span>
+            <span class="wpok-admin-hero-meta"><?php echo esc_html__( 'WordPress performance workspace', 'wp-optikit' ); ?></span>
         </div>
     </div>
 
-    <nav class="wpok-admin-tabs" aria-label="OptiKit sections">
+    <nav class="wpok-admin-tabs" aria-label="<?php echo esc_attr__( 'OptiKit sections', 'wp-optikit' ); ?>">
         <?php foreach ($tabs as $tabItem) : ?>
             <?php $isActive = $tabItem['id'] === $activeTab['id']; ?>
             <button

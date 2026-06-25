@@ -6,42 +6,36 @@ $formats = (array) ($imageSettings['formats'] ?? array());
 $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
 ?>
 <div class="wpok-grid wpok-grid-images">
-    <section class="wpok-card wpok-images-hero-card">
-        <span class="wpok-card-kicker">Image Operations</span>
-        <h2>Images Workspace</h2>
-        <p>Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace.</p>
-    </section>
-
     <section class="wpok-card">
         <div class="wpok-card-heading">
             <div>
-                <span class="wpok-card-kicker">Configuration</span>
-                <h2>Image Module Settings</h2>
+                <span class="wpok-card-kicker"><?php esc_html_e('Configuration', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Image Module Settings', 'wp-optikit'); ?></h2>
             </div>
         </div>
         <form method="post" action="options.php" class="wpok-settings-form">
             <?php settings_fields('wpok_image_settings_group'); ?>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-enabled">Enable image module</label>
+                <label for="wpok-image-enabled"><?php esc_html_e('Enable image module', 'wp-optikit'); ?></label>
                 <label class="wpok-inline-toggle">
                     <input id="wpok-image-enabled" type="checkbox" name="wpok_image_settings[enabled]" value="1" <?php checked(!empty($imageSettings['enabled'])); ?>>
-                    <span>Automatically convert supported uploads to the selected output format.</span>
+                    <span><?php esc_html_e('Automatically convert supported uploads to the selected output format.', 'wp-optikit'); ?></span>
                 </label>
             </div>
 
             <div class="wpok-field-row">
-                <span>Output format</span>
+                <span><?php esc_html_e('Output format', 'wp-optikit'); ?></span>
                 <div class="wpok-radio-group">
                     <label class="wpok-radio-card">
                         <input type="radio" name="wpok_image_settings[output_format]" value="webp" <?php checked($outputFormat, 'webp'); ?>>
-                        <span>WebP</span>
+                        <span><?php esc_html_e('WebP', 'wp-optikit'); ?></span>
                     </label>
                 </div>
             </div>
 
             <div class="wpok-field-row">
-                <span>Source formats</span>
+                <span><?php esc_html_e('Source formats', 'wp-optikit'); ?></span>
                 <div class="wpok-pill-group">
                     <?php foreach (array('jpg' => 'JPG', 'png' => 'PNG', 'gif' => 'GIF') as $value => $label) : ?>
                         <label class="wpok-pill">
@@ -53,56 +47,56 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             </div>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-quality">Target format quality</label>
+                <label for="wpok-image-quality"><?php esc_html_e('Target format quality', 'wp-optikit'); ?></label>
                 <input id="wpok-image-quality" type="number" min="1" max="100" name="wpok_image_settings[quality]" value="<?php echo esc_attr((string) ($imageSettings['quality'] ?? 80)); ?>">
             </div>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-threshold">Oversized threshold (KB)</label>
+                <label for="wpok-image-threshold"><?php esc_html_e('Oversized threshold (KB)', 'wp-optikit'); ?></label>
                 <input id="wpok-image-threshold" type="number" min="1" max="102400" name="wpok_image_settings[max_file_size_kb]" value="<?php echo esc_attr((string) ($imageSettings['max_file_size_kb'] ?? 512)); ?>">
             </div>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-keep-original">Keep original file</label>
+                <label for="wpok-image-keep-original"><?php esc_html_e('Keep original file', 'wp-optikit'); ?></label>
                 <label class="wpok-inline-toggle">
                     <input id="wpok-image-keep-original" type="checkbox" name="wpok_image_settings[keep_original]" value="1" <?php checked(!empty($imageSettings['keep_original'])); ?>>
-                    <span>Store the original upload path in attachment meta.</span>
+                    <span><?php esc_html_e('Store the original upload path in attachment meta.', 'wp-optikit'); ?></span>
                 </label>
             </div>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-elementor-cache">Clear Elementor cache after completed batch jobs</label>
+                <label for="wpok-image-elementor-cache"><?php esc_html_e('Clear Elementor cache after completed batch jobs', 'wp-optikit'); ?></label>
                 <label class="wpok-inline-toggle">
                     <input id="wpok-image-elementor-cache" type="checkbox" name="wpok_image_settings[clear_elementor_cache_after_jobs]" value="1" <?php checked(!empty($imageSettings['clear_elementor_cache_after_jobs'])); ?>>
-                    <span>After image batch jobs finish, automatically trigger Elementor's cache clear routine when Elementor is active.</span>
+                    <span><?php esc_html_e('After image batch jobs finish, automatically trigger Elementor\'s cache clear routine when Elementor is active.', 'wp-optikit'); ?></span>
                 </label>
             </div>
 
-            <?php submit_button('Save Image Settings', 'primary', 'submit', false); ?>
+            <?php submit_button(__('Save Image Settings', 'wp-optikit'), 'primary', 'submit', false); ?>
         </form>
     </section>
 
     <section class="wpok-card wpok-image-app" data-wpok-image-app>
         <div class="wpok-card-heading">
             <div>
-                <span class="wpok-card-kicker">Scan & Queue</span>
-                <h2>Image Jobs</h2>
+                <span class="wpok-card-kicker"><?php esc_html_e('Scan & Queue', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Image Jobs', 'wp-optikit'); ?></h2>
             </div>
         </div>
-        <p class="description">Use scan workflows to find target files, then send selected items to the background queue for processing.</p>
+        <p class="description"><?php esc_html_e('Use scan workflows to find target files, then send selected items to the background queue for processing.', 'wp-optikit'); ?></p>
 
         <div class="wpok-job-panels">
             <div class="wpok-job-panel" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
                 <div class="wpok-job-panel-head">
                     <div>
-                        <h3>Batch Convert Existing Images</h3>
-                        <p>Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.</p>
+                        <h3><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
+                        <p><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
                     </div>
-                    <button type="button" class="button button-secondary" data-action="scan">Scan Media Library</button>
+                    <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
                 </div>
                 <div class="wpok-job-results" data-role="results"></div>
                 <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-                    <button type="button" class="button button-primary" data-action="start">Queue Conversion Job</button>
+                    <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
                 </div>
                 <div class="wpok-job-progress" data-role="progress" hidden>
                     <div class="wpok-job-progress-meta">
@@ -111,8 +105,8 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                     </div>
                     <div class="wpok-progress-bar"><span data-role="job-bar"></span></div>
                     <div class="wpok-job-progress-actions">
-                        <span class="description" data-role="job-message">Waiting for job creation.</span>
-                        <button type="button" class="button-link-delete" data-action="cancel">Cancel job</button>
+                        <span class="description" data-role="job-message"><?php esc_html_e('Waiting for job creation.', 'wp-optikit'); ?></span>
+                        <button type="button" class="button-link-delete" data-action="cancel"><?php esc_html_e('Cancel job', 'wp-optikit'); ?></button>
                     </div>
                 </div>
             </div>
@@ -120,14 +114,14 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             <div class="wpok-job-panel" data-job-panel="recompress" data-job-type="image_recompress" data-scan-endpoint="images/scans/oversized">
                 <div class="wpok-job-panel-head">
                     <div>
-                        <h3>Re-compress Oversized Images</h3>
-                        <p>Detect oversized attachments and re-run compression in the background using the current output settings.</p>
+                        <h3><?php esc_html_e('Re-compress Oversized Images', 'wp-optikit'); ?></h3>
+                        <p><?php esc_html_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?></p>
                     </div>
-                    <button type="button" class="button button-secondary" data-action="scan">Scan Oversized Images</button>
+                    <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Oversized Images', 'wp-optikit'); ?></button>
                 </div>
                 <div class="wpok-job-results" data-role="results"></div>
                 <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-                    <button type="button" class="button button-primary" data-action="start">Queue Re-compression Job</button>
+                    <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Re-compression Job', 'wp-optikit'); ?></button>
                 </div>
                 <div class="wpok-job-progress" data-role="progress" hidden>
                     <div class="wpok-job-progress-meta">
@@ -136,11 +130,17 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                     </div>
                     <div class="wpok-progress-bar"><span data-role="job-bar"></span></div>
                     <div class="wpok-job-progress-actions">
-                        <span class="description" data-role="job-message">Waiting for job creation.</span>
-                        <button type="button" class="button-link-delete" data-action="cancel">Cancel job</button>
+                        <span class="description" data-role="job-message"><?php esc_html_e('Waiting for job creation.', 'wp-optikit'); ?></span>
+                        <button type="button" class="button-link-delete" data-action="cancel"><?php esc_html_e('Cancel job', 'wp-optikit'); ?></button>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <section class="wpok-card wpok-images-hero-card">
+        <span class="wpok-card-kicker"><?php esc_html_e('Image Operations', 'wp-optikit'); ?></span>
+        <h2><?php esc_html_e('Images Workspace', 'wp-optikit'); ?></h2>
+        <p><?php esc_html_e('Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace.', 'wp-optikit'); ?></p>
     </section>
 </div>

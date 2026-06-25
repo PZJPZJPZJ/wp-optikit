@@ -42,7 +42,7 @@ final class ImageModule implements ModuleInterface
 
     public function get_label(): string
     {
-        return 'Images';
+        return __('Images', 'wp-optikit');
     }
 
     public function is_enabled(): bool
@@ -65,7 +65,7 @@ final class ImageModule implements ModuleInterface
 
         $admin->addTab(
             'images',
-            'Images',
+            __('Images', 'wp-optikit'),
             static function (array $context) use ($settings): void {
                 $imageSettings = $settings->get();
                 include WPOK_DIR . 'templates/tabs/images.php';

@@ -1,3 +1,10 @@
+.wpok-admin-wrap,
+.wpok-admin-wrap *,
+.wpok-admin-wrap *::before,
+.wpok-admin-wrap *::after {
+    box-sizing: border-box;
+}
+
 .wpok-admin-wrap {
     max-width: none;
     margin-right: 20px;
@@ -91,7 +98,11 @@
 }
 
 .wpok-admin-tab {
-    flex: 1 1 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
     appearance: none;
     border: 0;
     border-radius: 10px;
@@ -218,6 +229,7 @@
 .wpok-card h3 {
     margin-top: 0;
     color: #0f172a;
+    overflow-wrap: break-word;
 }
 
 .wpok-card-toolbar {
@@ -347,7 +359,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    min-width: 180px;
+    min-width: 120px;
 }
 
 .wpok-progress-count {
@@ -433,6 +445,14 @@
     align-items: flex-start;
 }
 
+.wpok-job-panel-head > div {
+    min-width: 0;
+}
+
+.wpok-job-panel-head .button {
+    flex-shrink: 0;
+}
+
 .wpok-job-panel-head p {
     margin-bottom: 0;
     color: #566271;
@@ -472,7 +492,7 @@
 
 .wpok-job-tree-list {
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     flex: 1 1 auto;
 }
 
@@ -504,6 +524,9 @@
 .wpok-job-directory-name {
     flex: 1;
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .wpok-job-directory-meta {
@@ -522,10 +545,15 @@
     align-items: center;
     padding: 10px 18px 10px 42px;
     border-top: 1px solid #f0f0f1;
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .wpok-job-item-name {
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .wpok-job-item-size {
@@ -613,6 +641,12 @@
     color: #646970;
 }
 
+@media (max-width: 1100px) and (min-width: 721px) {
+    .wpok-grid-overview {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 960px) {
     .wpok-admin-hero,
     .wpok-overview-hero {
@@ -642,6 +676,8 @@
 
     .wpok-admin-tab {
         min-width: 132px;
+        padding: 11px 10px;
+        font-size: 13px;
     }
 
     .wpok-card-toolbar,

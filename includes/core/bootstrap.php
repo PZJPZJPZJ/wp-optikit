@@ -8,6 +8,10 @@ final class Bootstrap
 
     public static function boot(string $pluginFile): void
     {
+        add_action('init', static function (): void {
+            load_plugin_textdomain('wp-optikit', false, dirname(plugin_basename(WPOK_FILE)) . '/languages');
+        });
+
         self::loadCoreFiles();
 
         if (!Compatibility::meetsRequirements()) {

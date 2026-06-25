@@ -30,8 +30,8 @@ final class AdminController
     public function registerPage(): void
     {
         add_menu_page(
-            'OptiKit',
-            'OptiKit',
+            __('OptiKit', 'wp-optikit'),
+            __('OptiKit', 'wp-optikit'),
             'manage_options',
             'wp-optikit',
             array($this, 'render'),
@@ -61,6 +61,51 @@ final class AdminController
                 'restRoot'  => esc_url_raw(rest_url('wp-optikit/v1/')),
                 'restNonce' => wp_create_nonce('wp_rest'),
                 'activeTab' => isset($_GET['tab']) ? sanitize_key((string) $_GET['tab']) : 'overview',
+                'labels'    => array(
+                    // Job & item status labels
+                    'statusPending'    => __('Queued', 'wp-optikit'),
+                    'statusProcessing' => __('Running', 'wp-optikit'),
+                    'statusCancelling' => __('Cancelling', 'wp-optikit'),
+                    'statusSucceeded'  => __('Completed', 'wp-optikit'),
+                    'statusFailed'     => __('Failed', 'wp-optikit'),
+                    'statusCancelled'  => __('Cancelled', 'wp-optikit'),
+                    'statusSkipped'    => __('Skipped', 'wp-optikit'),
+
+                    // Core JS
+                    'requestFailed'  => __('Request failed', 'wp-optikit'),
+                    'btnCancelling'  => __('Cancelling...', 'wp-optikit'),
+                    'btnCancel'      => __('Cancel', 'wp-optikit'),
+                    'noActivity'     => __('No queue activity has been recorded yet.', 'wp-optikit'),
+                    'tableId'        => __('ID', 'wp-optikit'),
+                    'tableModule'    => __('Module', 'wp-optikit'),
+                    'tableType'      => __('Type', 'wp-optikit'),
+                    'tableStatus'    => __('Status', 'wp-optikit'),
+                    'tableProgress'  => __('Progress', 'wp-optikit'),
+                    'tableUpdated'   => __('Updated', 'wp-optikit'),
+                    'tableAction'    => __('Action', 'wp-optikit'),
+                    'noAction'       => __('-', 'wp-optikit'),
+                    'bytesB'         => __('B', 'wp-optikit'),
+                    'bytesKB'        => __('KB', 'wp-optikit'),
+                    'bytesMB'        => __('MB', 'wp-optikit'),
+                    'bytesGB'        => __('GB', 'wp-optikit'),
+
+                    // Image module
+                    'scanning'      => __('Scanning...', 'wp-optikit'),
+                    'noAttachments' => __('No matching attachments were found.', 'wp-optikit'),
+                    'selectAll'     => __('Select all', 'wp-optikit'),
+                    'directories'   => __('directories', 'wp-optikit'),
+                    'items'         => __('items', 'wp-optikit'),
+                    'itemReady'     => __('ready', 'wp-optikit'),
+                    'selectOne'     => __('Select at least one attachment first.', 'wp-optikit'),
+                    'jobCreated'    => __('Job created. Waiting for worker.', 'wp-optikit'),
+                    'processingMsg' => __('Processing through the background queue.', 'wp-optikit'),
+                    'jobFinished'   => __('Job finished with status: %s.', 'wp-optikit'),
+                    'cancelReq'     => __('Job cancellation requested.', 'wp-optikit'),
+                    'qConvert'      => __('Queue Conversion Job', 'wp-optikit'),
+                    'qRecompress'   => __('Queue Re-compression Job', 'wp-optikit'),
+                    'sizeArrow'     => __('->', 'wp-optikit'),
+                    'noChange'      => __('No change', 'wp-optikit'),
+                ),
             )
         );
     }

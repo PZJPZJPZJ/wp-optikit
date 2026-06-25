@@ -1,0 +1,449 @@
+# WP OptiKit Chinese (zh_CN) Translation
+# Copyright (C) 2026 AzzDev
+# This file is distributed under the GPL-2.0-or-later license.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP OptiKit 2.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP OptiKit\n"
+
+#: includes/core/plugin.php
+msgid "Overview"
+msgstr "概览"
+
+#: includes/modules/image/image-module.php
+msgid "Images"
+msgstr "图片"
+
+#: includes/core/plugin.php
+msgid "Cache"
+msgstr "缓存"
+
+#: includes/core/plugin.php
+msgid "Assets"
+msgstr "资源"
+
+#: includes/core/plugin.php
+msgid "Database"
+msgstr "数据库"
+
+#: includes/core/plugin.php
+msgid "Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace."
+msgstr "在专用工作区中协调缓存编排、清理流程和分发控制。"
+
+#: includes/core/plugin.php
+msgid "Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface."
+msgstr "在一个受控界面中完成 CSS、JavaScript 和前端交付优化。"
+
+#: includes/core/plugin.php
+msgid "Manage cleanup, diagnostics, and maintenance routines through a focused operations panel."
+msgstr "通过专一的操作面板管理清理、诊断和维护例程。"
+
+#: includes/core/admin/admin-controller.php
+msgid "OptiKit"
+msgstr "OptiKit"
+
+#: templates/layout.php
+msgid "Performance Operations Platform"
+msgstr "性能操作平台"
+
+#: templates/layout.php
+msgid "Run media optimization, queue orchestration, cache workflows, and maintenance operations from one focused WordPress workspace."
+msgstr "在一个集中的 WordPress 工作区中运行媒体优化、队列编排、缓存工作流和维护操作。"
+
+#: templates/layout.php
+msgid "WordPress performance workspace"
+msgstr "WordPress 性能工作区"
+
+#: templates/layout.php
+msgid "OptiKit sections"
+msgstr "OptiKit 分区"
+
+#: templates/tabs/overview.php
+msgid "Platform Status"
+msgstr "平台状态"
+
+#: templates/tabs/overview.php
+msgid "Run optimization work from one place"
+msgstr "从同一位置运行优化工作"
+
+#: templates/tabs/overview.php
+msgid "Track queue activity, manage media operations, and prepare the next layer of performance tooling without jumping between separate plugins."
+msgstr "跟踪队列活动、管理媒体操作并准备下一层性能工具，无需在多个插件之间切换。"
+
+#: templates/tabs/overview.php
+msgid "Running jobs"
+msgstr "运行中的任务"
+
+#: templates/tabs/overview.php
+msgid "Active queue operations"
+msgstr "活跃的队列操作"
+
+#: templates/tabs/overview.php
+msgid "Completed jobs"
+msgstr "已完成的任务"
+
+#: templates/tabs/overview.php
+msgid "Successful recent runs"
+msgstr "最近成功运行"
+
+#: templates/tabs/overview.php
+msgid "Image module"
+msgstr "图片模块"
+
+#: templates/tabs/overview.php
+msgid "Available"
+msgstr "可用"
+
+#: templates/tabs/overview.php
+msgid "Optimization workspace is active"
+msgstr "优化工作区已激活"
+
+#: templates/tabs/overview.php
+msgid "Environment"
+msgstr "环境"
+
+#: templates/tabs/overview.php
+msgid "PHP and WordPress runtime"
+msgstr "PHP 和 WordPress 运行环境"
+
+#: templates/tabs/overview.php
+msgid "Optimization Workspace"
+msgstr "优化工作区"
+
+#: templates/tabs/overview.php
+msgid "Modules"
+msgstr "模块"
+
+#: templates/tabs/overview.php
+msgid "Available now for day-to-day performance work."
+msgstr "现已可用，适合日常性能优化工作。"
+
+#: templates/tabs/overview.php
+msgid "Coming soon as part of the broader OptiKit operations suite."
+msgstr "即将推出，将作为 OptiKit 操作套件的一部分。"
+
+#: templates/tabs/overview.php
+msgid "Coming soon"
+msgstr "即将推出"
+
+#: templates/tabs/overview.php
+msgid "Runtime Health"
+msgstr "运行状况"
+
+#: templates/tabs/overview.php
+msgid "Minimum supported: %s"
+msgstr "最低支持版本：%s"
+
+#: templates/tabs/overview.php
+msgid "PHP runtime"
+msgstr "PHP 运行环境"
+
+#: templates/tabs/overview.php
+msgid "WordPress runtime"
+msgstr "WordPress 运行环境"
+
+#: templates/tabs/overview.php
+msgid "Recent failures"
+msgstr "最近的失败"
+
+#: templates/tabs/overview.php
+msgid "Jobs that ended with an error"
+msgstr "以错误结束的任务"
+
+#: templates/tabs/overview.php
+msgid "Queue Activity"
+msgstr "队列活动"
+
+#: templates/tabs/overview.php
+msgid "Recent Jobs"
+msgstr "最近的任务"
+
+#: templates/tabs/overview.php
+msgid "Clear Completed Records"
+msgstr "清除已完成记录"
+
+#: templates/tabs/overview.php
+msgid "No queue activity has been recorded yet."
+msgstr "尚未记录队列活动。"
+
+#: templates/tabs/overview.php
+msgid "ID"
+msgstr "ID"
+
+#: templates/tabs/overview.php
+msgid "Module"
+msgstr "模块"
+
+#: templates/tabs/overview.php
+msgid "Type"
+msgstr "类型"
+
+#: templates/tabs/overview.php
+msgid "Status"
+msgstr "状态"
+
+#: templates/tabs/overview.php
+msgid "Progress"
+msgstr "进度"
+
+#: templates/tabs/overview.php
+msgid "Updated"
+msgstr "更新于"
+
+#: templates/tabs/overview.php
+msgid "Action"
+msgstr "操作"
+
+#: templates/tabs/overview.php
+msgid "Cancelling..."
+msgstr "取消中..."
+
+#: templates/tabs/overview.php
+msgid "Cancel"
+msgstr "取消"
+
+#: templates/tabs/overview.php includes/core/admin/admin-controller.php
+msgid "-"
+msgstr "-"
+
+#: templates/tabs/images.php
+msgid "Image Operations"
+msgstr "图片操作"
+
+#: templates/tabs/images.php
+msgid "Images Workspace"
+msgstr "图片工作区"
+
+#: templates/tabs/images.php
+msgid "Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace."
+msgstr "在单个工作区中配置分发规则、扫描媒体库并运行队列支持的图片优化任务。"
+
+#: templates/tabs/images.php
+msgid "Configuration"
+msgstr "配置"
+
+#: templates/tabs/images.php
+msgid "Image Module Settings"
+msgstr "图片模块设置"
+
+#: templates/tabs/images.php
+msgid "Enable image module"
+msgstr "启用图片模块"
+
+#: templates/tabs/images.php
+msgid "Automatically convert supported uploads to the selected output format."
+msgstr "自动将支持的上传文件转换为选定的输出格式。"
+
+#: templates/tabs/images.php
+msgid "Output format"
+msgstr "输出格式"
+
+#: templates/tabs/images.php
+msgid "WebP"
+msgstr "WebP"
+
+#: templates/tabs/images.php
+msgid "Source formats"
+msgstr "源格式"
+
+#: templates/tabs/images.php
+msgid "Target format quality"
+msgstr "目标格式质量"
+
+#: templates/tabs/images.php
+msgid "Oversized threshold (KB)"
+msgstr "超大阈值 (KB)"
+
+#: templates/tabs/images.php
+msgid "Keep original file"
+msgstr "保留原始文件"
+
+#: templates/tabs/images.php
+msgid "Store the original upload path in attachment meta."
+msgstr "将原始上传路径存储在附件元数据中。"
+
+#: templates/tabs/images.php
+msgid "Clear Elementor cache after completed batch jobs"
+msgstr "批处理任务完成后清理 Elementor 缓存"
+
+#: templates/tabs/images.php
+msgid "After image batch jobs finish, automatically trigger Elementor's cache clear routine when Elementor is active."
+msgstr "当 Elementor 处于活动状态时，在图片批处理任务完成后自动触发 Elementor 的缓存清理例程。"
+
+#: templates/tabs/images.php
+msgid "Save Image Settings"
+msgstr "保存图片设置"
+
+#: templates/tabs/images.php
+msgid "Scan & Queue"
+msgstr "扫描与队列"
+
+#: templates/tabs/images.php
+msgid "Image Jobs"
+msgstr "图片任务"
+
+#: templates/tabs/images.php
+msgid "Use scan workflows to find target files, then send selected items to the background queue for processing."
+msgstr "使用扫描工作流查找目标文件，然后将选中项发送到后台队列进行处理。"
+
+#: templates/tabs/images.php
+msgid "Batch Convert Existing Images"
+msgstr "批量转换现有图片"
+
+#: templates/tabs/images.php
+msgid "Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing."
+msgstr "扫描媒体库中尚未转换为目标格式的附件，然后将它们加入后台处理队列。"
+
+#: templates/tabs/images.php
+msgid "Scan Media Library"
+msgstr "扫描媒体库"
+
+#: templates/tabs/images.php
+msgid "Queue Conversion Job"
+msgstr "加入转换任务队列"
+
+#: templates/tabs/images.php
+msgid "Waiting for job creation."
+msgstr "等待任务创建..."
+
+#: templates/tabs/images.php
+msgid "Cancel job"
+msgstr "取消任务"
+
+#: templates/tabs/images.php
+msgid "Re-compress Oversized Images"
+msgstr "重新压缩超大图片"
+
+#: templates/tabs/images.php
+msgid "Detect oversized attachments and re-run compression in the background using the current output settings."
+msgstr "检测超大附件，并使用当前输出设置在后台重新运行压缩。"
+
+#: templates/tabs/images.php
+msgid "Scan Oversized Images"
+msgstr "扫描超大图片"
+
+#: templates/tabs/images.php
+msgid "Queue Re-compression Job"
+msgstr "加入重新压缩任务队列"
+
+#: templates/tabs/planned.php
+msgid "Coming Soon"
+msgstr "即将推出"
+
+#: templates/tabs/planned.php
+msgid "This workspace is being prepared as part of the broader OptiKit platform experience."
+msgstr "该工作区正在准备中，将作为 OptiKit 平台体验的一部分。"
+
+#: includes/core/compatibility.php
+msgid "WP OptiKit requires PHP %1$s+ and WordPress %2$s+. Current environment: PHP %3$s, WordPress %4$s."
+msgstr "WP OptiKit 需要 PHP %1$s+ 和 WordPress %2$s+。当前环境：PHP %3$s，WordPress %4$s。"
+
+#: includes/core/compatibility.php
+msgid "WP OptiKit Activation Error"
+msgstr "WP OptiKit 激活错误"
+
+#. JavaScript labels
+#: includes/core/admin/admin-controller.php
+msgid "Queued"
+msgstr "已排队"
+
+#: includes/core/admin/admin-controller.php
+msgid "Running"
+msgstr "运行中"
+
+#: includes/core/admin/admin-controller.php
+msgid "Completed"
+msgstr "已完成"
+
+#: includes/core/admin/admin-controller.php
+msgid "Failed"
+msgstr "失败"
+
+#: includes/core/admin/admin-controller.php
+msgid "Cancelled"
+msgstr "已取消"
+
+#: includes/core/admin/admin-controller.php
+msgid "Skipped"
+msgstr "已跳过"
+
+#: includes/core/admin/admin-controller.php
+msgid "Request failed"
+msgstr "请求失败"
+
+#: includes/core/admin/admin-controller.php
+msgid "B"
+msgstr "B"
+
+#: includes/core/admin/admin-controller.php
+msgid "KB"
+msgstr "KB"
+
+#: includes/core/admin/admin-controller.php
+msgid "MB"
+msgstr "MB"
+
+#: includes/core/admin/admin-controller.php
+msgid "GB"
+msgstr "GB"
+
+#: includes/core/admin/admin-controller.php
+msgid "Scanning..."
+msgstr "扫描中..."
+
+#: includes/core/admin/admin-controller.php
+msgid "No matching attachments were found."
+msgstr "未找到匹配的附件。"
+
+#: includes/core/admin/admin-controller.php
+msgid "Select all"
+msgstr "全选"
+
+#: includes/core/admin/admin-controller.php
+msgid "directories"
+msgstr "个目录"
+
+#: includes/core/admin/admin-controller.php
+msgid "items"
+msgstr "个项目"
+
+#: includes/core/admin/admin-controller.php
+msgid "ready"
+msgstr "就绪"
+
+#: includes/core/admin/admin-controller.php
+msgid "Select at least one attachment first."
+msgstr "请先选择至少一个附件。"
+
+#: includes/core/admin/admin-controller.php
+msgid "Job created. Waiting for worker."
+msgstr "任务已创建，等待工作进程。"
+
+#: includes/core/admin/admin-controller.php
+msgid "Processing through the background queue."
+msgstr "正在通过后台队列处理。"
+
+#: includes/core/admin/admin-controller.php
+msgid "Job finished with status: %s."
+msgstr "任务已完成，状态：%s。"
+
+#: includes/core/admin/admin-controller.php
+msgid "Job cancellation requested."
+msgstr "已请求取消任务。"
+
+#: includes/core/admin/admin-controller.php
+msgid "->"
+msgstr "→"
+
+#: includes/core/admin/admin-controller.php
+msgid "No change"
+msgstr "无变化"

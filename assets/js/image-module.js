@@ -2,7 +2,7 @@
     'use strict';
 
     function init() {
-        if (!window.WPOKUtils) {
+        if (!window.WPOKUtils || !window.wpokAdmin || !window.wpokAdmin.labels) {
             return;
         }
 
@@ -16,6 +16,8 @@
             bindPanel(panel);
         });
     }
+
+    var labels = window.wpokAdmin.labels;
 
     function bindPanel(panel) {
         var state = {
@@ -82,7 +84,7 @@
         var results = panel.querySelector('[data-role="results"]');
         var toolbar = panel.querySelector('[data-role="toolbar"]');
 
-        results.innerHTML = '<div class="wpok-job-empty">Scanning...</div>';
+        results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.scanning || 'Scanning...') + '</div>';
         toolbar.hidden = true;
 
         window.WPOKUtils.request(endpoint, { method: 'POST', body: {} })
@@ -100,7 +102,7 @@
         var directoryNames = Object.keys(directories || {});
 
         if (directoryNames.length === 0) {
-            results.innerHTML = '<div class="wpok-job-empty">No matching attachments were found.</div>';
+            results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.noAttachments || 'No matching attachments were found.') + '</div>';
             toolbar.hidden = true;
             return;
         }
@@ -108,8 +110,8 @@
         var total = 0;
         var html = '<div class="wpok-job-tree">';
         html += '<div class="wpok-job-tree-toolbar">';
-        html += '<label><input type="checkbox" data-role="select-all" checked> Select all</label>';
-        html += '<span>' + directoryNames.length + ' directories</span>';
+        html += '<label><input type="checkbox" data-role="select-all" checked> ' + escapeHtml(labels.selectAll || 'Select all') + '</label>';
+        html += '<span>' + directoryNames.length + ' ' + escapeHtml(labels.directories || 'directories') + '</span>';
         html += '</div>';
         html += '<ul class="wpok-job-tree-list">';
 
@@ -121,7 +123,7 @@
             html += '<input type="checkbox" checked>';
             html += '<span class="wpok-job-directory-toggle">' + (index === 0 ? '-' : '+') + '</span>';
             html += '<span class="wpok-job-directory-name">' + escapeHtml(directoryName) + '</span>';
-            html += '<span class="wpok-job-directory-meta">' + items.length + ' items</span>';
+            html += '<span class="wpok-job-directory-meta">' + items.length + ' ' + escapeHtml(labels.items || 'items') + '</span>';
             html += '</div>';
             html += '<ul class="wpok-job-item-list">';
 
@@ -129,7 +131,7 @@
                 html += '<li class="wpok-job-item" data-attachment-id="' + item.id + '" data-size-bytes="' + item.size + '">';
                 html += '<input type="checkbox" checked>';
                 html += '<span class="wpok-job-item-name">' + escapeHtml(item.name) + '</span>';
-                html += '<span class="wpok-job-item-status">ready</span>';
+                html += '<span class="wpok-job-item-status">' + escapeHtml(labels.itemReady || 'ready') + '</span>';
                 html += '<span class="wpok-job-item-size">' + escapeHtml(window.WPOKUtils.formatBytes(item.size)) + '</span>';
                 html += '</li>';
             });
@@ -155,7 +157,7 @@
         ).filter(Boolean);
 
         if (ids.length === 0) {
-            panel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">Select at least one attachment first.</div>');
+            panel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(labels.selectOne || 'Select at least one attachment first.') + '</div>');
             return;
         }
 
@@ -169,7 +171,7 @@
         }).then(function (response) {
             state.jobId = response.job.id;
             state.freezeCount = null;
-            setProgress(panel, response.job, 'Job created. Waiting for worker.');
+            setProgress(panel, response.job, labels.jobCreated || 'Job created. Waiting for worker.');
             panel.querySelector('[data-role="progress"]').hidden = false;
             watchJob(panel, state);
         }).catch(function (error) {
@@ -189,7 +191,7 @@
                     response.job.processed_items = state.freezeCount;
                 }
 
-                setProgress(panel, response.job, 'Processing through the background queue.');
+                setProgress(panel, response.job, labels.processingMsg || 'Processing through the background queue.');
 
                 return window.WPOKUtils.request('jobs/' + state.jobId + '/items');
                 })
@@ -201,7 +203,8 @@
                     if (status === 'succeeded' || status === 'failed' || status === 'cancelled') {
                         window.clearInterval(state.poller);
                         state.poller = null;
-                        setProgress(panel, payload.job, 'Job finished with status: ' + status + '.');
+                        var finishedMsg = (labels.jobFinished || 'Job finished with status: %s.').replace('%s', status);
+                        setProgress(panel, payload.job, finishedMsg);
                     }
                 })
                 .catch(function (error) {
@@ -225,7 +228,7 @@
                 if (state.freezeCount !== null) {
                     response.job.processed_items = state.freezeCount;
                 }
-                setProgress(panel, response.job, 'Job cancellation requested.');
+                setProgress(panel, response.job, labels.cancelReq || 'Job cancellation requested.');
             })
             .catch(function (error) {
                 setMessage(panel, error.message);
@@ -256,14 +259,14 @@
 
                 if (isRecompressPanel && item.status === 'succeeded' && delta < 1024) {
                     row.classList.add('is-unchanged');
-                    statusNode.textContent = 'No change';
+                    statusNode.textContent = labels.noChange || 'No change';
                     newSizeClass = 'wpok-item-size-new wpok-item-size-neutral';
                 }
 
                 row.setAttribute('data-size-bytes', item.result.new_size_bytes);
                 row.querySelector('.wpok-job-item-size').innerHTML =
                     '<span class="wpok-item-size-old">' + escapeHtml(window.WPOKUtils.formatBytes(oldSize)) + '</span>' +
-                    '<span class="wpok-item-size-arrow">-&gt;</span>' +
+                    '<span class="wpok-item-size-arrow">' + escapeHtml(labels.sizeArrow || '->') + '</span>' +
                     '<span class="' + newSizeClass + '">' + escapeHtml(window.WPOKUtils.formatBytes(newSize)) + '</span>';
             }
 
@@ -276,7 +279,7 @@
     function setProgress(panel, job, message) {
         var progress = panel.querySelector('[data-role="progress"]');
         progress.hidden = false;
-        panel.querySelector('[data-role="job-status"]').textContent = humanizeJobStatus(job.status);
+        panel.querySelector('[data-role="job-status"]').textContent = window.WPOKUtils.humanizeJobStatus(job.status);
         panel.querySelector('[data-role="job-count"]').textContent = job.processed_items + ' / ' + job.total_items;
         panel.querySelector('[data-role="job-message"]').textContent = message;
 
@@ -299,46 +302,27 @@
         var total = panel.querySelectorAll('.wpok-job-item').length;
         var selected = panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
         var baseLabel = panel.getAttribute('data-job-type') === 'image_convert'
-            ? 'Queue Conversion Job'
-            : 'Queue Re-compression Job';
+            ? (labels.qConvert || 'Queue Conversion Job')
+            : (labels.qRecompress || 'Queue Re-compression Job');
 
         button.textContent = baseLabel + ' (' + selected + '/' + total + ')';
     }
 
-    function escapeHtml(value) {
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
-    function humanizeJobStatus(status) {
-        var labels = {
-            pending: 'Queued',
-            processing: 'Running',
-            cancelling: 'Cancelling',
-            succeeded: 'Completed',
-            failed: 'Failed',
-            cancelled: 'Cancelled',
-            skipped: 'Skipped'
-        };
-
-        return labels[status] || status;
-    }
-
     function humanizeItemStatus(status) {
-        var labels = {
-            pending: 'Queued',
-            processing: 'Running',
-            succeeded: 'Completed',
-            failed: 'Failed',
-            skipped: 'Skipped',
-            cancelled: 'Cancelled'
+        var map = {
+            pending: labels.statusPending,
+            processing: labels.statusProcessing,
+            succeeded: labels.statusSucceeded,
+            failed: labels.statusFailed,
+            skipped: labels.statusSkipped,
+            cancelled: labels.statusCancelled
         };
 
-        return labels[status] || status;
+        return map[status] || status;
+    }
+
+    function escapeHtml(value) {
+        return window.WPOKUtils.escapeHtml(value);
     }
 
     document.addEventListener('DOMContentLoaded', init);

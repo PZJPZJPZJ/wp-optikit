@@ -5,6 +5,8 @@
         return;
     }
 
+    var labels = window.wpokAdmin.labels || {};
+
     function request(path, options) {
         var config = options || {};
         var method = config.method || 'GET';
@@ -30,7 +32,7 @@
         }).then(function (response) {
             return response.json().then(function (data) {
                 if (!response.ok) {
-                    var message = data && data.message ? data.message : 'Request failed';
+                    var message = data && data.message ? data.message : (labels.requestFailed || 'Request failed');
                     throw new Error(message);
                 }
 
@@ -39,22 +41,29 @@
         });
     }
 
+    var UNITS = [
+        labels.bytesB || ' B',
+        labels.bytesKB || ' KB',
+        labels.bytesMB || ' MB',
+        labels.bytesGB || ' GB'
+    ];
+
     function formatBytes(bytes) {
         var size = parseInt(bytes, 10) || 0;
 
         if (size < 1024) {
-            return size + ' B';
+            return size + UNITS[0];
         }
 
         if (size < 1024 * 1024) {
-            return scaled(size / 1024, 'KB');
+            return scaled(size / 1024, UNITS[1]);
         }
 
         if (size < 1024 * 1024 * 1024) {
-            return scaled(size / (1024 * 1024), 'MB');
+            return scaled(size / (1024 * 1024), UNITS[2]);
         }
 
-        return scaled(size / (1024 * 1024 * 1024), 'GB');
+        return scaled(size / (1024 * 1024 * 1024), UNITS[3]);
     }
 
     function scaled(value, unit) {
@@ -65,17 +74,17 @@
     }
 
     function humanizeJobStatus(status) {
-        var labels = {
-            pending: 'Queued',
-            processing: 'Running',
-            cancelling: 'Cancelling',
-            succeeded: 'Completed',
-            failed: 'Failed',
-            cancelled: 'Cancelled',
-            skipped: 'Skipped'
+        var map = {
+            pending: labels.statusPending,
+            processing: labels.statusProcessing,
+            cancelling: labels.statusCancelling,
+            succeeded: labels.statusSucceeded,
+            failed: labels.statusFailed,
+            cancelled: labels.statusCancelled,
+            skipped: labels.statusSkipped
         };
 
-        return labels[status] || status;
+        return map[status] || status;
     }
 
     function initTabs() {
@@ -182,10 +191,10 @@
             }
 
             cancelButton.disabled = true;
-            cancelButton.textContent = 'Cancelling...';
+            cancelButton.textContent = labels.btnCancelling || 'Cancelling...';
 
             request('jobs/' + jobId + '/cancel', { method: 'POST', body: {} })
-                .then(function (response) {
+                .then(function () {
                     refreshRecentJobs(container, state);
                 })
                 .catch(function (error) {
@@ -268,7 +277,7 @@
         var hasActive = false;
 
         if (!jobs.length) {
-            content.innerHTML = '<p class="description">No queue activity has been recorded yet.</p>';
+            content.innerHTML = '<p class="description">' + escapeHtml(labels.noActivity || 'No queue activity has been recorded yet.') + '</p>';
             if (clearButton) {
                 clearButton.disabled = true;
             }
@@ -280,7 +289,15 @@
 
         var html = '';
         html += '<table class="widefat striped wpok-job-table">';
-        html += '<thead><tr><th>ID</th><th>Module</th><th>Type</th><th>Status</th><th>Progress</th><th>Updated</th><th class="wpok-job-actions-col">Action</th></tr></thead>';
+        html += '<thead><tr>'
+            + '<th>' + escapeHtml(labels.tableId || 'ID') + '</th>'
+            + '<th>' + escapeHtml(labels.tableModule || 'Module') + '</th>'
+            + '<th>' + escapeHtml(labels.tableType || 'Type') + '</th>'
+            + '<th>' + escapeHtml(labels.tableStatus || 'Status') + '</th>'
+            + '<th>' + escapeHtml(labels.tableProgress || 'Progress') + '</th>'
+            + '<th>' + escapeHtml(labels.tableUpdated || 'Updated') + '</th>'
+            + '<th class="wpok-job-actions-col">' + escapeHtml(labels.tableAction || 'Action') + '</th>'
+            + '</tr></thead>';
         html += '<tbody>';
 
         jobs.forEach(function (job) {
@@ -308,10 +325,10 @@
             html += '<td class="wpok-job-actions-cell">';
             if (status === 'pending' || status === 'processing' || status === 'cancelling') {
                 html += '<button type="button" class="button button-secondary" data-action="cancel-job" data-job-id="' + escapeHtml(job.id) + '"' + (status === 'cancelling' ? ' disabled' : '') + '>';
-                html += status === 'cancelling' ? 'Cancelling...' : 'Cancel';
+                html += status === 'cancelling' ? escapeHtml(labels.btnCancelling || 'Cancelling...') : escapeHtml(labels.btnCancel || 'Cancel');
                 html += '</button>';
             } else {
-                html += '<span class="description">-</span>';
+                html += '<span class="description">' + escapeHtml(labels.noAction || '-') + '</span>';
             }
             html += '</td>';
             html += '</tr>';
@@ -353,9 +370,20 @@
         }, state.nextRefreshMs || 10000);
     }
 
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     window.WPOKUtils = {
         request: request,
-        formatBytes: formatBytes
+        formatBytes: formatBytes,
+        humanizeJobStatus: humanizeJobStatus,
+        escapeHtml: escapeHtml
     };
 
     document.addEventListener('DOMContentLoaded', function () {

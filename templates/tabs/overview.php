@@ -7,42 +7,42 @@ $completedJobs = array_filter($recentJobs, static fn (array $job): bool => $job[
 $failedJobs = array_filter($recentJobs, static fn (array $job): bool => $job['status'] === 'failed');
 
 $jobStatusLabels = array(
-    'pending'    => 'Queued',
-    'processing' => 'Running',
-    'cancelling' => 'Cancelling',
-    'succeeded'  => 'Completed',
-    'failed'     => 'Failed',
-    'cancelled'  => 'Cancelled',
-    'skipped'    => 'Skipped',
+    'pending'    => __('Queued', 'wp-optikit'),
+    'processing' => __('Running', 'wp-optikit'),
+    'cancelling' => __('Cancelling', 'wp-optikit'),
+    'succeeded'  => __('Completed', 'wp-optikit'),
+    'failed'     => __('Failed', 'wp-optikit'),
+    'cancelled'  => __('Cancelled', 'wp-optikit'),
+    'skipped'    => __('Skipped', 'wp-optikit'),
 );
 ?>
 <section class="wpok-overview-hero">
     <div class="wpok-overview-hero-main wpok-card">
-        <span class="wpok-overview-kicker">Platform Status</span>
-        <h2>Run optimization work from one place</h2>
-        <p>Track queue activity, manage media operations, and prepare the next layer of performance tooling without jumping between separate plugins.</p>
+        <span class="wpok-overview-kicker"><?php esc_html_e('Platform Status', 'wp-optikit'); ?></span>
+        <h2><?php esc_html_e('Run optimization work from one place', 'wp-optikit'); ?></h2>
+        <p><?php esc_html_e('Track queue activity, manage media operations, and prepare the next layer of performance tooling without jumping between separate plugins.', 'wp-optikit'); ?></p>
     </div>
 
     <div class="wpok-overview-metrics">
         <section class="wpok-card wpok-metric-card">
-            <span class="wpok-metric-label">Running jobs</span>
+            <span class="wpok-metric-label"><?php esc_html_e('Running jobs', 'wp-optikit'); ?></span>
             <strong><?php echo esc_html((string) count($runningJobs)); ?></strong>
-            <small>Active queue operations</small>
+            <small><?php esc_html_e('Active queue operations', 'wp-optikit'); ?></small>
         </section>
         <section class="wpok-card wpok-metric-card">
-            <span class="wpok-metric-label">Completed jobs</span>
+            <span class="wpok-metric-label"><?php esc_html_e('Completed jobs', 'wp-optikit'); ?></span>
             <strong><?php echo esc_html((string) count($completedJobs)); ?></strong>
-            <small>Successful recent runs</small>
+            <small><?php esc_html_e('Successful recent runs', 'wp-optikit'); ?></small>
         </section>
         <section class="wpok-card wpok-metric-card">
-            <span class="wpok-metric-label">Image module</span>
-            <strong>Available</strong>
-            <small>Optimization workspace is active</small>
+            <span class="wpok-metric-label"><?php esc_html_e('Image module', 'wp-optikit'); ?></span>
+            <strong><?php esc_html_e('Available', 'wp-optikit'); ?></strong>
+            <small><?php esc_html_e('Optimization workspace is active', 'wp-optikit'); ?></small>
         </section>
         <section class="wpok-card wpok-metric-card">
-            <span class="wpok-metric-label">Environment</span>
+            <span class="wpok-metric-label"><?php esc_html_e('Environment', 'wp-optikit'); ?></span>
             <strong><?php echo esc_html($environment['php_current']); ?> / <?php echo esc_html($environment['wp_current']); ?></strong>
-            <small>PHP and WordPress runtime</small>
+            <small><?php esc_html_e('PHP and WordPress runtime', 'wp-optikit'); ?></small>
         </section>
     </div>
 </section>
@@ -51,16 +51,20 @@ $jobStatusLabels = array(
     <section class="wpok-card">
         <div class="wpok-card-heading">
             <div>
-                <span class="wpok-card-kicker">Optimization Workspace</span>
-                <h2>Modules</h2>
+                <span class="wpok-card-kicker"><?php esc_html_e('Optimization Workspace', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Modules', 'wp-optikit'); ?></h2>
             </div>
         </div>
         <div class="wpok-module-grid">
             <?php foreach ($modules as $module) : ?>
                 <article class="wpok-module-card <?php echo $module['enabled'] ? 'is-enabled' : 'is-planned'; ?>">
                     <h3><?php echo esc_html($module['label']); ?></h3>
-                    <p><?php echo $module['enabled'] ? 'Available now for day-to-day performance work.' : 'Coming soon as part of the broader OptiKit operations suite.'; ?></p>
-                    <span class="wpok-module-state"><?php echo $module['enabled'] ? 'Available' : 'Coming soon'; ?></span>
+                    <p><?php echo $module['enabled']
+                        ? esc_html__('Available now for day-to-day performance work.', 'wp-optikit')
+                        : esc_html__('Coming soon as part of the broader OptiKit operations suite.', 'wp-optikit'); ?></p>
+                    <span class="wpok-module-state"><?php echo $module['enabled']
+                        ? esc_html__('Available', 'wp-optikit')
+                        : esc_html__('Coming soon', 'wp-optikit'); ?></span>
                 </article>
             <?php endforeach; ?>
         </div>
@@ -69,14 +73,14 @@ $jobStatusLabels = array(
     <section class="wpok-card">
         <div class="wpok-card-heading">
             <div>
-                <span class="wpok-card-kicker">Runtime Health</span>
-                <h2>Environment</h2>
+                <span class="wpok-card-kicker"><?php esc_html_e('Runtime Health', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Environment', 'wp-optikit'); ?></h2>
             </div>
         </div>
         <ul class="wpok-stat-list">
-            <li><span>PHP runtime</span><strong><?php echo esc_html($environment['php_current']); ?></strong><small>Minimum supported: <?php echo esc_html($environment['php_min']); ?></small></li>
-            <li><span>WordPress runtime</span><strong><?php echo esc_html($environment['wp_current']); ?></strong><small>Minimum supported: <?php echo esc_html($environment['wp_min']); ?></small></li>
-            <li><span>Recent failures</span><strong><?php echo esc_html((string) count($failedJobs)); ?></strong><small>Jobs that ended with an error</small></li>
+            <li><span><?php esc_html_e('PHP runtime', 'wp-optikit'); ?></span><strong><?php echo esc_html($environment['php_current']); ?></strong><small><?php printf(__('Minimum supported: %s', 'wp-optikit'), esc_html($environment['php_min'])); ?></small></li>
+            <li><span><?php esc_html_e('WordPress runtime', 'wp-optikit'); ?></span><strong><?php echo esc_html($environment['wp_current']); ?></strong><small><?php printf(__('Minimum supported: %s', 'wp-optikit'), esc_html($environment['wp_min'])); ?></small></li>
+            <li><span><?php esc_html_e('Recent failures', 'wp-optikit'); ?></span><strong><?php echo esc_html((string) count($failedJobs)); ?></strong><small><?php esc_html_e('Jobs that ended with an error', 'wp-optikit'); ?></small></li>
         </ul>
     </section>
 </div>
@@ -84,28 +88,28 @@ $jobStatusLabels = array(
 <section class="wpok-card wpok-recent-jobs-card" data-recent-jobs data-limit="8">
     <div class="wpok-card-toolbar">
         <div>
-            <span class="wpok-card-kicker">Queue Activity</span>
-            <h2>Recent Jobs</h2>
+            <span class="wpok-card-kicker"><?php esc_html_e('Queue Activity', 'wp-optikit'); ?></span>
+            <h2><?php esc_html_e('Recent Jobs', 'wp-optikit'); ?></h2>
         </div>
         <div class="wpok-toolbar-actions">
-            <button type="button" class="button button-secondary" data-action="clear-completed">Clear Completed Records</button>
+            <button type="button" class="button button-secondary" data-action="clear-completed"><?php esc_html_e('Clear Completed Records', 'wp-optikit'); ?></button>
         </div>
     </div>
 
     <div data-role="recent-jobs-content">
         <?php if (empty($recentJobs)) : ?>
-            <p class="description">No queue activity has been recorded yet.</p>
+            <p class="description"><?php esc_html_e('No queue activity has been recorded yet.', 'wp-optikit'); ?></p>
         <?php else : ?>
             <table class="widefat striped wpok-job-table">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Module</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Progress</th>
-                    <th>Updated</th>
-                    <th class="wpok-job-actions-col">Action</th>
+                    <th><?php esc_html_e('ID', 'wp-optikit'); ?></th>
+                    <th><?php esc_html_e('Module', 'wp-optikit'); ?></th>
+                    <th><?php esc_html_e('Type', 'wp-optikit'); ?></th>
+                    <th><?php esc_html_e('Status', 'wp-optikit'); ?></th>
+                    <th><?php esc_html_e('Progress', 'wp-optikit'); ?></th>
+                    <th><?php esc_html_e('Updated', 'wp-optikit'); ?></th>
+                    <th class="wpok-job-actions-col"><?php esc_html_e('Action', 'wp-optikit'); ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -128,10 +132,10 @@ $jobStatusLabels = array(
                         <td class="wpok-job-actions-cell">
                             <?php if (in_array($job['status'], array('pending', 'processing', 'cancelling'), true)) : ?>
                                 <button type="button" class="button button-secondary" data-action="cancel-job" data-job-id="<?php echo esc_attr((string) $job['id']); ?>" <?php disabled($job['status'] === 'cancelling'); ?>>
-                                    <?php echo $job['status'] === 'cancelling' ? 'Cancelling...' : 'Cancel'; ?>
+                                    <?php echo $job['status'] === 'cancelling' ? __('Cancelling...', 'wp-optikit') : __('Cancel', 'wp-optikit'); ?>
                                 </button>
                             <?php else : ?>
-                                <span class="description">-</span>
+                                <span class="description"><?php esc_html_e('-', 'wp-optikit'); ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>

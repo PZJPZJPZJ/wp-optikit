@@ -117,9 +117,9 @@ final class Plugin
     {
         $modules = array(
             new ImageModule($this->container),
-            new PlannedModule('cache', 'Cache', 'Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace.'),
-            new PlannedModule('assets', 'Assets', 'Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface.'),
-            new PlannedModule('database', 'Database', 'Manage cleanup, diagnostics, and maintenance routines through a focused operations panel.'),
+            new PlannedModule('cache', __('Cache', 'wp-optikit'), __('Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace.', 'wp-optikit')),
+            new PlannedModule('assets', __('Assets', 'wp-optikit'), __('Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface.', 'wp-optikit')),
+            new PlannedModule('database', __('Database', 'wp-optikit'), __('Manage cleanup, diagnostics, and maintenance routines through a focused operations panel.', 'wp-optikit')),
         );
 
         foreach ($modules as $module) {
@@ -131,7 +131,7 @@ final class Plugin
     {
         $registry->addTab(
             'overview',
-            'Overview',
+            __('Overview', 'wp-optikit'),
             static function (array $context): void {
                 include WPOK_DIR . 'templates/tabs/overview.php';
             }
