@@ -20,7 +20,8 @@
     function bindPanel(panel) {
         var state = {
             jobId: null,
-            poller: null
+            poller: null,
+            freezeCount: null
         };
 
         panel.addEventListener('click', function (event) {
@@ -167,6 +168,7 @@
             }
         }).then(function (response) {
             state.jobId = response.job.id;
+            state.freezeCount = null;
             setProgress(panel, response.job, 'Job created. Waiting for worker.');
             panel.querySelector('[data-role="progress"]').hidden = false;
             watchJob(panel, state);
@@ -182,10 +184,14 @@
 
         state.poller = window.setInterval(function () {
             window.WPOKUtils.request('jobs/' + state.jobId)
-                .then(function (response) {
-                    setProgress(panel, response.job, 'Processing through the background queue.');
+            .then(function (response) {
+                if (state.freezeCount !== null && (response.job.status === 'cancelling' || response.job.status === 'cancelled')) {
+                    response.job.processed_items = state.freezeCount;
+                }
 
-                    return window.WPOKUtils.request('jobs/' + state.jobId + '/items');
+                setProgress(panel, response.job, 'Processing through the background queue.');
+
+                return window.WPOKUtils.request('jobs/' + state.jobId + '/items');
                 })
                 .then(function (payload) {
                     updateItems(panel, payload.items || []);
@@ -211,8 +217,14 @@
             return;
         }
 
+        var countText = panel.querySelector('[data-role="job-count"]').textContent || '0 / 0';
+        state.freezeCount = parseInt(countText.split('/')[0], 10) || 0;
+
         window.WPOKUtils.request('jobs/' + state.jobId + '/cancel', { method: 'POST', body: {} })
             .then(function (response) {
+                if (state.freezeCount !== null) {
+                    response.job.processed_items = state.freezeCount;
+                }
                 setProgress(panel, response.job, 'Job cancellation requested.');
             })
             .catch(function (error) {
@@ -234,7 +246,7 @@
             row.classList.add('is-' + item.status);
 
             var statusNode = row.querySelector('.wpok-job-item-status');
-            statusNode.textContent = item.status;
+            statusNode.textContent = humanizeItemStatus(item.status);
 
             if (item.result && typeof item.result.new_size_bytes !== 'undefined') {
                 var oldSize = parseInt(item.result.old_size_bytes || 0, 10) || 0;
@@ -244,7 +256,7 @@
 
                 if (isRecompressPanel && item.status === 'succeeded' && delta < 1024) {
                     row.classList.add('is-unchanged');
-                    statusNode.textContent = 'unchanged';
+                    statusNode.textContent = 'No change';
                     newSizeClass = 'wpok-item-size-new wpok-item-size-neutral';
                 }
 
@@ -256,7 +268,7 @@
             }
 
             if (item.last_error) {
-                statusNode.textContent = item.status + ': ' + item.last_error;
+                statusNode.textContent = humanizeItemStatus(item.status) + ': ' + item.last_error;
             }
         });
     }
@@ -264,7 +276,7 @@
     function setProgress(panel, job, message) {
         var progress = panel.querySelector('[data-role="progress"]');
         progress.hidden = false;
-        panel.querySelector('[data-role="job-status"]').textContent = job.status;
+        panel.querySelector('[data-role="job-status"]').textContent = humanizeJobStatus(job.status);
         panel.querySelector('[data-role="job-count"]').textContent = job.processed_items + ' / ' + job.total_items;
         panel.querySelector('[data-role="job-message"]').textContent = message;
 
@@ -300,6 +312,33 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
+    }
+
+    function humanizeJobStatus(status) {
+        var labels = {
+            pending: 'Queued',
+            processing: 'Running',
+            cancelling: 'Cancelling',
+            succeeded: 'Completed',
+            failed: 'Failed',
+            cancelled: 'Cancelled',
+            skipped: 'Skipped'
+        };
+
+        return labels[status] || status;
+    }
+
+    function humanizeItemStatus(status) {
+        var labels = {
+            pending: 'Queued',
+            processing: 'Running',
+            succeeded: 'Completed',
+            failed: 'Failed',
+            skipped: 'Skipped',
+            cancelled: 'Cancelled'
+        };
+
+        return labels[status] || status;
     }
 
     document.addEventListener('DOMContentLoaded', init);

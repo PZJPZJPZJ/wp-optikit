@@ -35,7 +35,7 @@ final class AdminController
             'manage_options',
             'wp-optikit',
             array($this, 'render'),
-            'dashicons-admin-generic',
+            'dashicons-performance',
             79
         );
     }

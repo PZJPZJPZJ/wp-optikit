@@ -5,7 +5,8 @@
  */
 ?>
 <section class="wpok-card">
+    <span class="wpok-card-kicker">Coming Soon</span>
     <h2><?php echo esc_html($plannedTitle); ?></h2>
     <p><?php echo esc_html($plannedDescription); ?></p>
-    <p class="description">This tab is intentionally scaffold-only in the first platform rewrite release.</p>
+    <p class="description">This workspace is being prepared as part of the broader OptiKit platform experience.</p>
 </section>

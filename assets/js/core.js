@@ -64,6 +64,20 @@
         return formatted + ' ' + unit;
     }
 
+    function humanizeJobStatus(status) {
+        var labels = {
+            pending: 'Queued',
+            processing: 'Running',
+            cancelling: 'Cancelling',
+            succeeded: 'Completed',
+            failed: 'Failed',
+            cancelled: 'Cancelled',
+            skipped: 'Skipped'
+        };
+
+        return labels[status] || status;
+    }
+
     function initTabs() {
         var triggers = document.querySelectorAll('[data-tab-trigger]');
         var panels = document.querySelectorAll('[data-tab-panel]');
@@ -285,7 +299,7 @@
             html += '<td>#' + escapeHtml(job.id) + '</td>';
             html += '<td>' + escapeHtml(job.module) + '</td>';
             html += '<td>' + escapeHtml(job.job_type) + '</td>';
-            html += '<td><span class="wpok-job-status is-' + escapeHtml(status) + '">' + escapeHtml(status) + '</span></td>';
+            html += '<td><span class="wpok-job-status is-' + escapeHtml(status) + '">' + escapeHtml(humanizeJobStatus(status)) + '</span></td>';
             html += '<td><div class="wpok-inline-progress">';
             html += '<div class="wpok-progress-bar is-compact"><span style="width:' + percent + '%;"></span></div>';
             html += '<span class="wpok-progress-count">' + processed + ' / ' + total + '</span>';

@@ -6,12 +6,16 @@ $tabs       = $context['tabs'];
 $activeTab  = $context['active_tab'];
 ?>
 <div class="wrap wpok-admin-wrap">
-    <div class="wpok-admin-header">
-        <div>
+    <div class="wpok-admin-hero">
+        <div class="wpok-admin-hero-copy">
+            <span class="wpok-admin-kicker">Performance Operations Platform</span>
             <h1>OptiKit</h1>
-            <p>Platform rewrite foundation for image optimization and future performance modules.</p>
+            <p>Run media optimization, queue orchestration, cache workflows, and maintenance operations from one focused WordPress workspace.</p>
         </div>
-        <span class="wpok-admin-badge">v<?php echo esc_html($context['plugin_version']); ?></span>
+        <div class="wpok-admin-hero-side">
+            <span class="wpok-admin-badge">v<?php echo esc_html($context['plugin_version']); ?></span>
+            <span class="wpok-admin-hero-meta">WordPress performance workspace</span>
+        </div>
     </div>
 
     <nav class="wpok-admin-tabs" aria-label="OptiKit sections">

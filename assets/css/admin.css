@@ -1,32 +1,78 @@
 .wpok-admin-wrap {
     max-width: none;
     margin-right: 20px;
+    padding-bottom: 24px;
 }
 
-.wpok-admin-header {
+.wpok-admin-hero {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin: 24px 0 18px;
-    gap: 20px;
+    align-items: stretch;
+    margin: 24px 0 20px;
+    gap: 24px;
+    padding: 26px 28px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top left, rgba(77, 187, 255, 0.18), transparent 38%),
+        linear-gradient(135deg, #0f243b 0%, #153a58 52%, #1b4f73 100%);
+    color: #fff;
+    box-shadow: 0 22px 44px rgba(8, 29, 53, 0.18);
 }
 
-.wpok-admin-header h1 {
-    margin: 0 0 6px;
+.wpok-admin-hero-copy {
+    max-width: 760px;
 }
 
-.wpok-admin-header p {
+.wpok-admin-kicker {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #d6ecff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.wpok-admin-hero h1 {
+    margin: 14px 0 8px;
+    font-size: 34px;
+    line-height: 1.05;
+    color: #fff;
+}
+
+.wpok-admin-hero p {
     margin: 0;
-    color: #50575e;
+    color: #d5e5f2;
+    font-size: 15px;
+    max-width: 680px;
+    line-height: 1.6;
+}
+
+.wpok-admin-hero-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
 }
 
 .wpok-admin-badge {
-    background: #135e96;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+    color: #f7fbff;
     border-radius: 999px;
     padding: 6px 12px;
     font-size: 12px;
     font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.wpok-admin-hero-meta {
+    color: #dcecf8;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .wpok-admin-content {
@@ -39,9 +85,9 @@
     gap: 10px;
     overflow-x: auto;
     padding: 8px;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #edf4fb 0%, #e5edf7 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #eef4fb 0%, #e6edf6 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .wpok-admin-tab {
@@ -53,7 +99,7 @@
     color: #3c4858;
     font-weight: 600;
     text-align: center;
-    padding: 12px 14px;
+    padding: 13px 14px;
     cursor: pointer;
     transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
@@ -67,6 +113,7 @@
     background: #fff;
     color: #0f4c81;
     box-shadow: 0 8px 18px rgba(16, 71, 119, 0.12);
+    transform: translateY(-1px);
 }
 
 .wpok-admin-tab:focus {
@@ -93,17 +140,84 @@
     margin-bottom: 20px;
 }
 
+.wpok-overview-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.wpok-overview-hero-main {
+    min-height: 100%;
+}
+
+.wpok-overview-kicker,
+.wpok-card-kicker {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #0f4c81;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.wpok-overview-hero-main h2 {
+    margin-bottom: 10px;
+}
+
+.wpok-overview-hero-main p {
+    margin: 0;
+    color: #526170;
+    line-height: 1.7;
+}
+
+.wpok-overview-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.wpok-metric-card {
+    padding: 18px;
+}
+
+.wpok-metric-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.wpok-metric-card strong {
+    display: block;
+    font-size: 24px;
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+.wpok-metric-card small {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
 .wpok-card {
-    background: #fff;
-    border: 1px solid #dcdcde;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+    border: 1px solid #d7dee7;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(15, 28, 43, 0.05);
 }
 
 .wpok-card h2,
 .wpok-card h3 {
     margin-top: 0;
+    color: #0f172a;
 }
 
 .wpok-card-toolbar {
@@ -116,6 +230,14 @@
 
 .wpok-card-toolbar h2 {
     margin-bottom: 0;
+}
+
+.wpok-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
 }
 
 .wpok-toolbar-actions {
@@ -160,24 +282,26 @@
 }
 
 .wpok-module-card {
-    border: 1px solid #dcdcde;
-    border-radius: 8px;
+    border: 1px solid #d7dee7;
+    border-radius: 16px;
     padding: 16px;
-    background: #f6f7f7;
+    background: #f8fbff;
 }
 
 .wpok-module-card.is-enabled {
-    background: #f0f6fc;
-    border-color: #8fbce6;
+    background: linear-gradient(180deg, #f3f9ff 0%, #eef7ff 100%);
+    border-color: #97c8f5;
 }
 
 .wpok-module-card.is-planned {
-    background: #fcf9e8;
-    border-color: #dfcc74;
+    background: linear-gradient(180deg, #fff9e9 0%, #fdf6df 100%);
+    border-color: #e5cf84;
 }
 
 .wpok-module-card p {
     min-height: 38px;
+    color: #566271;
+    line-height: 1.6;
 }
 
 .wpok-module-state,
@@ -296,10 +420,10 @@
 }
 
 .wpok-job-panel {
-    border: 1px solid #dcdcde;
-    border-radius: 8px;
+    border: 1px solid #d7dee7;
+    border-radius: 16px;
     padding: 16px;
-    background: #fbfbfb;
+    background: linear-gradient(180deg, #fbfdff 0%, #f7fafe 100%);
 }
 
 .wpok-job-panel-head {
@@ -309,13 +433,19 @@
     align-items: flex-start;
 }
 
+.wpok-job-panel-head p {
+    margin-bottom: 0;
+    color: #566271;
+    line-height: 1.6;
+}
+
 .wpok-job-results {
     margin-top: 16px;
 }
 
 .wpok-job-tree {
-    border: 1px solid #dcdcde;
-    border-radius: 8px;
+    border: 1px solid #d7dee7;
+    border-radius: 14px;
     background: #fff;
     overflow: hidden;
     max-height: 520px;
@@ -478,7 +608,46 @@
 .wpok-job-empty {
     padding: 18px;
     border: 1px dashed #c3c4c7;
-    border-radius: 8px;
+    border-radius: 14px;
     background: #fff;
     color: #646970;
+}
+
+@media (max-width: 960px) {
+    .wpok-admin-hero,
+    .wpok-overview-hero {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .wpok-admin-hero-side {
+        align-items: flex-start;
+    }
+
+    .wpok-overview-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .wpok-admin-hero {
+        padding: 22px 20px;
+    }
+
+    .wpok-overview-metrics,
+    .wpok-grid-overview,
+    .wpok-grid-images {
+        grid-template-columns: 1fr;
+    }
+
+    .wpok-admin-tab {
+        min-width: 132px;
+    }
+
+    .wpok-card-toolbar,
+    .wpok-card-heading,
+    .wpok-job-panel-head {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }

@@ -77,41 +77,9 @@ Navigate to **Settings → WP OptiKit** to access the admin dashboard.
 
 ---
 
-## 🔧 Development
-
-```bash
-# Clone the repository
-git clone https://github.com/AzzDev/wp-optikit.git
-
-# Dependencies are managed via Composer (if any)
-composer install
-```
-
-The plugin uses a modular architecture:
-- **`includes/core/`** — Framework services (container, queue, storage, REST, admin)
-- **`includes/modules/image/`** — Image optimization module (processor, scanner, settings, job handler)
-- **`includes/modules/support/`** — Module scaffolding infrastructure
-
----
-
 ## 🔄 Auto-Updates
 
 WP OptiKit integrates with GitHub Releases for seamless plugin updates. When a new version is published, eligible sites will see the update notification on their Plugins screen — no manual re-downloading required.
-
----
-
-## 🗺️ Roadmap
-
-- [x] Automatic WebP conversion on upload
-- [x] Batch WebP conversion for existing Media Library
-- [x] Oversized image detection & re-compression
-- [x] Background job queue with progress tracking
-- [x] Elementor CSS cache integration
-- [ ] Page cache module
-- [ ] CSS/JS minification & combination
-- [ ] Database optimization & cleanup
-- [ ] CDN integration
-- [ ] Lazy loading
 
 ---
 
@@ -124,7 +92,3 @@ Contributions, bug reports, and feature requests are welcome! Please open an [is
 ## 📄 License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">Made with ❤️ by <a href="https://github.com/AzzDev">AzzDev</a></p>

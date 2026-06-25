@@ -6,8 +6,19 @@ $formats = (array) ($imageSettings['formats'] ?? array());
 $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
 ?>
 <div class="wpok-grid wpok-grid-images">
+    <section class="wpok-card wpok-images-hero-card">
+        <span class="wpok-card-kicker">Image Operations</span>
+        <h2>Images Workspace</h2>
+        <p>Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace.</p>
+    </section>
+
     <section class="wpok-card">
-        <h2>Image Settings</h2>
+        <div class="wpok-card-heading">
+            <div>
+                <span class="wpok-card-kicker">Configuration</span>
+                <h2>Image Module Settings</h2>
+            </div>
+        </div>
         <form method="post" action="options.php" class="wpok-settings-form">
             <?php settings_fields('wpok_image_settings_group'); ?>
 
@@ -15,7 +26,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <label for="wpok-image-enabled">Enable image module</label>
                 <label class="wpok-inline-toggle">
                     <input id="wpok-image-enabled" type="checkbox" name="wpok_image_settings[enabled]" value="1" <?php checked(!empty($imageSettings['enabled'])); ?>>
-                    <span>Automatically convert supported uploads to the target format.</span>
+                    <span>Automatically convert supported uploads to the selected output format.</span>
                 </label>
             </div>
 
@@ -72,15 +83,20 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
     </section>
 
     <section class="wpok-card wpok-image-app" data-wpok-image-app>
-        <h2>Image Jobs</h2>
-        <p class="description">Scans use REST endpoints and batch work is executed by the background queue.</p>
+        <div class="wpok-card-heading">
+            <div>
+                <span class="wpok-card-kicker">Scan & Queue</span>
+                <h2>Image Jobs</h2>
+            </div>
+        </div>
+        <p class="description">Use scan workflows to find target files, then send selected items to the background queue for processing.</p>
 
         <div class="wpok-job-panels">
             <div class="wpok-job-panel" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
                 <div class="wpok-job-panel-head">
                     <div>
                         <h3>Batch Convert Existing Images</h3>
-                        <p>Find attachments that have not been converted to WebP yet.</p>
+                        <p>Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.</p>
                     </div>
                     <button type="button" class="button button-secondary" data-action="scan">Scan Media Library</button>
                 </div>
@@ -105,7 +121,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-job-panel-head">
                     <div>
                         <h3>Re-compress Oversized Images</h3>
-                        <p>Find attachments above the configured size threshold and re-run compression in the queue.</p>
+                        <p>Detect oversized attachments and re-run compression in the background using the current output settings.</p>
                     </div>
                     <button type="button" class="button button-secondary" data-action="scan">Scan Oversized Images</button>
                 </div>

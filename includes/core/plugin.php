@@ -117,9 +117,9 @@ final class Plugin
     {
         $modules = array(
             new ImageModule($this->container),
-            new PlannedModule('cache', 'Cache', 'The cache module is planned for a future phase of the platform rewrite.'),
-            new PlannedModule('assets', 'Assets', 'The asset optimization module is scaffolded but intentionally disabled in this first platform release.'),
-            new PlannedModule('database', 'Database', 'The database maintenance module is reserved for a later implementation phase.'),
+            new PlannedModule('cache', 'Cache', 'Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace.'),
+            new PlannedModule('assets', 'Assets', 'Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface.'),
+            new PlannedModule('database', 'Database', 'Manage cleanup, diagnostics, and maintenance routines through a focused operations panel.'),
         );
 
         foreach ($modules as $module) {
