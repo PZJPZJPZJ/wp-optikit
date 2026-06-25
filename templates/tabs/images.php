@@ -48,7 +48,10 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
 
             <div class="wpok-field-row">
                 <label for="wpok-image-quality"><?php esc_html_e('Target format quality', 'wp-optikit'); ?></label>
-                <input id="wpok-image-quality" type="number" min="1" max="100" name="wpok_image_settings[quality]" value="<?php echo esc_attr((string) ($imageSettings['quality'] ?? 80)); ?>">
+                <div class="wpok-range-wrap">
+                    <input id="wpok-image-quality" type="range" min="1" max="100" name="wpok_image_settings[quality]" value="<?php echo esc_attr((string) ($imageSettings['quality'] ?? 80)); ?>" data-range-display>
+                    <span class="wpok-range-value" data-role="quality-value"><?php echo esc_html((string) ($imageSettings['quality'] ?? 80)); ?></span>
+                </div>
             </div>
 
             <div class="wpok-field-row">
@@ -98,17 +101,6 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-job-toolbar" data-role="toolbar" hidden>
                     <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Conversion Job', 'wp-optikit'); ?></button>
                 </div>
-                <div class="wpok-job-progress" data-role="progress" hidden>
-                    <div class="wpok-job-progress-meta">
-                        <strong data-role="job-status">pending</strong>
-                        <span data-role="job-count">0 / 0</span>
-                    </div>
-                    <div class="wpok-progress-bar"><span data-role="job-bar"></span></div>
-                    <div class="wpok-job-progress-actions">
-                        <span class="description" data-role="job-message"><?php esc_html_e('Waiting for job creation.', 'wp-optikit'); ?></span>
-                        <button type="button" class="button-link-delete" data-action="cancel"><?php esc_html_e('Cancel job', 'wp-optikit'); ?></button>
-                    </div>
-                </div>
             </div>
 
             <div class="wpok-job-panel" data-job-panel="recompress" data-job-type="image_recompress" data-scan-endpoint="images/scans/oversized">
@@ -123,24 +115,20 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-job-toolbar" data-role="toolbar" hidden>
                     <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Re-compression Job', 'wp-optikit'); ?></button>
                 </div>
-                <div class="wpok-job-progress" data-role="progress" hidden>
-                    <div class="wpok-job-progress-meta">
-                        <strong data-role="job-status">pending</strong>
-                        <span data-role="job-count">0 / 0</span>
-                    </div>
-                    <div class="wpok-progress-bar"><span data-role="job-bar"></span></div>
-                    <div class="wpok-job-progress-actions">
-                        <span class="description" data-role="job-message"><?php esc_html_e('Waiting for job creation.', 'wp-optikit'); ?></span>
-                        <button type="button" class="button-link-delete" data-action="cancel"><?php esc_html_e('Cancel job', 'wp-optikit'); ?></button>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <section class="wpok-card wpok-images-hero-card">
-        <span class="wpok-card-kicker"><?php esc_html_e('Image Operations', 'wp-optikit'); ?></span>
-        <h2><?php esc_html_e('Images Workspace', 'wp-optikit'); ?></h2>
-        <p><?php esc_html_e('Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace.', 'wp-optikit'); ?></p>
+    <section class="wpok-card wpok-image-jobs-card" data-image-jobs>
+        <div class="wpok-card-toolbar">
+            <div>
+                <span class="wpok-card-kicker"><?php esc_html_e('Image Operations', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Images Workspace', 'wp-optikit'); ?></h2>
+            </div>
+            <div class="wpok-toolbar-actions">
+                <button type="button" class="button button-secondary" data-action="clear-completed"><?php esc_html_e('Clear Completed Records', 'wp-optikit'); ?></button>
+            </div>
+        </div>
+        <div data-role="image-jobs-content"></div>
     </section>
 </div>

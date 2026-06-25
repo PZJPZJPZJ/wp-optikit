@@ -1,31 +1,31 @@
 (function () {
     'use strict';
 
+    var labels, activeWatches = {};
+
     function init() {
         if (!window.WPOKUtils || !window.wpokAdmin || !window.wpokAdmin.labels) {
             return;
         }
 
+        labels = window.wpokAdmin.labels;
+
         var app = document.querySelector('[data-wpok-image-app]');
 
-        if (!app) {
-            return;
+        if (app) {
+            app.querySelectorAll('[data-job-panel]').forEach(function (panel) {
+                bindPanel(panel);
+            });
         }
 
-        app.querySelectorAll('[data-job-panel]').forEach(function (panel) {
-            bindPanel(panel);
-        });
+        initImageJobs();
     }
 
-    var labels = window.wpokAdmin.labels;
+    /* ============================================================
+       PANEL CODE (scan + queue submission)
+       ============================================================ */
 
     function bindPanel(panel) {
-        var state = {
-            jobId: null,
-            poller: null,
-            freezeCount: null
-        };
-
         panel.addEventListener('click', function (event) {
             var target = event.target;
 
@@ -35,12 +35,7 @@
             }
 
             if (target.closest('[data-action="start"]')) {
-                startJob(panel, state);
-                return;
-            }
-
-            if (target.closest('[data-action="cancel"]')) {
-                cancelJob(panel, state);
+                startJob(panel);
                 return;
             }
 
@@ -148,7 +143,7 @@
         updateActionLabel(panel);
     }
 
-    function startJob(panel, state) {
+    function startJob(panel) {
         var ids = Array.prototype.map.call(
             panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked'),
             function (checkbox) {
@@ -169,127 +164,10 @@
                 attachment_ids: ids
             }
         }).then(function (response) {
-            state.jobId = response.job.id;
-            state.freezeCount = null;
-            setProgress(panel, response.job, labels.jobCreated || 'Job created. Waiting for worker.');
-            panel.querySelector('[data-role="progress"]').hidden = false;
-            watchJob(panel, state);
+            addNewJobToList(response.job);
         }).catch(function (error) {
-            setMessage(panel, error.message);
+            panel.querySelector('[data-role="results"]').insertAdjacentHTML('afterbegin', '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>');
         });
-    }
-
-    function watchJob(panel, state) {
-        if (state.poller) {
-            window.clearInterval(state.poller);
-        }
-
-        state.poller = window.setInterval(function () {
-            window.WPOKUtils.request('jobs/' + state.jobId)
-            .then(function (response) {
-                if (state.freezeCount !== null && (response.job.status === 'cancelling' || response.job.status === 'cancelled')) {
-                    response.job.processed_items = state.freezeCount;
-                }
-
-                setProgress(panel, response.job, labels.processingMsg || 'Processing through the background queue.');
-
-                return window.WPOKUtils.request('jobs/' + state.jobId + '/items');
-                })
-                .then(function (payload) {
-                    updateItems(panel, payload.items || []);
-
-                    var status = payload.job.status;
-
-                    if (status === 'succeeded' || status === 'failed' || status === 'cancelled') {
-                        window.clearInterval(state.poller);
-                        state.poller = null;
-                        var finishedMsg = (labels.jobFinished || 'Job finished with status: %s.').replace('%s', status);
-                        setProgress(panel, payload.job, finishedMsg);
-                    }
-                })
-                .catch(function (error) {
-                    window.clearInterval(state.poller);
-                    state.poller = null;
-                    setMessage(panel, error.message);
-                });
-        }, 2000);
-    }
-
-    function cancelJob(panel, state) {
-        if (!state.jobId) {
-            return;
-        }
-
-        var countText = panel.querySelector('[data-role="job-count"]').textContent || '0 / 0';
-        state.freezeCount = parseInt(countText.split('/')[0], 10) || 0;
-
-        window.WPOKUtils.request('jobs/' + state.jobId + '/cancel', { method: 'POST', body: {} })
-            .then(function (response) {
-                if (state.freezeCount !== null) {
-                    response.job.processed_items = state.freezeCount;
-                }
-                setProgress(panel, response.job, labels.cancelReq || 'Job cancellation requested.');
-            })
-            .catch(function (error) {
-                setMessage(panel, error.message);
-            });
-    }
-
-    function updateItems(panel, items) {
-        var isRecompressPanel = panel.getAttribute('data-job-type') === 'image_recompress';
-
-        items.forEach(function (item) {
-            var row = panel.querySelector('.wpok-job-item[data-attachment-id="' + item.object_id + '"]');
-
-            if (!row) {
-                return;
-            }
-
-            row.classList.remove('is-pending', 'is-processing', 'is-succeeded', 'is-failed', 'is-skipped', 'is-cancelled', 'is-unchanged');
-            row.classList.add('is-' + item.status);
-
-            var statusNode = row.querySelector('.wpok-job-item-status');
-            statusNode.textContent = humanizeItemStatus(item.status);
-
-            if (item.result && typeof item.result.new_size_bytes !== 'undefined') {
-                var oldSize = parseInt(item.result.old_size_bytes || 0, 10) || 0;
-                var newSize = parseInt(item.result.new_size_bytes || 0, 10) || 0;
-                var delta = Math.abs(oldSize - newSize);
-                var newSizeClass = 'wpok-item-size-new';
-
-                if (isRecompressPanel && item.status === 'succeeded' && delta < 1024) {
-                    row.classList.add('is-unchanged');
-                    statusNode.textContent = labels.noChange || 'No change';
-                    newSizeClass = 'wpok-item-size-new wpok-item-size-neutral';
-                }
-
-                row.setAttribute('data-size-bytes', item.result.new_size_bytes);
-                row.querySelector('.wpok-job-item-size').innerHTML =
-                    '<span class="wpok-item-size-old">' + escapeHtml(window.WPOKUtils.formatBytes(oldSize)) + '</span>' +
-                    '<span class="wpok-item-size-arrow">' + escapeHtml(labels.sizeArrow || '->') + '</span>' +
-                    '<span class="' + newSizeClass + '">' + escapeHtml(window.WPOKUtils.formatBytes(newSize)) + '</span>';
-            }
-
-            if (item.last_error) {
-                statusNode.textContent = humanizeItemStatus(item.status) + ': ' + item.last_error;
-            }
-        });
-    }
-
-    function setProgress(panel, job, message) {
-        var progress = panel.querySelector('[data-role="progress"]');
-        progress.hidden = false;
-        panel.querySelector('[data-role="job-status"]').textContent = window.WPOKUtils.humanizeJobStatus(job.status);
-        panel.querySelector('[data-role="job-count"]').textContent = job.processed_items + ' / ' + job.total_items;
-        panel.querySelector('[data-role="job-message"]').textContent = message;
-
-        var percent = job.total_items > 0 ? Math.round((job.processed_items / job.total_items) * 100) : 0;
-        panel.querySelector('[data-role="job-bar"]').style.width = percent + '%';
-    }
-
-    function setMessage(panel, message) {
-        panel.querySelector('[data-role="progress"]').hidden = false;
-        panel.querySelector('[data-role="job-message"]').textContent = message;
     }
 
     function updateActionLabel(panel) {
@@ -308,18 +186,294 @@
         button.textContent = baseLabel + ' (' + selected + '/' + total + ')';
     }
 
-    function humanizeItemStatus(status) {
-        var map = {
-            pending: labels.statusPending,
-            processing: labels.statusProcessing,
-            succeeded: labels.statusSucceeded,
-            failed: labels.statusFailed,
-            skipped: labels.statusSkipped,
-            cancelled: labels.statusCancelled
-        };
+    /* ============================================================
+       WORKSPACE JOBS LIST
+       ============================================================ */
 
-        return map[status] || status;
+    function initImageJobs() {
+        var container = document.querySelector('[data-image-jobs]');
+
+        if (!container) {
+            return;
+        }
+
+        /* Clear completed */
+        var clearBtn = container.querySelector('[data-action="clear-completed"]');
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                clearBtn.disabled = true;
+
+                window.WPOKUtils.request('jobs/clear-completed', { method: 'POST', body: {} })
+                    .then(function (response) {
+                        var jobs = response.jobs || [];
+                        var imageJobs = jobs.filter(function (j) {
+                            return j.module === 'image';
+                        });
+
+                        stopAllWatches();
+
+                        if (imageJobs.length > 0) {
+                            renderJobsList(container, imageJobs);
+                            imageJobs.forEach(function (job) {
+                                if (isActiveStatus(job.status)) {
+                                    startWatching(job.id);
+                                }
+                            });
+                        } else {
+                            showEmpty(container);
+                        }
+                    })
+                    .finally(function () {
+                        clearBtn.disabled = false;
+                    });
+            });
+        }
+
+        /* Load existing jobs on page load */
+        window.WPOKUtils.request('jobs?limit=20').then(function (response) {
+            var jobs = response.jobs || [];
+            var imageJobs = jobs.filter(function (j) {
+                return j.module === 'image';
+            });
+
+            if (imageJobs.length > 0) {
+                renderJobsList(container, imageJobs);
+                imageJobs.forEach(function (job) {
+                    if (isActiveStatus(job.status)) {
+                        startWatching(job.id);
+                    }
+                });
+            } else {
+                showEmpty(container);
+            }
+        });
     }
+
+    function addNewJobToList(job) {
+        var container = document.querySelector('[data-image-jobs]');
+
+        if (!container) {
+            return;
+        }
+
+        /* Remove empty-state placeholder */
+        var empty = container.querySelector('.wpok-image-jobs-empty');
+
+        if (empty) {
+            empty.remove();
+        }
+
+        /* Ensure table exists */
+        var table = container.querySelector('.wpok-image-jobs-table');
+        var content = container.querySelector('[data-role="image-jobs-content"]');
+
+        if (!table) {
+            content.innerHTML = ''
+                + '<table class="wpok-image-jobs-table">'
+                + '<thead><tr>'
+                + '<th>' + escapeHtml(labels.tableId || 'ID') + '</th>'
+                + '<th>' + escapeHtml(labels.tableType || 'Type') + '</th>'
+                + '<th>' + escapeHtml(labels.tableStatus || 'Status') + '</th>'
+                + '<th>' + escapeHtml(labels.tableProgress || 'Progress') + '</th>'
+                + '<th class="wpok-job-actions-col">' + escapeHtml(labels.tableAction || 'Action') + '</th>'
+                + '</tr></thead>'
+                + '<tbody></tbody>'
+                + '</table>';
+            table = content.querySelector('.wpok-image-jobs-table');
+        }
+
+        var tbody = table.querySelector('tbody');
+        tbody.insertAdjacentHTML('afterbegin', buildJobRow(job));
+
+        if (isActiveStatus(job.status)) {
+            startWatching(job.id);
+        }
+    }
+
+    function buildJobRow(job) {
+        var total = parseInt(job.total_items, 10) || 0;
+        var processed = parseInt(job.processed_items, 10) || 0;
+        var percent = total > 0 ? Math.round((processed / total) * 100) : 0;
+        var active = isActiveStatus(job.status);
+
+        return '<tr data-job-id="' + job.id + '">'
+            + '<td>#' + escapeHtml(String(job.id)) + '</td>'
+            + '<td>' + escapeHtml(job.job_type) + '</td>'
+            + '<td><span class="wpok-job-status is-' + escapeHtml(job.status) + '">' + escapeHtml(window.WPOKUtils.humanizeJobStatus(job.status)) + '</span></td>'
+            + '<td><div class="wpok-inline-progress">'
+            + '<div class="wpok-progress-bar is-compact"><span style="width:' + percent + '%;"></span></div>'
+            + '<span class="wpok-progress-count">' + processed + ' / ' + total + '</span>'
+            + '</div></td>'
+            + '<td class="wpok-job-actions-cell">'
+            + (active
+                ? '<button type="button" class="button button-secondary" data-action="cancel-image-job" data-job-id="' + job.id + '">' + escapeHtml(labels.btnCancel || 'Cancel') + '</button>'
+                : '<span class="description">' + escapeHtml(labels.noAction || '-') + '</span>')
+            + '</td>'
+            + '</tr>';
+    }
+
+    function updateJobRow(job) {
+        var container = document.querySelector('[data-image-jobs]');
+
+        if (!container) {
+            return;
+        }
+
+        var row = container.querySelector('tr[data-job-id="' + job.id + '"]');
+
+        if (!row) {
+            return;
+        }
+
+        var total = parseInt(job.total_items, 10) || 0;
+        var processed = parseInt(job.processed_items, 10) || 0;
+        var percent = total > 0 ? Math.round((processed / total) * 100) : 0;
+
+        /* Update status badge */
+        var badge = row.querySelector('.wpok-job-status');
+
+        if (badge) {
+            badge.className = 'wpok-job-status is-' + escapeHtml(job.status);
+            badge.textContent = window.WPOKUtils.humanizeJobStatus(job.status);
+        }
+
+        /* Update progress bar */
+        var barSpan = row.querySelector('.wpok-progress-bar span');
+
+        if (barSpan) {
+            barSpan.style.width = percent + '%';
+        }
+
+        /* Update count */
+        var count = row.querySelector('.wpok-progress-count');
+
+        if (count) {
+            count.textContent = processed + ' / ' + total;
+        }
+
+        /* Update action cell when job reaches terminal status */
+        if (!isActiveStatus(job.status)) {
+            var actionCell = row.querySelector('.wpok-job-actions-cell');
+
+            if (actionCell) {
+                actionCell.innerHTML = '<span class="description">' + escapeHtml(labels.noAction || '-') + '</span>';
+            }
+        }
+    }
+
+    function renderJobsList(container, jobs) {
+        var content = container.querySelector('[data-role="image-jobs-content"]');
+
+        if (!jobs.length) {
+            showEmpty(container);
+            return;
+        }
+
+        var html = '<table class="wpok-image-jobs-table">'
+            + '<thead><tr>'
+            + '<th>' + escapeHtml(labels.tableId || 'ID') + '</th>'
+            + '<th>' + escapeHtml(labels.tableType || 'Type') + '</th>'
+            + '<th>' + escapeHtml(labels.tableStatus || 'Status') + '</th>'
+            + '<th>' + escapeHtml(labels.tableProgress || 'Progress') + '</th>'
+            + '<th class="wpok-job-actions-col">' + escapeHtml(labels.tableAction || 'Action') + '</th>'
+            + '</tr></thead>'
+            + '<tbody>';
+
+        jobs.forEach(function (job) {
+            html += buildJobRow(job);
+        });
+
+        html += '</tbody></table>';
+        content.innerHTML = html;
+    }
+
+    function showEmpty(container) {
+        var content = container.querySelector('[data-role="image-jobs-content"]');
+
+        if (content) {
+            content.innerHTML = '<div class="wpok-image-jobs-empty">' + escapeHtml(labels.noActivity || 'No queue activity has been recorded yet.') + '</div>';
+        }
+    }
+
+    /* ============================================================
+       POLLING — one interval per active job
+       ============================================================ */
+
+    function startWatching(jobId) {
+        if (activeWatches[jobId]) {
+            return;
+        }
+
+        activeWatches[jobId] = window.setInterval(function () {
+            window.WPOKUtils.request('jobs/' + jobId).then(function (response) {
+                updateJobRow(response.job);
+
+                if (!isActiveStatus(response.job.status)) {
+                    stopWatching(jobId);
+                }
+            }).catch(function () {
+                stopWatching(jobId);
+            });
+        }, 2000);
+    }
+
+    function stopWatching(jobId) {
+        if (activeWatches[jobId]) {
+            window.clearInterval(activeWatches[jobId]);
+            delete activeWatches[jobId];
+        }
+    }
+
+    function stopAllWatches() {
+        for (var id in activeWatches) {
+            if (activeWatches.hasOwnProperty(id)) {
+                window.clearInterval(activeWatches[id]);
+            }
+        }
+
+        activeWatches = {};
+    }
+
+    function isActiveStatus(status) {
+        return status === 'pending' || status === 'processing' || status === 'cancelling';
+    }
+
+    /* ============================================================
+       CANCEL — delegated click on workspace cancel buttons
+       ============================================================ */
+
+    document.addEventListener('click', function (event) {
+        var btn = event.target.closest('[data-action="cancel-image-job"]');
+
+        if (!btn) {
+            return;
+        }
+
+        var jobId = btn.getAttribute('data-job-id');
+
+        if (!jobId) {
+            return;
+        }
+
+        btn.disabled = true;
+
+        window.WPOKUtils.request('jobs/' + jobId + '/cancel', { method: 'POST', body: {} })
+            .then(function (response) {
+                updateJobRow(response.job);
+
+                if (!isActiveStatus(response.job.status)) {
+                    stopWatching(jobId);
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+            });
+    });
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
 
     function escapeHtml(value) {
         return window.WPOKUtils.escapeHtml(value);

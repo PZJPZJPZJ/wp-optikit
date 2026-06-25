@@ -387,7 +387,17 @@
     };
 
     document.addEventListener('DOMContentLoaded', function () {
-        initTabs();
+        /* Range slider live value display */
+    document.querySelectorAll('[data-range-display]').forEach(function (slider) {
+        var display = slider.parentElement.querySelector('[data-role="quality-value"]');
+        if (display) {
+            slider.addEventListener('input', function () {
+                display.textContent = slider.value;
+            });
+        }
+    });
+
+    initTabs();
         initRecentJobs();
     });
 })();
