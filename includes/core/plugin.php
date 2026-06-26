@@ -13,6 +13,7 @@ use WPOptiKit\Core\Storage\OptionStore;
 use WPOptiKit\Core\Storage\SchemaManager;
 use WPOptiKit\Core\Updater\GithubUpdater;
 use WPOptiKit\Modules\Image\ImageModule;
+use WPOptiKit\Modules\MediaOrphan\MediaMissingRestController;
 use WPOptiKit\Modules\MediaOrphan\MediaOrphanRestController;
 use WPOptiKit\Modules\MediaOrphan\MediaOrphanScanner;
 use WPOptiKit\Modules\Support\PlannedModule;
@@ -49,10 +50,11 @@ final class Plugin
         $jobsController = $this->container->get('jobs_controller');
         $jobsController->boot();
 
-        /* Boot media orphan REST controller */
+        /* Boot media orphan REST controllers */
         $wpdb           = $GLOBALS['wpdb'];
         $orphanScanner  = new MediaOrphanScanner($wpdb);
         (new MediaOrphanRestController($orphanScanner))->boot();
+        (new MediaMissingRestController($orphanScanner))->boot();
 
         /** @var AdminPageRegistry $adminRegistry */
         $adminRegistry = $this->container->get('admin_registry');

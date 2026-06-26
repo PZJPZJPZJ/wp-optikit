@@ -159,6 +159,34 @@ msgstr "失败"
 msgid "total"
 msgstr "共计"
 
+#: templates/tabs/images.php
+msgid "Missing Files"
+msgstr "文件缺失"
+
+#: templates/tabs/images.php
+msgid "Find attachment records whose files are missing from the disk."
+msgstr "查找媒体库中有记录但磁盘上文件已丢失的附件。"
+
+#: templates/tabs/images.php
+msgid "Scan Missing Files"
+msgstr "扫描缺失文件"
+
+#: includes/core/admin/admin-controller.php
+msgid "No missing files were found."
+msgstr "未找到缺失的文件。"
+
+#: includes/core/admin/admin-controller.php
+msgid "missing"
+msgstr "缺失"
+
+#: includes/core/admin/admin-controller.php
+msgid "Delete Attachment Records"
+msgstr "删除附件记录"
+
+#: includes/core/admin/admin-controller.php
+msgid "Delete %d attachment records? Files are already missing from disk."
+msgstr "将删除 %d 条附件记录？文件已从磁盘丢失。"
+
 #: templates/tabs/overview.php
 msgid "Plain"
 msgstr "朴素"

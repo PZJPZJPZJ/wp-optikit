@@ -17,6 +17,7 @@
 
         initImageJobs();
         initOrphanPanel();
+        initMissingPanel();
     }
 
     /* ============================================================
@@ -684,6 +685,202 @@
             var success = response.success || 0;
             var fail = response.fail || 0;
 
+            results.innerHTML = '<div class="wpok-job-empty">'
+                + '<strong>' + escapeHtml(labels.deleteResult || 'Delete completed.') + '</strong><br>'
+                + escapeHtml(String(success)) + ' ' + escapeHtml(labels.successLower || 'succeeded') + ', '
+                + escapeHtml(String(fail)) + ' ' + escapeHtml(labels.failedLower || 'failed') + '.'
+                + '</div>';
+        }).catch(function (error) {
+            results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
+        });
+    }
+
+    /* ============================================================
+       MISSING FILES PANEL
+       ============================================================ */
+
+    function initMissingPanel() {
+        var panel = document.querySelector('[data-missing-panel]');
+
+        if (!panel) {
+            return;
+        }
+
+        panel.addEventListener('click', function (event) {
+            var target = event.target;
+
+            if (target.closest('[data-action="scan"]')) {
+                scanMissingFiles(panel);
+                return;
+            }
+
+            if (target.closest('[data-action="delete-missing"]')) {
+                deleteMissingRecords(panel);
+                return;
+            }
+
+            var directoryHead = target.closest('.wpok-job-directory-head');
+
+            if (directoryHead && !target.closest('input[type="checkbox"]')) {
+                directoryHead.parentElement.classList.toggle('is-open');
+                var toggle = directoryHead.querySelector('.wpok-job-directory-toggle');
+                toggle.textContent = directoryHead.parentElement.classList.contains('is-open') ? '-' : '+';
+            }
+        });
+
+        panel.addEventListener('change', function (event) {
+            var target = event.target;
+
+            if (target.matches('[data-role="select-all"]')) {
+                panel.querySelectorAll('.wpok-job-item input[type="checkbox"], .wpok-job-directory-head input[type="checkbox"]').forEach(function (cb) {
+                    cb.checked = target.checked;
+                });
+                updateMissingDeleteBtn(panel);
+                return;
+            }
+
+            if (target.matches('.wpok-job-directory-head input[type="checkbox"]')) {
+                var dir = target.closest('.wpok-job-directory');
+                dir.querySelectorAll('.wpok-job-item input[type="checkbox"]').forEach(function (cb) {
+                    cb.checked = target.checked;
+                });
+                updateMissingDeleteBtn(panel);
+                return;
+            }
+
+            if (target.matches('.wpok-job-item input[type="checkbox"]')) {
+                updateMissingDeleteBtn(panel);
+            }
+        });
+    }
+
+    function scanMissingFiles(panel) {
+        var endpoint = panel.getAttribute('data-missing-endpoint');
+        var results = panel.querySelector('[data-role="results"]');
+        var toolbar = panel.querySelector('[data-role="toolbar"]');
+
+        results.innerHTML = buildScanProgressHtml();
+        toolbar.hidden = true;
+
+        window.WPOKUtils.request(endpoint + '/scan', { method: 'POST', body: {} })
+            .then(function (response) {
+                renderMissingResults(panel, response.directories || {});
+            })
+            .catch(function (error) {
+                results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
+            });
+    }
+
+    function renderMissingResults(panel, directories) {
+        var results = panel.querySelector('[data-role="results"]');
+        var toolbar = panel.querySelector('[data-role="toolbar"]');
+        var directoryNames = Object.keys(directories || {});
+
+        if (directoryNames.length === 0) {
+            results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.noMissing || 'No missing files were found.') + '</div>';
+            toolbar.hidden = true;
+            return;
+        }
+
+        var totalIdCount = 0;
+        var html = '<div class="wpok-job-tree">';
+        html += '<div class="wpok-job-tree-toolbar">';
+        html += '<label><input type="checkbox" data-role="select-all" checked> ' + escapeHtml(labels.selectAll || 'Select all') + '</label>';
+        html += '</div>';
+        html += '<ul class="wpok-job-tree-list">';
+
+        directoryNames.forEach(function (directoryName) {
+            var items = directories[directoryName] || [];
+            html += '<li class="wpok-job-directory">';
+            html += '<div class="wpok-job-directory-head">';
+            html += '<input type="checkbox" checked>';
+            html += '<span class="wpok-job-directory-toggle">+</span>';
+            html += '<span class="wpok-job-directory-name">' + escapeHtml(directoryName) + '</span>';
+            html += '<span class="wpok-job-directory-meta">' + items.length + ' ' + escapeHtml(labels.missingFiles || 'missing') + '</span>';
+            html += '</div>';
+            html += '<ul class="wpok-job-item-list">';
+
+            var seen = {};
+
+            items.forEach(function (item) {
+                if (item.id && item.id > 0 && !seen[item.id]) {
+                    seen[item.id] = true;
+                    totalIdCount++;
+                }
+
+                html += '<li class="wpok-job-item' + (item.id && item.id > 0 ? ' wpok-missing-has-id' : '') + '" data-attachment-id="' + (item.id || 0) + '" data-size-name="' + escapeHtml(item.sizeName || '') + '">';
+                html += '<input type="checkbox" checked>';
+                html += '<span class="wpok-job-item-name">' + escapeHtml(item.name) + '</span>';
+                html += '<span class="wpok-job-item-status wpok-missing-badge">' + escapeHtml(labels.fileMissing || 'missing') + '</span>';
+                html += '</li>';
+            });
+
+            html += '</ul>';
+            html += '</li>';
+        });
+
+        html += '</ul>';
+        html += '</div>';
+
+        results.innerHTML = html;
+        toolbar.hidden = false;
+
+        toolbar.innerHTML = '<button type="button" class="button wpok-btn-danger" data-action="delete-missing">' + escapeHtml(labels.deleteMissingRecords || 'Delete Attachment Records') + ' (' + totalIdCount + ')</button>';
+    }
+
+    function updateMissingDeleteBtn(panel) {
+        var seen = {};
+        var count = 0;
+
+        panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').forEach(function (cb) {
+            var id = parseInt(cb.closest('.wpok-job-item').getAttribute('data-attachment-id'), 10) || 0;
+            if (id > 0 && !seen[id]) {
+                seen[id] = true;
+                count++;
+            }
+        });
+
+        var delBtn = panel.querySelector('[data-action="delete-missing"]');
+
+        if (delBtn) {
+            delBtn.textContent = (labels.deleteMissingRecords || 'Delete Attachment Records') + ' (' + count + ')';
+        }
+    }
+
+    function deleteMissingRecords(panel) {
+        var seen = {};
+        var items = [];
+
+        panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').forEach(function (cb) {
+            var id = parseInt(cb.closest('.wpok-job-item').getAttribute('data-attachment-id'), 10) || 0;
+            if (id > 0 && !seen[id]) {
+                seen[id] = true;
+                items.push({ id: id });
+            }
+        });
+
+        if (items.length === 0) {
+            return;
+        }
+
+        var msg = labels.confirmMissing || 'Delete %d attachment records? Files are already missing from disk.';
+
+        if (!confirm(msg.replace(/%d/g, String(items.length)))) {
+            return;
+        }
+
+        var results = panel.querySelector('[data-role="results"]');
+        var toolbar = panel.querySelector('[data-role="toolbar"]');
+
+        toolbar.hidden = true;
+        results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.deleting || 'Deleting...') + '</div>';
+
+        window.WPOKUtils.request('media-missing/delete', {
+            method: 'POST',
+            body: { items: items }
+        }).then(function (response) {
+            var success = response.success || 0;
+            var fail = response.fail || 0;
             results.innerHTML = '<div class="wpok-job-empty">'
                 + '<strong>' + escapeHtml(labels.deleteResult || 'Delete completed.') + '</strong><br>'
                 + escapeHtml(String(success)) + ' ' + escapeHtml(labels.successLower || 'succeeded') + ', '

@@ -115,6 +115,13 @@ final class AdminController
                     'successLower'    => __('succeeded', 'wp-optikit'),
                     'failedLower'     => __('failed', 'wp-optikit'),
                     'totalLower'      => __('total', 'wp-optikit'),
+
+                    // Missing Files
+                    'noMissing'           => __('No missing files were found.', 'wp-optikit'),
+                    'missingFiles'        => __('missing', 'wp-optikit'),
+                    'fileMissing'         => __('missing', 'wp-optikit'),
+                    'deleteMissingRecords' => __('Delete Attachment Records', 'wp-optikit'),
+                    'confirmMissing'      => __('Delete %d attachment records? Files are already missing from disk.', 'wp-optikit'),
                 ),
             )
         );

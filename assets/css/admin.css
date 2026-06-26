@@ -580,6 +580,18 @@
     font-weight: 400;
 }
 
+.wpok-missing-badge {
+    color: #b91c1c !important;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.wpok-missing-has-id {
+    background: #fef2f2;
+    border-radius: 8px;
+}
+
 .wpok-btn-danger {
     background: #dc2626 !important;
     border-color: #b91c1c !important;
