@@ -63,13 +63,6 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             <div class="wpok-field-row">
                 <span><?php esc_html_e('Conversion engine', 'wp-optikit'); ?></span>
                 <div class="wpok-radio-group">
-                    <label class="wpok-radio-card<?php echo !$gdAvailable ? ' is-disabled' : ''; ?>">
-                        <input type="radio" name="wpok_image_settings[engine]" value="gd" <?php checked($engine, 'gd'); ?> <?php disabled(!$gdAvailable); ?>>
-                        <span>GD</span>
-                        <?php if (!$gdAvailable) : ?>
-                            <span class="wpok-engine-note"><?php esc_html_e('(not available)', 'wp-optikit'); ?></span>
-                        <?php endif; ?>
-                    </label>
                     <label class="wpok-radio-card<?php echo !$imagickAvailable ? ' is-disabled' : ''; ?>">
                         <input type="radio" name="wpok_image_settings[engine]" value="imagick" <?php checked($engine, 'imagick'); ?> <?php disabled(!$imagickAvailable); ?>>
                         <span>Imagick</span>
@@ -77,7 +70,15 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                             <span class="wpok-engine-note"><?php esc_html_e('(not available)', 'wp-optikit'); ?></span>
                         <?php endif; ?>
                     </label>
+                    <label class="wpok-radio-card<?php echo !$gdAvailable ? ' is-disabled' : ''; ?>">
+                        <input type="radio" name="wpok_image_settings[engine]" value="gd" <?php checked($engine, 'gd'); ?> <?php disabled(!$gdAvailable); ?>>
+                        <span>GD</span>
+                        <?php if (!$gdAvailable) : ?>
+                            <span class="wpok-engine-note"><?php esc_html_e('(not available)', 'wp-optikit'); ?></span>
+                        <?php endif; ?>
+                    </label>
                 </div>
+                <p class="wpok-engine-description"><?php esc_html_e('Imagick offers better quality and animated GIF to WebP conversion. GD is a fallback when Imagick is unavailable.', 'wp-optikit'); ?></p>
             </div>
 
             <div class="wpok-field-row">
@@ -91,14 +92,6 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             <div class="wpok-field-row">
                 <label for="wpok-image-threshold"><?php esc_html_e('Oversized threshold (KB)', 'wp-optikit'); ?></label>
                 <input id="wpok-image-threshold" type="number" min="1" max="102400" name="wpok_image_settings[max_file_size_kb]" value="<?php echo esc_attr((string) ($imageSettings['max_file_size_kb'] ?? 512)); ?>">
-            </div>
-
-            <div class="wpok-field-row">
-                <label for="wpok-image-keep-original"><?php esc_html_e('Keep original file', 'wp-optikit'); ?></label>
-                <label class="wpok-inline-toggle">
-                    <input id="wpok-image-keep-original" type="checkbox" name="wpok_image_settings[keep_original]" value="1" <?php checked(!empty($imageSettings['keep_original'])); ?>>
-                    <span><?php esc_html_e('Store the original upload path in attachment meta.', 'wp-optikit'); ?></span>
-                </label>
             </div>
 
             <div class="wpok-field-row">

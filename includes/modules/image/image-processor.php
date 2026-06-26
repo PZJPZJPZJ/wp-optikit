@@ -7,11 +7,6 @@ use WPOptiKit\Core\Support\SizeFormatter;
 final class ImageProcessor
 {
     /**
-     * @var array<string, string>
-     */
-    private array $pendingOriginalFiles = array();
-
-    /**
      * @var array<string, array{old_path:string, old_size:int}>
      */
     private array $pendingUploadConversions = array();
@@ -32,8 +27,7 @@ final class ImageProcessor
 
         $oldPath      = (string) $upload['file'];
         $oldSize      = file_exists($oldPath) ? (int) filesize($oldPath) : 0;
-        $keepOriginal = $this->settings->keepOriginal();
-        $savedImage   = $this->convertFileToWebp($oldPath, !$keepOriginal);
+        $savedImage   = $this->convertFileToWebp($oldPath, true);
 
         if ($savedImage === null) {
             return $upload;
@@ -43,10 +37,6 @@ final class ImageProcessor
             'old_path' => $oldPath,
             'old_size' => $oldSize,
         );
-
-        if ($keepOriginal) {
-            $this->pendingOriginalFiles[$savedImage['path']] = $oldPath;
-        }
 
         $upload['file'] = $savedImage['path'];
         $upload['url']  = str_replace(basename((string) $upload['url']), basename($savedImage['path']), (string) $upload['url']);
@@ -58,11 +48,6 @@ final class ImageProcessor
     public function handleAttachmentMetadata(array $metadata, int $attachmentId): array
     {
         $attachedFile = get_attached_file($attachmentId);
-
-        if (is_string($attachedFile) && isset($this->pendingOriginalFiles[$attachedFile])) {
-            $this->storeOriginalReference($attachmentId, $this->pendingOriginalFiles[$attachedFile]);
-            unset($this->pendingOriginalFiles[$attachedFile]);
-        }
 
         if (is_string($attachedFile) && isset($this->pendingUploadConversions[$attachedFile])) {
             $conversion = $this->pendingUploadConversions[$attachedFile];
@@ -84,15 +69,10 @@ final class ImageProcessor
             return $metadata;
         }
 
-        $keepOriginal = $this->settings->keepOriginal();
-        $converted    = $this->convertFileToWebp($originalFile, !$keepOriginal);
+        $converted    = $this->convertFileToWebp($originalFile, true);
 
         if ($converted === null) {
             return $metadata;
-        }
-
-        if ($keepOriginal) {
-            $this->storeOriginalReference($attachmentId, $originalFile);
         }
 
         $metadata['original_image'] = basename($converted['path']);
@@ -113,7 +93,6 @@ final class ImageProcessor
         }
 
         $oldSize      = (int) filesize($filePath);
-        $keepOriginal = $this->settings->keepOriginal();
         $metadata     = wp_get_attachment_metadata($attachmentId);
         $metadata     = is_array($metadata) ? $metadata : array();
         $dirname      = dirname($filePath);
@@ -122,14 +101,10 @@ final class ImageProcessor
             $originalFile = $dirname . '/' . $metadata['original_image'];
 
             if (file_exists($originalFile) && !preg_match('/\.webp$/i', $originalFile)) {
-                $convertedOriginal = $this->convertFileToWebp($originalFile, !$keepOriginal);
+                $convertedOriginal = $this->convertFileToWebp($originalFile, true);
 
                 if ($convertedOriginal !== null) {
                     $metadata['original_image'] = basename($convertedOriginal['path']);
-
-                    if ($keepOriginal) {
-                        $this->storeOriginalReference($attachmentId, $originalFile);
-                    }
                 }
             }
         }
@@ -148,7 +123,7 @@ final class ImageProcessor
             }
         }
 
-        $savedImage = $this->convertFileToWebp($filePath, !$keepOriginal);
+        $savedImage = $this->convertFileToWebp($filePath, true);
 
         if ($savedImage === null) {
             // GIF 引擎不支持时标记为跳过而非失败
@@ -176,12 +151,6 @@ final class ImageProcessor
         }
 
         wp_update_attachment_metadata($attachmentId, $newMetadata);
-
-        if ($keepOriginal) {
-            $this->storeOriginalReference($attachmentId, $filePath);
-        } else {
-            delete_post_meta($attachmentId, '_wpok_original_file');
-        }
 
         $result = $this->buildResult('succeeded', $attachmentId, $filePath, $savedImage['path'], $oldSize);
         update_post_meta($attachmentId, '_wpok_last_conversion', $result);
@@ -382,8 +351,6 @@ final class ImageProcessor
         return array(
             'gd_loaded'      => extension_loaded('gd'),
             'imagick_loaded' => extension_loaded('imagick'),
-            'imagick_webp'   => $this->hasImagickWebpSupport(),
-            'animated_webp'  => $this->hasAnimatedWebpSupport(),
         );
     }
 
@@ -502,16 +469,6 @@ final class ImageProcessor
     private function hasImageEditorSupport(): bool
     {
         return extension_loaded('imagick') || extension_loaded('gd');
-    }
-
-    private function storeOriginalReference(int $attachmentId, string $originalFile): void
-    {
-        $uploadDir = wp_upload_dir();
-        $baseDir   = wp_normalize_path((string) $uploadDir['basedir']);
-        $path      = wp_normalize_path($originalFile);
-        $relative  = str_starts_with($path, $baseDir) ? ltrim(str_replace($baseDir, '', $path), '/') : basename($path);
-
-        update_post_meta($attachmentId, '_wpok_original_file', $relative);
     }
 
     private function mimeTypeForExtension(string $extension): string

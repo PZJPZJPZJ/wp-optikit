@@ -147,18 +147,6 @@ $wpDebug        = defined('WP_DEBUG') && WP_DEBUG;
                     'note'     => __('Required for animated GIF conversion', 'wp-optikit'),
                     'required' => false,
                 ),
-                'imagick_webp' => array(
-                    'loaded'   => $engineStatus['imagick_webp'] ?? false,
-                    'label'    => 'Imagick WebP',
-                    'note'     => __('Required for WebP support via Imagick', 'wp-optikit'),
-                    'required' => false,
-                ),
-                'animated_webp' => array(
-                    'loaded'   => $engineStatus['animated_webp'] ?? false,
-                    'label'    => __('Animated WebP (libwebp-anim)', 'wp-optikit'),
-                    'note'     => __('Enables animated GIF to WebP conversion', 'wp-optikit'),
-                    'required' => false,
-                ),
                 'zip' => array(
                     'loaded'   => extension_loaded('zip'),
                     'label'    => 'ZIP',

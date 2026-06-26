@@ -42,7 +42,6 @@ final class OptionStore
             'wpok_enabled',
             'wpok_convert_formats',
             'wpok_quality',
-            'wpok_keep_original',
             'wpok_max_file_size',
         );
 

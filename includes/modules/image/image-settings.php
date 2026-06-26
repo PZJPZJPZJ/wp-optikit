@@ -18,7 +18,6 @@ final class ImageSettings
             'formats'          => array('jpg', 'png', 'gif'),
             'engine'           => 'imagick',
             'quality'          => 80,
-            'keep_original'    => false,
             'max_file_size_kb' => 512,
             'clear_elementor_cache_after_jobs' => false,
         );
@@ -73,13 +72,6 @@ final class ImageSettings
         $settings = $this->get();
 
         return max(1, min(100, (int) $settings['quality']));
-    }
-
-    public function keepOriginal(): bool
-    {
-        $settings = $this->get();
-
-        return !empty($settings['keep_original']);
     }
 
     public function getMaxFileSizeBytes(): int
@@ -161,7 +153,6 @@ final class ImageSettings
             'formats'          => $formats,
             'engine'           => $engine,
             'quality'          => max(1, min(100, (int) ($input['quality'] ?? self::defaults()['quality']))),
-            'keep_original'    => !empty($input['keep_original']),
             'max_file_size_kb' => max(1, min(1024 * 100, (int) ($input['max_file_size_kb'] ?? self::defaults()['max_file_size_kb']))),
             'clear_elementor_cache_after_jobs' => !empty($input['clear_elementor_cache_after_jobs']),
         );
