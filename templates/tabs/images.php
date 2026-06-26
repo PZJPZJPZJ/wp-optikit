@@ -44,7 +44,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-pill-group">
                     <?php foreach (array('jpg' => 'JPG', 'png' => 'PNG', 'gif' => 'GIF') as $value => $label) : ?>
                         <?php
-                        $isGif  = $value === 'gif';
+                        $isGif       = $value === 'gif';
                         $gifDisabled = $isGif && (($engine === 'gd') || ($engine === 'imagick' && !$hasAnimatedWebp));
                         ?>
                         <label class="wpok-pill<?php echo $gifDisabled ? ' is-disabled' : ''; ?>">

@@ -767,3 +767,39 @@ msgstr "动画 WebP (libwebp-anim)"
 #: templates/tabs/overview.php
 msgid "Enables animated GIF to animated WebP conversion"
 msgstr "启用动图转换为动画 WebP"
+
+#: templates/tabs/overview.php
+msgid "PHP Extensions"
+msgstr "PHP 扩展"
+
+#: templates/tabs/overview.php
+msgid "Extension Status"
+msgstr "扩展状态"
+
+#: templates/tabs/overview.php
+msgid "Required for WebP support via Imagick"
+msgstr "Imagick WebP 支持所需"
+
+#: templates/tabs/overview.php
+msgid "Commonly used for HTTP requests"
+msgstr "HTTP 请求常用"
+
+#: templates/tabs/overview.php
+msgid "Commonly used for multibyte string operations"
+msgstr "多字节字符串操作常用"
+
+#: templates/tabs/overview.php
+msgid "Commonly used for MIME type detection"
+msgstr "MIME 类型检测常用"
+
+#: templates/tabs/overview.php
+msgid "Required for REST API operations"
+msgstr "REST API 操作所需"
+
+#: templates/tabs/overview.php
+msgid "Commonly used for secure connections"
+msgstr "安全连接常用"
+
+#: templates/tabs/overview.php
+msgid "(required)"
+msgstr "（必备）"

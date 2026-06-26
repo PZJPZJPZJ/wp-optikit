@@ -16,18 +16,8 @@ $phpVer         = PHP_VERSION;
 $phpMemLimit    = ini_get('memory_limit') ?: __('Unknown', 'wp-optikit');
 $phpMaxInput    = ini_get('max_input_vars') ?: __('Unknown', 'wp-optikit');
 $phpMaxPost     = ini_get('post_max_size') ?: __('Unknown', 'wp-optikit');
-$gdInstalled    = extension_loaded('gd');
-$zipInstalled   = extension_loaded('zip');
-
-/* Engine Status */
-$engineStatus      = $context['engine_status'] ?? array();
-$imagickInstalled  = $engineStatus['imagick_loaded'] ?? false;
-$imagickWebp       = $engineStatus['imagick_webp'] ?? false;
-$animatedWebp      = $engineStatus['animated_webp'] ?? false;
 $wpUploadDir    = wp_get_upload_dir();
 $uploadWritable = $wpUploadDir['error'] === false && wp_is_writable($wpUploadDir['basedir']);
-$elementorDb    = get_option('_elementor_installed_time', null);
-$elementorConnected = $elementorDb !== null && class_exists('\Elementor\Plugin');
 
 /* WordPress Environment */
 $wpVer          = get_bloginfo('version');
@@ -126,35 +116,102 @@ $wpDebug        = defined('WP_DEBUG') && WP_DEBUG;
                 <small class="wpok-env-rec"><?php esc_html_e('Recommended: 32M or higher', 'wp-optikit'); ?></small>
             </li>
             <li>
-                <span class="wpok-env-label">GD <?php esc_html_e('Installed', 'wp-optikit'); ?></span>
-                <span class="wpok-env-value <?php echo $gdInstalled ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $gdInstalled ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
-                <small class="wpok-env-rec"><?php esc_html_e('Required for image processing', 'wp-optikit'); ?></small>
-            </li>
-            <li>
-                <span class="wpok-env-label">Imagick <?php esc_html_e('Installed', 'wp-optikit'); ?></span>
-                <span class="wpok-env-value <?php echo $imagickInstalled ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $imagickInstalled ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
-                <small class="wpok-env-rec"><?php esc_html_e('Required for animated GIF conversion', 'wp-optikit'); ?></small>
-            </li>
-            <li>
-                <span class="wpok-env-label"><?php esc_html_e('Animated WebP (libwebp-anim)', 'wp-optikit'); ?></span>
-                <span class="wpok-env-value <?php echo $animatedWebp ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $animatedWebp ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
-                <small class="wpok-env-rec"><?php esc_html_e('Enables animated GIF to animated WebP conversion', 'wp-optikit'); ?></small>
-            </li>
-            <li>
-                <span class="wpok-env-label">ZIP <?php esc_html_e('Installed', 'wp-optikit'); ?></span>
-                <span class="wpok-env-value <?php echo $zipInstalled ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $zipInstalled ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
-                <small class="wpok-env-rec"><?php esc_html_e('Required for package operations', 'wp-optikit'); ?></small>
-            </li>
-            <li>
                 <span class="wpok-env-label"><?php esc_html_e('Write Permissions', 'wp-optikit'); ?></span>
                 <span class="wpok-env-value <?php echo $uploadWritable ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $uploadWritable ? esc_html__('All Right', 'wp-optikit') : esc_html__('Not Writable', 'wp-optikit'); ?></span>
                 <small class="wpok-env-rec"><?php esc_html_e('Required for file operations', 'wp-optikit'); ?></small>
             </li>
-            <li>
-                <span class="wpok-env-label">Elementor <?php esc_html_e('Library', 'wp-optikit'); ?></span>
-                <span class="wpok-env-value <?php echo $elementorConnected ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $elementorConnected ? esc_html__('Connected', 'wp-optikit') : esc_html__('Not Connected', 'wp-optikit'); ?></span>
-                <small class="wpok-env-rec"><?php esc_html_e('Required for Elementor integration', 'wp-optikit'); ?></small>
-            </li>
+        </ul>
+    </section>
+
+    <section class="wpok-card">
+        <div class="wpok-card-heading">
+            <div>
+                <span class="wpok-card-kicker"><?php esc_html_e('PHP Extensions', 'wp-optikit'); ?></span>
+                <h2><?php esc_html_e('Extension Status', 'wp-optikit'); ?></h2>
+            </div>
+        </div>
+        <ul class="wpok-env-list">
+            <?php
+            $engineStatus = $context['engine_status'] ?? array();
+
+            $extensions = array(
+                'gd' => array(
+                    'loaded'   => extension_loaded('gd'),
+                    'label'    => 'GD',
+                    'note'     => __('Required for image processing', 'wp-optikit'),
+                    'required' => true,
+                ),
+                'imagick' => array(
+                    'loaded'   => extension_loaded('imagick'),
+                    'label'    => 'Imagick',
+                    'note'     => __('Required for animated GIF conversion', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'imagick_webp' => array(
+                    'loaded'   => $engineStatus['imagick_webp'] ?? false,
+                    'label'    => 'Imagick WebP',
+                    'note'     => __('Required for WebP support via Imagick', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'animated_webp' => array(
+                    'loaded'   => $engineStatus['animated_webp'] ?? false,
+                    'label'    => __('Animated WebP (libwebp-anim)', 'wp-optikit'),
+                    'note'     => __('Enables animated GIF to WebP conversion', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'zip' => array(
+                    'loaded'   => extension_loaded('zip'),
+                    'label'    => 'ZIP',
+                    'note'     => __('Required for package operations', 'wp-optikit'),
+                    'required' => true,
+                ),
+                'curl' => array(
+                    'loaded'   => extension_loaded('curl'),
+                    'label'    => 'cURL',
+                    'note'     => __('Commonly used for HTTP requests', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'mbstring' => array(
+                    'loaded'   => extension_loaded('mbstring'),
+                    'label'    => 'mbstring',
+                    'note'     => __('Commonly used for multibyte string operations', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'fileinfo' => array(
+                    'loaded'   => extension_loaded('fileinfo'),
+                    'label'    => 'Fileinfo',
+                    'note'     => __('Commonly used for MIME type detection', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'json' => array(
+                    'loaded'   => extension_loaded('json'),
+                    'label'    => 'JSON',
+                    'note'     => __('Required for REST API operations', 'wp-optikit'),
+                    'required' => true,
+                ),
+                'openssl' => array(
+                    'loaded'   => extension_loaded('openssl'),
+                    'label'    => 'OpenSSL',
+                    'note'     => __('Commonly used for secure connections', 'wp-optikit'),
+                    'required' => false,
+                ),
+            );
+            ?>
+
+            <?php foreach ($extensions as $ext) : ?>
+                <li>
+                    <span class="wpok-env-label"><?php echo esc_html($ext['label']); ?></span>
+                    <span class="wpok-env-value <?php echo $ext['loaded'] ? 'wpok-env-ok' : 'wpok-env-fail'; ?>">
+                        <?php echo $ext['loaded'] ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?>
+                    </span>
+                    <small class="wpok-env-rec">
+                        <?php echo esc_html($ext['note']); ?>
+                        <?php if ($ext['required']) : ?>
+                            <span class="wpok-ext-required"><?php esc_html_e('(required)', 'wp-optikit'); ?></span>
+                        <?php endif; ?>
+                    </small>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </section>
 
