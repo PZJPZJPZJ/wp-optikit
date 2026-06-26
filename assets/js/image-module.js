@@ -16,7 +16,7 @@
         });
 
         initImageJobs();
-        initCleanupPanels();
+        initOrphanPanel();
     }
 
     /* ============================================================
@@ -511,31 +511,26 @@
     });
 
     /* ============================================================
-       CLEANUP PANELS (Unused Media + Orphan Files)
+       ORPHAN FILES PANEL
        ============================================================ */
 
-    function initCleanupPanels() {
-        document.querySelectorAll('[data-cleanup-panel]').forEach(function (panel) {
-            bindCleanupPanel(panel);
-        });
-    }
+    function initOrphanPanel() {
+        var panel = document.querySelector('[data-orphan-panel]');
 
-    function bindCleanupPanel(panel) {
+        if (!panel) {
+            return;
+        }
+
         panel.addEventListener('click', function (event) {
             var target = event.target;
 
             if (target.closest('[data-action="scan"]')) {
-                scanCleanupPanel(panel);
+                scanOrphanFiles(panel);
                 return;
             }
 
-            if (target.closest('[data-action="delete-files"]')) {
-                deleteSelectedFiles(panel);
-                return;
-            }
-
-            if (target.closest('[data-action="delete-permanent"]')) {
-                deleteSelectedFiles(panel, true);
+            if (target.closest('[data-action="delete-orphans"]')) {
+                deleteOrphanFiles(panel);
                 return;
             }
 
@@ -555,7 +550,7 @@
                 panel.querySelectorAll('.wpok-job-item input[type="checkbox"], .wpok-job-directory-head input[type="checkbox"]').forEach(function (checkbox) {
                     checkbox.checked = target.checked;
                 });
-                updateDeleteButton(panel);
+                updateOrphanDeleteBtn(panel);
                 return;
             }
 
@@ -564,60 +559,40 @@
                 directory.querySelectorAll('.wpok-job-item input[type="checkbox"]').forEach(function (checkbox) {
                     checkbox.checked = target.checked;
                 });
-                updateDeleteButton(panel);
+                updateOrphanDeleteBtn(panel);
                 return;
             }
 
             if (target.matches('.wpok-job-item input[type="checkbox"]')) {
-                updateDeleteButton(panel);
+                updateOrphanDeleteBtn(panel);
             }
         });
     }
 
-    function scanCleanupPanel(panel) {
-        var endpoint = panel.getAttribute('data-scan-endpoint');
+    function scanOrphanFiles(panel) {
+        var endpoint = panel.getAttribute('data-orphan-endpoint');
         var results = panel.querySelector('[data-role="results"]');
         var toolbar = panel.querySelector('[data-role="toolbar"]');
 
+        results.innerHTML = buildScanProgressHtml();
         toolbar.hidden = true;
 
-        /* Orphan Files: show count-based progress */
-        if (panel.getAttribute('data-cleanup-panel') === 'orphan') {
-            results.innerHTML = buildScanProgressHtml('Preparing...');
-
-            window.WPOKUtils.request('media-orphan/count', { method: 'POST', body: {} })
-                .then(function (countResp) {
-                    var total = countResp.total || 0;
-                    results.innerHTML = buildScanProgressHtml(escapeHtml(String(total)) + ' ' + escapeHtml(labels.orphanScanning || 'files scanning...'));
-                    return window.WPOKUtils.request(endpoint, { method: 'POST', body: {} });
-                })
-                .then(function (scanResp) {
-                    renderCleanupResults(panel, scanResp.directories || {});
-                })
-                .catch(function (error) {
-                    results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
-                });
-        } else {
-            results.innerHTML = buildScanProgressHtml();
-            toolbar.hidden = true;
-
-            window.WPOKUtils.request(endpoint, { method: 'POST', body: {} })
-                .then(function (response) {
-                    renderCleanupResults(panel, response.directories || {});
-                })
-                .catch(function (error) {
-                    results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
-                });
-        }
+        window.WPOKUtils.request(endpoint + '/scan', { method: 'POST', body: {} })
+            .then(function (response) {
+                renderOrphanResults(panel, response.directories || {});
+            })
+            .catch(function (error) {
+                results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(error.message) + '</div>';
+            });
     }
 
-    function renderCleanupResults(panel, directories) {
+    function renderOrphanResults(panel, directories) {
         var results = panel.querySelector('[data-role="results"]');
         var toolbar = panel.querySelector('[data-role="toolbar"]');
         var directoryNames = Object.keys(directories || {});
 
         if (directoryNames.length === 0) {
-            results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.noUnusedFound || 'No unused files were found.') + '</div>';
+            results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.noOrphans || 'No orphan files were found.') + '</div>';
             toolbar.hidden = true;
             return;
         }
@@ -626,13 +601,18 @@
         var html = '<div class="wpok-job-tree">';
         html += '<div class="wpok-job-tree-toolbar">';
         html += '<label><input type="checkbox" data-role="select-all" checked> ' + escapeHtml(labels.selectAll || 'Select all') + '</label>';
-        html += '<span>' + directoryNames.length + ' ' + escapeHtml(labels.directories || 'directories') + '</span>';
+        html += '<span>' + directoryNames.length + ' ' + escapeHtml(labels.directories || 'directories') + '<span class="wpok-orphan-total"> | ' + escapeHtml(labels.totalLower || 'total') + ' ';
+
+        directoryNames.forEach(function (dn) {
+            totalItems += (directories[dn] || []).length;
+        });
+
+        html += String(totalItems) + ' ' + escapeHtml(labels.items || 'items') + '</span></span>';
         html += '</div>';
         html += '<ul class="wpok-job-tree-list">';
 
         directoryNames.forEach(function (directoryName) {
             var items = directories[directoryName] || [];
-            totalItems += items.length;
             html += '<li class="wpok-job-directory">';
             html += '<div class="wpok-job-directory-head">';
             html += '<input type="checkbox" checked>';
@@ -643,7 +623,7 @@
             html += '<ul class="wpok-job-item-list">';
 
             items.forEach(function (item) {
-                html += '<li class="wpok-job-item" data-attachment-id="' + (item.id || 0) + '" data-size-bytes="' + item.size + '" data-file-path="' + escapeHtml(item.path || '') + '">';
+                html += '<li class="wpok-job-item" data-file-path="' + escapeHtml(item.path || '') + '" data-size-bytes="' + item.size + '">';
                 html += '<input type="checkbox" checked>';
                 html += '<span class="wpok-job-item-name">' + escapeHtml(item.name) + '</span>';
                 html += '<span class="wpok-job-item-size">' + escapeHtml(window.WPOKUtils.formatBytes(item.size)) + '</span>';
@@ -660,67 +640,46 @@
         results.innerHTML = html;
         toolbar.hidden = false;
 
-        /* Add delete buttons to toolbar */
-        var panelCount = totalItems;
-        toolbar.innerHTML = ''
-            + '<div class="wpok-cleanup-toolbar">'
-            + '<button type="button" class="button button-secondary" data-action="delete-files">' + escapeHtml(labels.trashSelected || 'Trash Selected') + ' (' + panelCount + '/' + panelCount + ')</button>'
-            + '<button type="button" class="button wpok-btn-danger" data-action="delete-permanent">' + escapeHtml(labels.deletePermanent || 'Delete Permanently') + '</button>'
-            + '</div>';
+        toolbar.innerHTML = '<button type="button" class="button wpok-btn-danger" data-action="delete-orphans">' + escapeHtml(labels.deletePermanent || 'Delete Permanently') + ' (' + totalItems + '/' + totalItems + ')</button>';
     }
 
-    function updateDeleteButton(panel) {
+    function updateOrphanDeleteBtn(panel) {
         var total = panel.querySelectorAll('.wpok-job-item').length;
         var selected = panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
-        var trashBtn = panel.querySelector('[data-action="delete-files"]');
+        var delBtn = panel.querySelector('[data-action="delete-orphans"]');
 
-        if (trashBtn) {
-            trashBtn.textContent = (labels.trashSelected || 'Trash Selected') + ' (' + selected + '/' + total + ')';
+        if (delBtn) {
+            delBtn.textContent = (labels.deletePermanent || 'Delete Permanently') + ' (' + selected + '/' + total + ')';
         }
     }
 
-    function deleteSelectedFiles(panel, permanent) {
+    function deleteOrphanFiles(panel) {
         var items = Array.prototype.map.call(
             panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked'),
             function (checkbox) {
-                var item = checkbox.closest('.wpok-job-item');
-                return {
-                    id: parseInt(item.getAttribute('data-attachment-id'), 10) || 0,
-                    file: item.getAttribute('data-file-path') || ''
-                };
+                return { file: checkbox.closest('.wpok-job-item').getAttribute('data-file-path') || '' };
             }
-        );
+        ).filter(function (i) { return i.file !== ''; });
 
         if (items.length === 0) {
             return;
         }
 
-        var mode = permanent ? 'permanent' : 'trash';
-        var msg;
-
-        if (permanent) {
-            msg = labels.confirmPermanent || 'This will permanently delete %d files. This cannot be undone. Continue?';
-        } else {
-            msg = labels.confirmTrash || 'Move %d files to trash? They can be restored later.';
-        }
+        var msg = labels.confirmOrphan || 'Permanently delete %d orphan files? This cannot be undone.';
 
         if (!confirm(msg.replace(/%d/g, String(items.length)))) {
             return;
         }
 
-        var endpoint = panel.getAttribute('data-delete-endpoint');
         var results = panel.querySelector('[data-role="results"]');
         var toolbar = panel.querySelector('[data-role="toolbar"]');
 
         toolbar.hidden = true;
         results.innerHTML = '<div class="wpok-job-empty">' + escapeHtml(labels.deleting || 'Deleting...') + '</div>';
 
-        window.WPOKUtils.request(endpoint, {
+        window.WPOKUtils.request('media-orphan/delete', {
             method: 'POST',
-            body: {
-                mode: mode,
-                items: items
-            }
+            body: { items: items }
         }).then(function (response) {
             var success = response.success || 0;
             var fail = response.fail || 0;

@@ -125,21 +125,8 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </div>
     </section>
 
-    <!-- 5. Unused Media -->
-    <section class="wpok-card wpok-cleanup-card" data-cleanup-panel="unused" data-delete-endpoint="media-unused/delete" data-scan-endpoint="media-unused/scan">
-        <div class="wpok-job-panel-head">
-            <div>
-                <h3><?php esc_html_e('Unused Media', 'wp-optikit'); ?></h3>
-                <p><?php esc_html_e('Find media library attachments that are not referenced by any post or page.', 'wp-optikit'); ?></p>
-            </div>
-            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Unused Media', 'wp-optikit'); ?></button>
-        </div>
-        <div class="wpok-job-results" data-role="results"></div>
-        <div class="wpok-job-toolbar" data-role="toolbar" hidden></div>
-    </section>
-
-    <!-- 6. Orphan Files -->
-    <section class="wpok-card wpok-cleanup-card" data-cleanup-panel="orphan" data-delete-endpoint="media-orphan/delete" data-scan-endpoint="media-orphan/scan">
+    <!-- 5. Orphan Files -->
+    <section class="wpok-card" data-orphan-panel data-orphan-endpoint="media-orphan">
         <div class="wpok-job-panel-head">
             <div>
                 <h3><?php esc_html_e('Orphan Files', 'wp-optikit'); ?></h3>

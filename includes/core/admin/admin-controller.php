@@ -106,17 +106,15 @@ final class AdminController
                     'sizeArrow'       => __('->', 'wp-optikit'),
                     'noChange'        => __('No change', 'wp-optikit'),
 
-                    // Cleanup panels
-                    'noUnusedFound'   => __('No unused files were found.', 'wp-optikit'),
-                    'trashSelected'   => __('Trash Selected', 'wp-optikit'),
+                    // Cleanup — Orphan Files
+                    'noOrphans'       => __('No orphan files were found.', 'wp-optikit'),
                     'deletePermanent' => __('Delete Permanently', 'wp-optikit'),
-                    'confirmTrash'    => __('Move %d files to trash? They can be restored later.', 'wp-optikit'),
-                    'confirmPermanent' => __('This will permanently delete %d files. This cannot be undone. Continue?', 'wp-optikit'),
+                    'confirmOrphan'   => __('Permanently delete %d orphan files? This cannot be undone.', 'wp-optikit'),
                     'deleting'        => __('Deleting...', 'wp-optikit'),
                     'deleteResult'    => __('Delete completed.', 'wp-optikit'),
                     'successLower'    => __('succeeded', 'wp-optikit'),
                     'failedLower'     => __('failed', 'wp-optikit'),
-                    'orphanScanning'  => __('files scanning...', 'wp-optikit'),
+                    'totalLower'      => __('total', 'wp-optikit'),
                 ),
             )
         );

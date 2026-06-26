@@ -20,18 +20,6 @@ final class MediaOrphanRestController
     {
         register_rest_route(
             'wp-optikit/v1',
-            '/media-orphan/count',
-            array(
-                array(
-                    'methods'             => 'POST',
-                    'callback'            => array($this, 'count'),
-                    'permission_callback' => array($this, 'canManage'),
-                ),
-            )
-        );
-
-        register_rest_route(
-            'wp-optikit/v1',
             '/media-orphan/scan',
             array(
                 array(
@@ -55,11 +43,6 @@ final class MediaOrphanRestController
         );
     }
 
-    public function count(WP_REST_Request $request): WP_REST_Response
-    {
-        return new WP_REST_Response(array('total' => $this->scanner->countImageFiles()));
-    }
-
     public function scan(WP_REST_Request $request): WP_REST_Response
     {
         return new WP_REST_Response(array('directories' => $this->scanner->scan()));
@@ -67,11 +50,17 @@ final class MediaOrphanRestController
 
     public function delete(WP_REST_Request $request): WP_REST_Response
     {
-        $mode  = $request->get_param('mode');
         $items = $request->get_param('items');
 
         if (!is_array($items)) {
             return new WP_REST_Response(array('success' => 0, 'fail' => 0, 'errors' => array()), 400);
+        }
+
+        $uploadDir = wp_get_upload_dir();
+        $baseDir   = realpath((string) $uploadDir['basedir']);
+
+        if ($baseDir === false) {
+            return new WP_REST_Response(array('success' => 0, 'fail' => 0, 'errors' => array(array('file' => '', 'reason' => 'Upload dir not found'))), 500);
         }
 
         $success = 0;
@@ -92,15 +81,6 @@ final class MediaOrphanRestController
             }
 
             /* Security: only allow files inside wp-content/uploads */
-            $uploadDir = wp_get_upload_dir();
-            $baseDir   = realpath((string) $uploadDir['basedir']);
-
-            if ($baseDir === false) {
-                $fail++;
-                $errors[] = array('file' => $filePath, 'reason' => 'Upload dir not found');
-                continue;
-            }
-
             $fullPath = realpath($filePath);
 
             if ($fullPath === false || strpos($fullPath, $baseDir) !== 0) {

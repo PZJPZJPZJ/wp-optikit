@@ -116,18 +116,6 @@ msgid "Disabled"
 msgstr "已禁用"
 
 #: templates/tabs/images.php
-msgid "Unused Media"
-msgstr "未引用媒体"
-
-#: templates/tabs/images.php
-msgid "Find media library attachments that are not referenced by any post or page."
-msgstr "查找未被任何文章或页面引用的媒体库附件。"
-
-#: templates/tabs/images.php
-msgid "Scan Unused Media"
-msgstr "扫描未引用媒体"
-
-#: templates/tabs/images.php
 msgid "Orphan Files"
 msgstr "失效文件"
 
@@ -140,24 +128,16 @@ msgid "Scan Orphan Files"
 msgstr "扫描失效文件"
 
 #: includes/core/admin/admin-controller.php
-msgid "No unused files were found."
-msgstr "未找到未引用的文件。"
-
-#: includes/core/admin/admin-controller.php
-msgid "Trash Selected"
-msgstr "移至回收站"
+msgid "No orphan files were found."
+msgstr "未找到失效文件。"
 
 #: includes/core/admin/admin-controller.php
 msgid "Delete Permanently"
 msgstr "永久删除"
 
 #: includes/core/admin/admin-controller.php
-msgid "Move %d files to trash? They can be restored later."
-msgstr "将 %d 个文件移至回收站？之后可以恢复。"
-
-#: includes/core/admin/admin-controller.php
-msgid "This will permanently delete %d files. This cannot be undone. Continue?"
-msgstr "将永久删除 %d 个文件。此操作不可撤销。是否继续？"
+msgid "Permanently delete %d orphan files? This cannot be undone."
+msgstr "将永久删除 %d 个失效文件。此操作不可撤销。"
 
 #: includes/core/admin/admin-controller.php
 msgid "Deleting..."
@@ -176,8 +156,8 @@ msgid "failed"
 msgstr "失败"
 
 #: includes/core/admin/admin-controller.php
-msgid "files scanning..."
-msgstr "个文件扫描中..."
+msgid "total"
+msgstr "共计"
 
 #: templates/tabs/overview.php
 msgid "Plain"
