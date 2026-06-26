@@ -1,6 +1,10 @@
 <?php
 /**
  * @var array<string, mixed> $imageSettings
+ * @var string $engine
+ * @var bool $gdAvailable
+ * @var bool $imagickAvailable
+ * @var bool $hasAnimatedWebp
  */
 $formats = (array) ($imageSettings['formats'] ?? array());
 $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
@@ -39,11 +43,40 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <span><?php esc_html_e('Source formats', 'wp-optikit'); ?></span>
                 <div class="wpok-pill-group">
                     <?php foreach (array('jpg' => 'JPG', 'png' => 'PNG', 'gif' => 'GIF') as $value => $label) : ?>
-                        <label class="wpok-pill">
-                            <input type="checkbox" name="wpok_image_settings[formats][]" value="<?php echo esc_attr($value); ?>" <?php checked(in_array($value, $formats, true)); ?>>
+                        <?php
+                        $isGif  = $value === 'gif';
+                        $gifDisabled = $isGif && (($engine === 'gd') || ($engine === 'imagick' && !$hasAnimatedWebp));
+                        ?>
+                        <label class="wpok-pill<?php echo $gifDisabled ? ' is-disabled' : ''; ?>">
+                            <input type="checkbox" name="wpok_image_settings[formats][]" value="<?php echo esc_attr($value); ?>" <?php checked(in_array($value, $formats, true)); ?> <?php disabled($gifDisabled); ?>>
                             <span><?php echo esc_html($label); ?></span>
+                            <?php if ($gifDisabled) : ?>
+                                <span class="wpok-pill-note"><?php echo $engine === 'gd'
+                                    ? esc_html__('(GD cannot convert animated GIFs)', 'wp-optikit')
+                                    : esc_html__('(Imagick lacks animated WebP support)', 'wp-optikit'); ?></span>
+                            <?php endif; ?>
                         </label>
                     <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="wpok-field-row">
+                <span><?php esc_html_e('Conversion engine', 'wp-optikit'); ?></span>
+                <div class="wpok-radio-group">
+                    <label class="wpok-radio-card<?php echo !$gdAvailable ? ' is-disabled' : ''; ?>">
+                        <input type="radio" name="wpok_image_settings[engine]" value="gd" <?php checked($engine, 'gd'); ?> <?php disabled(!$gdAvailable); ?>>
+                        <span>GD</span>
+                        <?php if (!$gdAvailable) : ?>
+                            <span class="wpok-engine-note"><?php esc_html_e('(not available)', 'wp-optikit'); ?></span>
+                        <?php endif; ?>
+                    </label>
+                    <label class="wpok-radio-card<?php echo !$imagickAvailable ? ' is-disabled' : ''; ?>">
+                        <input type="radio" name="wpok_image_settings[engine]" value="imagick" <?php checked($engine, 'imagick'); ?> <?php disabled(!$imagickAvailable); ?>>
+                        <span>Imagick</span>
+                        <?php if (!$imagickAvailable) : ?>
+                            <span class="wpok-engine-note"><?php esc_html_e('(not available)', 'wp-optikit'); ?></span>
+                        <?php endif; ?>
+                    </label>
                 </div>
             </div>
 

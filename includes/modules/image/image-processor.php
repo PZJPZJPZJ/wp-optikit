@@ -151,6 +151,11 @@ final class ImageProcessor
         $savedImage = $this->convertFileToWebp($filePath, !$keepOriginal);
 
         if ($savedImage === null) {
+            // 动画 GIF 无法转换时标记为跳过而非失败
+            if ($this->isAnimatedGif($filePath)) {
+                return $this->buildResult('skipped', $attachmentId, $filePath, $filePath);
+            }
+
             throw new \RuntimeException('Attachment conversion failed.');
         }
 
@@ -215,6 +220,18 @@ final class ImageProcessor
             return null;
         }
 
+        // 检测并处理动画 GIF
+        if ($this->isAnimatedGif($filePath)) {
+            $engine = $this->settings->getEngine();
+
+            if ($engine === 'imagick' && $this->hasAnimatedWebpSupport()) {
+                return $this->convertAnimatedGifToWebp($filePath, $deleteOriginal);
+            }
+
+            // GD 或 Imagick 不支持动画 WebP -> 跳过转换
+            return null;
+        }
+
         $editor = wp_get_image_editor($filePath);
 
         if (is_wp_error($editor)) {
@@ -273,6 +290,140 @@ final class ImageProcessor
             'path' => $filePath,
             'file' => basename($filePath),
         );
+    }
+
+    /**
+     * 检测文件是否为动画 GIF（含多帧）
+     */
+    private function isAnimatedGif(string $filePath): bool
+    {
+        if (!file_exists($filePath) || strtolower((string) pathinfo($filePath, PATHINFO_EXTENSION)) !== 'gif') {
+            return false;
+        }
+
+        $content = @file_get_contents($filePath, false, null, 0, 2097152);
+
+        if ($content === false) {
+            return false;
+        }
+
+        return preg_match_all('/\x00\x21\xF9\x04/', $content) > 1;
+    }
+
+    /**
+     * 检查 Imagick 是否支持 WebP 格式
+     */
+    public function hasImagickWebpSupport(): bool
+    {
+        if (!extension_loaded('imagick')) {
+            return false;
+        }
+
+        try {
+            $formats = \Imagick::queryFormats('WEBP');
+
+            return !empty($formats);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * 检查 Imagick 是否支持动画 WebP（libwebp-anim）
+     */
+    public function hasAnimatedWebpSupport(): bool
+    {
+        if (!extension_loaded('imagick')) {
+            return false;
+        }
+
+        $cacheKey = 'wpok_anim_webp_support';
+        $cached   = get_transient($cacheKey);
+
+        if ($cached !== false) {
+            return (bool) $cached;
+        }
+
+        try {
+            $frame1 = new \Imagick();
+            $frame1->newImage(1, 1, new \ImagickPixel('white'));
+            $frame1->setImageFormat('webp');
+            $frame1->setImageDelay(10);
+
+            $frame2 = clone $frame1;
+            $frame2->setImageDelay(20);
+
+            $anim = new \Imagick();
+            $anim->addImage($frame1);
+            $anim->addImage($frame2);
+            $anim->setImageFormat('webp');
+            $anim->writeImages('php://temp', true);
+
+            $anim->clear();
+            $frame1->clear();
+            $frame2->clear();
+
+            set_transient($cacheKey, true, HOUR_IN_SECONDS);
+
+            return true;
+        } catch (\Throwable $e) {
+            set_transient($cacheKey, false, HOUR_IN_SECONDS);
+
+            return false;
+        }
+    }
+
+    /**
+     * 获取引擎支持状态（供 UI 使用）
+     *
+     * @return array<string, bool>
+     */
+    public function getEngineStatus(): array
+    {
+        return array(
+            'gd_loaded'      => extension_loaded('gd'),
+            'imagick_loaded' => extension_loaded('imagick'),
+            'imagick_webp'   => $this->hasImagickWebpSupport(),
+            'animated_webp'  => $this->hasAnimatedWebpSupport(),
+        );
+    }
+
+    /**
+     * 使用 Imagick 将动画 GIF 转换为动画 WebP
+     */
+    private function convertAnimatedGifToWebp(string $filePath, bool $deleteOriginal): ?array
+    {
+        try {
+            $imagick = new \Imagick($filePath);
+            $imagick = $imagick->coalesceImages();
+
+            $fileInfo = pathinfo($filePath);
+            $webpPath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '.webp';
+
+            foreach ($imagick as $frame) {
+                $frame->setImageFormat('webp');
+                $frame->setImageDelay($frame->getImageDelay());
+                $frame->setImageDispose($frame->getImageDispose());
+            }
+
+            $imagick->writeImages($webpPath, true);
+            $imagick->clear();
+
+            if (!file_exists($webpPath)) {
+                return null;
+            }
+
+            if ($deleteOriginal) {
+                @unlink($filePath);
+            }
+
+            return array(
+                'path' => $webpPath,
+                'file' => basename($webpPath),
+            );
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     private function buildResult(string $status, int $attachmentId, string $oldPath, string $newPath, ?int $oldSize = null): array

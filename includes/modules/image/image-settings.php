@@ -16,6 +16,7 @@ final class ImageSettings
             'enabled'          => true,
             'output_format'    => 'webp',
             'formats'          => array('jpg', 'png', 'gif'),
+            'engine'           => 'imagick',
             'quality'          => 80,
             'keep_original'    => false,
             'max_file_size_kb' => 512,
@@ -95,6 +96,46 @@ final class ImageSettings
         return !empty($settings['clear_elementor_cache_after_jobs']);
     }
 
+    public function getEngine(): string
+    {
+        $settings = $this->get();
+        $engine   = (string) ($settings['engine'] ?? 'imagick');
+
+        if (!in_array($engine, array('gd', 'imagick'), true)) {
+            $engine = 'imagick';
+        }
+
+        if (!$this->isEngineAvailable($engine)) {
+            $engine = $this->isEngineAvailable('gd') ? 'gd' : 'imagick';
+        }
+
+        return $engine;
+    }
+
+    public function isEngineAvailable(string $engine): bool
+    {
+        return match ($engine) {
+            'gd'      => extension_loaded('gd'),
+            'imagick' => extension_loaded('imagick'),
+            default   => false,
+        };
+    }
+
+    public function getAvailableEngines(): array
+    {
+        $engines = array();
+
+        if (extension_loaded('gd')) {
+            $engines['gd'] = __('GD', 'wp-optikit');
+        }
+
+        if (extension_loaded('imagick')) {
+            $engines['imagick'] = __('Imagick', 'wp-optikit');
+        }
+
+        return $engines;
+    }
+
     public function sanitize($input): array
     {
         $input   = is_array($input) ? $input : array();
@@ -104,10 +145,21 @@ final class ImageSettings
             $formats = self::defaults()['formats'];
         }
 
+        $engine = (string) ($input['engine'] ?? 'imagick');
+
+        if (!in_array($engine, array('gd', 'imagick'), true)) {
+            $engine = 'imagick';
+        }
+
+        if (!$this->isEngineAvailable($engine)) {
+            $engine = $this->isEngineAvailable('gd') ? 'gd' : 'imagick';
+        }
+
         return array(
             'enabled'          => !empty($input['enabled']),
             'output_format'    => (($input['output_format'] ?? 'webp') === 'webp') ? 'webp' : 'webp',
             'formats'          => $formats,
+            'engine'           => $engine,
             'quality'          => max(1, min(100, (int) ($input['quality'] ?? self::defaults()['quality']))),
             'keep_original'    => !empty($input['keep_original']),
             'max_file_size_kb' => max(1, min(1024 * 100, (int) ($input['max_file_size_kb'] ?? self::defaults()['max_file_size_kb']))),

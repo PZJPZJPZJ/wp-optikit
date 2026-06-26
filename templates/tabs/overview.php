@@ -18,6 +18,12 @@ $phpMaxInput    = ini_get('max_input_vars') ?: __('Unknown', 'wp-optikit');
 $phpMaxPost     = ini_get('post_max_size') ?: __('Unknown', 'wp-optikit');
 $gdInstalled    = extension_loaded('gd');
 $zipInstalled   = extension_loaded('zip');
+
+/* Engine Status */
+$engineStatus      = $context['engine_status'] ?? array();
+$imagickInstalled  = $engineStatus['imagick_loaded'] ?? false;
+$imagickWebp       = $engineStatus['imagick_webp'] ?? false;
+$animatedWebp      = $engineStatus['animated_webp'] ?? false;
 $wpUploadDir    = wp_get_upload_dir();
 $uploadWritable = $wpUploadDir['error'] === false && wp_is_writable($wpUploadDir['basedir']);
 $elementorDb    = get_option('_elementor_installed_time', null);
@@ -123,6 +129,16 @@ $wpDebug        = defined('WP_DEBUG') && WP_DEBUG;
                 <span class="wpok-env-label">GD <?php esc_html_e('Installed', 'wp-optikit'); ?></span>
                 <span class="wpok-env-value <?php echo $gdInstalled ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $gdInstalled ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
                 <small class="wpok-env-rec"><?php esc_html_e('Required for image processing', 'wp-optikit'); ?></small>
+            </li>
+            <li>
+                <span class="wpok-env-label">Imagick <?php esc_html_e('Installed', 'wp-optikit'); ?></span>
+                <span class="wpok-env-value <?php echo $imagickInstalled ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $imagickInstalled ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
+                <small class="wpok-env-rec"><?php esc_html_e('Required for animated GIF conversion', 'wp-optikit'); ?></small>
+            </li>
+            <li>
+                <span class="wpok-env-label"><?php esc_html_e('Animated WebP (libwebp-anim)', 'wp-optikit'); ?></span>
+                <span class="wpok-env-value <?php echo $animatedWebp ? 'wpok-env-ok' : 'wpok-env-fail'; ?>"><?php echo $animatedWebp ? esc_html__('Yes', 'wp-optikit') : esc_html__('No', 'wp-optikit'); ?></span>
+                <small class="wpok-env-rec"><?php esc_html_e('Enables animated GIF to animated WebP conversion', 'wp-optikit'); ?></small>
             </li>
             <li>
                 <span class="wpok-env-label">ZIP <?php esc_html_e('Installed', 'wp-optikit'); ?></span>

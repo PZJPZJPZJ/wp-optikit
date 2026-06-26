@@ -6,6 +6,7 @@ use WPOptiKit\Core\Compatibility;
 use WPOptiKit\Core\Contracts\ModuleInterface;
 use WPOptiKit\Core\Queue\JobRepository;
 use WPOptiKit\Core\Storage\OptionStore;
+use WPOptiKit\Modules\Image\ImageProcessor;
 use WPOptiKit\Modules\Image\ImageSettings;
 
 final class AdminController
@@ -136,6 +137,12 @@ final class AdminController
         $tabs      = $this->registry->all();
         $activeTab = isset($_GET['tab']) ? sanitize_key((string) $_GET['tab']) : 'overview';
         $tab       = $this->registry->get($activeTab) ?? reset($tabs);
+
+        // 计算图片引擎状态
+        $imageSettings = new ImageSettings($this->options);
+        $imageProcessor = new ImageProcessor($imageSettings);
+        $engineStatus   = $imageProcessor->getEngineStatus();
+
         $context   = array(
             'tabs'            => $tabs,
             'active_tab'      => $tab,
@@ -149,6 +156,7 @@ final class AdminController
                 'wp_min'      => Compatibility::MIN_WP,
             ),
             'image_settings'  => $this->options->get(OptionStore::IMAGE_OPTION, ImageSettings::defaults()),
+            'engine_status'   => $engineStatus,
         );
 
         include WPOK_DIR . 'templates/layout.php';

@@ -575,6 +575,25 @@
     background: #fff;
 }
 
+.wpok-pill.is-disabled,
+.wpok-radio-card.is-disabled {
+	opacity: 0.5;
+	background: #f0f0f1;
+	cursor: not-allowed;
+}
+
+.wpok-pill.is-disabled input,
+.wpok-radio-card.is-disabled input {
+	pointer-events: none;
+}
+
+.wpok-pill-note,
+.wpok-engine-note {
+	font-size: 11px;
+	color: #8c8f94;
+	margin-left: 4px;
+}
+
 .wpok-orphan-total {
     color: #8c8f94;
     font-weight: 400;

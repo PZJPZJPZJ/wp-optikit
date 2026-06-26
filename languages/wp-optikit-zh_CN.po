@@ -739,3 +739,31 @@ msgstr "→"
 #: includes/core/admin/admin-controller.php
 msgid "No change"
 msgstr "无变化"
+
+#: templates/tabs/images.php
+msgid "Conversion engine"
+msgstr "转换引擎"
+
+#: templates/tabs/images.php
+msgid "(not available)"
+msgstr "（不可用）"
+
+#: templates/tabs/images.php
+msgid "GD cannot convert animated GIFs"
+msgstr "GD 无法转换动图"
+
+#: templates/tabs/images.php
+msgid "Imagick lacks animated WebP support"
+msgstr "Imagick 缺少动画 WebP 支持"
+
+#: templates/tabs/overview.php
+msgid "Required for animated GIF conversion"
+msgstr "动图转换所需"
+
+#: templates/tabs/overview.php
+msgid "Animated WebP (libwebp-anim)"
+msgstr "动画 WebP (libwebp-anim)"
+
+#: templates/tabs/overview.php
+msgid "Enables animated GIF to animated WebP conversion"
+msgstr "启用动图转换为动画 WebP"
