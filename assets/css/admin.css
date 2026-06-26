@@ -91,7 +91,7 @@
     width: 100%;
     gap: 10px;
     overflow-x: auto;
-    padding: 8px;
+    padding: 10px;
     border-radius: 18px;
     background: linear-gradient(180deg, #eef4fb 0%, #e6edf6 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
@@ -123,8 +123,7 @@
 .wpok-admin-tab.is-active {
     background: #fff;
     color: #0f4c81;
-    box-shadow: 0 8px 18px rgba(16, 71, 119, 0.12);
-    transform: translateY(-1px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .wpok-admin-tab:focus {
@@ -1000,4 +999,72 @@
     font-size: 12px;
     color: #8c8f94;
     line-height: 1.5;
+}
+
+/* ============================================================
+   Sticky Tab Bar Wrapper + Frosted Glass
+   ============================================================ */
+.wpok-admin-tabs-bar {
+    position: sticky;
+    top: 32px;
+    z-index: 100;
+    padding: 10px 0;
+}
+
+.wpok-admin-tabs-glass {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px) saturate(1.5);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),inset 0 1px 2px rgba(255,255,255,0.6),inset 0 -1px 2px rgba(0,0,0,0.08);
+    border-radius: 30px;
+}
+
+.wpok-admin-tabs-glass .wpok-admin-tab {
+    background: transparent;
+}
+
+.wpok-admin-tabs-glass .wpok-admin-tab:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.wpok-admin-tabs-glass .wpok-admin-tab.is-active {
+    background: #fff;
+}
+
+/* Logo & Version Badge */
+.wpok-admin-tab-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 18px 4px 6px;
+    margin-right: 4px;
+    user-select: none;
+    cursor: default;
+    flex-shrink: 0;
+}
+
+.wpok-logo-text {
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #0f4c81 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.wpok-version-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(15, 76, 129, 0.12);
+    color: #0f4c81;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
 }

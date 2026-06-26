@@ -132,55 +132,83 @@ $wpDebug        = defined('WP_DEBUG') && WP_DEBUG;
         </div>
         <ul class="wpok-env-list">
             <?php
-            $engineStatus = $context['engine_status'] ?? array();
-
             $extensions = array(
-                'gd' => array(
-                    'loaded'   => extension_loaded('gd'),
-                    'label'    => 'GD',
-                    'note'     => __('Required for image processing', 'wp-optikit'),
-                    'required' => true,
+                'exif' => array(
+                    'loaded'   => extension_loaded('exif'),
+                    'label'    => 'EXIF',
+                    'note'     => __('Reads image metadata', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'igbinary' => array(
+                    'loaded'   => extension_loaded('igbinary'),
+                    'label'    => 'igbinary',
+                    'note'     => __('Alternative PHP serializer', 'wp-optikit'),
+                    'required' => false,
                 ),
                 'imagick' => array(
                     'loaded'   => extension_loaded('imagick'),
                     'label'    => 'Imagick',
-                    'note'     => __('Required for animated GIF conversion', 'wp-optikit'),
+                    'note'     => __('Image processing engine', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'intl' => array(
+                    'loaded'   => extension_loaded('intl'),
+                    'label'    => 'intl',
+                    'note'     => __('Internationalization support', 'wp-optikit'),
                     'required' => false,
                 ),
                 'zip' => array(
                     'loaded'   => extension_loaded('zip'),
                     'label'    => 'ZIP',
-                    'note'     => __('Required for package operations', 'wp-optikit'),
+                    'note'     => __('Package operations', 'wp-optikit'),
                     'required' => true,
                 ),
-                'curl' => array(
-                    'loaded'   => extension_loaded('curl'),
-                    'label'    => 'cURL',
-                    'note'     => __('Commonly used for HTTP requests', 'wp-optikit'),
+                'apcu' => array(
+                    'loaded'   => extension_loaded('apcu'),
+                    'label'    => 'APCu',
+                    'note'     => __('Local cache store', 'wp-optikit'),
                     'required' => false,
                 ),
-                'mbstring' => array(
-                    'loaded'   => extension_loaded('mbstring'),
-                    'label'    => 'mbstring',
-                    'note'     => __('Commonly used for multibyte string operations', 'wp-optikit'),
+                'memcached' => array(
+                    'loaded'   => extension_loaded('memcached'),
+                    'label'    => 'Memcached',
+                    'note'     => __('Distributed cache', 'wp-optikit'),
                     'required' => false,
                 ),
-                'fileinfo' => array(
-                    'loaded'   => extension_loaded('fileinfo'),
-                    'label'    => 'Fileinfo',
-                    'note'     => __('Commonly used for MIME type detection', 'wp-optikit'),
+                'opcache' => array(
+                    'loaded'   => extension_loaded('Zend OPcache'),
+                    'label'    => 'OPcache',
+                    'note'     => __('PHP bytecode cache', 'wp-optikit'),
                     'required' => false,
                 ),
-                'json' => array(
-                    'loaded'   => extension_loaded('json'),
-                    'label'    => 'JSON',
-                    'note'     => __('Required for REST API operations', 'wp-optikit'),
+                'redis' => array(
+                    'loaded'   => extension_loaded('redis'),
+                    'label'    => 'Redis',
+                    'note'     => __('Object cache backend', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'shmop' => array(
+                    'loaded'   => extension_loaded('shmop'),
+                    'label'    => 'shmop',
+                    'note'     => __('Shared memory operations', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'mysqli' => array(
+                    'loaded'   => extension_loaded('mysqli'),
+                    'label'    => 'MySQLi',
+                    'note'     => __('Database driver', 'wp-optikit'),
                     'required' => true,
                 ),
-                'openssl' => array(
-                    'loaded'   => extension_loaded('openssl'),
-                    'label'    => 'OpenSSL',
-                    'note'     => __('Commonly used for secure connections', 'wp-optikit'),
+                'pdo_mysql' => array(
+                    'loaded'   => extension_loaded('pdo_mysql'),
+                    'label'    => 'PDO MySQL',
+                    'note'     => __('Alternative database driver', 'wp-optikit'),
+                    'required' => false,
+                ),
+                'gd' => array(
+                    'loaded'   => extension_loaded('gd'),
+                    'label'    => 'GD',
+                    'note'     => __('Image processing fallback', 'wp-optikit'),
                     'required' => false,
                 ),
             );

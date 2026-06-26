@@ -78,7 +78,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                         <?php endif; ?>
                     </label>
                 </div>
-                <p class="wpok-engine-description"><?php esc_html_e('Imagick offers better quality and animated GIF to WebP conversion. GD is a fallback when Imagick is unavailable.', 'wp-optikit'); ?></p>
+                <p class="wpok-engine-description"><?php esc_html_e('Imagick offers better quality, animated GIF to WebP conversion, and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black).', 'wp-optikit'); ?></p>
             </div>
 
             <div class="wpok-field-row">
@@ -87,6 +87,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                     <input id="wpok-image-quality" type="range" min="1" max="100" name="wpok_image_settings[quality]" value="<?php echo esc_attr((string) ($imageSettings['quality'] ?? 80)); ?>" data-range-display>
                     <span class="wpok-range-value" data-role="quality-value"><?php echo esc_html((string) ($imageSettings['quality'] ?? 80)); ?></span>
                 </div>
+                <p class="wpok-engine-description"><?php esc_html_e('Default: 80. Recommended range: 75–90. Higher values produce better quality but larger file sizes.', 'wp-optikit'); ?></p>
             </div>
 
             <div class="wpok-field-row">
