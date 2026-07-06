@@ -62,17 +62,15 @@ final class ImageModule implements ModuleInterface
     public function register_admin(AdminPageRegistry $admin): void
     {
         $settings  = $this->settings;
-        $processor = $this->processor;
 
         $admin->addTab(
             'images',
             __('Images', 'wp-optikit'),
-            static function (array $context) use ($settings, $processor): void {
-                $imageSettings   = $settings->get();
-                $engine          = $settings->getEngine();
-                $gdAvailable     = extension_loaded('gd');
+            static function (array $context) use ($settings): void {
+                $imageSettings    = $settings->get();
+                $engine           = $settings->getEngine();
+                $gdAvailable      = extension_loaded('gd');
                 $imagickAvailable = extension_loaded('imagick');
-                $hasAnimatedWebp = $imagickAvailable ? $processor->hasAnimatedWebpSupport() : false;
 
                 include WPOK_DIR . 'templates/tabs/images.php';
             }

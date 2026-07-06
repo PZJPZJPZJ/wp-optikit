@@ -1,7 +1,7 @@
 # WP OptiKit Chinese (zh_CN) Translation
 # Copyright (C) 2026 AzzDev
 # This file is distributed under the GPL-2.0-or-later license.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: WP OptiKit 2.0.0\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Language-Team: \n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: WP OptiKit\n"
@@ -36,15 +36,21 @@ msgid "Database"
 msgstr "数据库"
 
 #: includes/core/plugin.php
-msgid "Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace."
+msgid ""
+"Coordinate cache orchestration, purge flows, and delivery control from a "
+"dedicated workspace."
 msgstr "在专用工作区中协调缓存编排、清理流程和分发控制。"
 
 #: includes/core/plugin.php
-msgid "Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface."
+msgid ""
+"Prepare CSS, JavaScript, and frontend delivery optimization in one controlled "
+"surface."
 msgstr "在一个受控界面中完成 CSS、JavaScript 和前端交付优化。"
 
 #: includes/core/plugin.php
-msgid "Manage cleanup, diagnostics, and maintenance routines through a focused operations panel."
+msgid ""
+"Manage cleanup, diagnostics, and maintenance routines through a focused "
+"operations panel."
 msgstr "通过专一的操作面板管理清理、诊断和维护例程。"
 
 #: includes/core/admin/admin-controller.php
@@ -108,7 +114,9 @@ msgid "Orphan Files"
 msgstr "失效文件"
 
 #: templates/tabs/images.php
-msgid "Find files in the uploads directory that have no corresponding attachment record in the database."
+msgid ""
+"Find files in the uploads directory that have no corresponding attachment "
+"record in the database."
 msgstr "查找上传目录中没有对应附件记录的文件。"
 
 #: templates/tabs/images.php
@@ -184,7 +192,9 @@ msgid "Run optimization work from one place"
 msgstr "从同一位置运行优化工作"
 
 #: templates/tabs/overview.php
-msgid "Track queue activity, manage media operations, and prepare the next layer of performance tooling without jumping between separate plugins."
+msgid ""
+"Track queue activity, manage media operations, and prepare the next layer of "
+"performance tooling without jumping between separate plugins."
 msgstr "跟踪队列活动、管理媒体操作并准备下一层性能工具，无需在多个插件之间切换。"
 
 #: templates/tabs/overview.php
@@ -496,7 +506,9 @@ msgid "Images Workspace"
 msgstr "图片工作区"
 
 #: templates/tabs/images.php
-msgid "Configure delivery rules, scan the media library, and run queue-backed image optimization jobs from one workspace."
+msgid ""
+"Configure delivery rules, scan the media library, and run queue-backed image "
+"optimization jobs from one workspace."
 msgstr "在单个工作区中配置分发规则、扫描媒体库并运行队列支持的图片优化任务。"
 
 #: templates/tabs/images.php
@@ -540,7 +552,9 @@ msgid "Clear Elementor cache after completed batch jobs"
 msgstr "批处理任务完成后清理 Elementor 缓存"
 
 #: templates/tabs/images.php
-msgid "After image batch jobs finish, automatically trigger Elementor's cache clear routine when Elementor is active."
+msgid ""
+"After image batch jobs finish, automatically trigger Elementor's cache clear "
+"routine when Elementor is active."
 msgstr "当 Elementor 处于活动状态时，在图片批处理任务完成后自动触发 Elementor 的缓存清理例程。"
 
 #: templates/tabs/images.php
@@ -556,7 +570,9 @@ msgid "Image Jobs"
 msgstr "图片任务"
 
 #: templates/tabs/images.php
-msgid "Use scan workflows to find target files, then send selected items to the background queue for processing."
+msgid ""
+"Use scan workflows to find target files, then send selected items to the "
+"background queue for processing."
 msgstr "使用扫描工作流查找目标文件，然后将选中项发送到后台队列进行处理。"
 
 #: templates/tabs/images.php
@@ -564,7 +580,9 @@ msgid "Batch Convert Existing Images"
 msgstr "批量转换现有图片"
 
 #: templates/tabs/images.php
-msgid "Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing."
+msgid ""
+"Scan the media library for attachments that have not yet been converted to the "
+"target format, then queue them for background processing."
 msgstr "扫描媒体库中尚未转换为目标格式的附件，然后将它们加入后台处理队列。"
 
 #: templates/tabs/images.php
@@ -588,7 +606,9 @@ msgid "Re-compress Oversized Images"
 msgstr "重新压缩超大图片"
 
 #: templates/tabs/images.php
-msgid "Detect oversized attachments and re-run compression in the background using the current output settings."
+msgid ""
+"Detect oversized attachments and re-run compression in the background using "
+"the current output settings."
 msgstr "检测超大附件，并使用当前输出设置在后台重新运行压缩。"
 
 #: templates/tabs/images.php
@@ -604,19 +624,23 @@ msgid "Coming Soon"
 msgstr "即将推出"
 
 #: templates/tabs/planned.php
-msgid "This workspace is being prepared as part of the broader OptiKit platform experience."
+msgid ""
+"This workspace is being prepared as part of the broader OptiKit platform "
+"experience."
 msgstr "该工作区正在准备中，将作为 OptiKit 平台体验的一部分。"
 
 #: includes/core/compatibility.php
-msgid "WP OptiKit requires PHP %1$s+ and WordPress %2$s+. Current environment: PHP %3$s, WordPress %4$s."
+msgid ""
+"WP OptiKit requires PHP %1$s+ and WordPress %2$s+. Current environment: PHP "
+"%3$s, WordPress %4$s."
 msgstr "WP OptiKit 需要 PHP %1$s+ 和 WordPress %2$s+。当前环境：PHP %3$s，WordPress %4$s。"
 
 #: includes/core/compatibility.php
 msgid "WP OptiKit Activation Error"
 msgstr "WP OptiKit 激活错误"
 
-#. JavaScript labels
 #: includes/core/admin/admin-controller.php
+#. JavaScript labels
 msgid "Queued"
 msgstr "已排队"
 
@@ -720,14 +744,6 @@ msgstr "转换引擎"
 msgid "(not available)"
 msgstr "（不可用）"
 
-#: templates/tabs/images.php
-msgid "GD cannot convert animated GIFs"
-msgstr "GD 无法转换动图"
-
-#: templates/tabs/images.php
-msgid "Imagick lacks animated WebP support"
-msgstr "Imagick 缺少动画 WebP 支持"
-
 #: templates/tabs/overview.php
 msgid "PHP Extensions"
 msgstr "PHP 扩展"
@@ -740,13 +756,21 @@ msgstr "扩展状态"
 msgid "(required)"
 msgstr "（必备）"
 
+#: templates/tabs/images.php
+msgid ""
+"Imagick offers better quality and preserves PNG transparency. GD is a fallback "
+"when Imagick is unavailable but loses PNG alpha channel (transparency becomes "
+"black). Animated GIF to WebP conversion requires Imagick with animated WebP "
+"support (libwebp-anim); GIFs are skipped automatically when the engine does "
+"not support animated conversion."
+msgstr ""
+"Imagick 提供更高质量并保留 PNG 透明度。GD 是 Imagick 不可用时的后备方案，但会丢失 PNG 透明通道（透明区域变黑）。动图转 "
+"WebP 需要 Imagick 具备动画 WebP 支持（libwebp-anim）；当引擎不支持动图转换时，GIF 文件将被自动跳过。"
 
 #: templates/tabs/images.php
-msgid "Imagick offers better quality, animated GIF to WebP conversion, and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black)."
-msgstr "Imagick 提供更高质量、动图转 WebP 以及保留 PNG 透明度。GD 是 Imagick 不可用时的后备方案，但会丢失 PNG 透明通道（透明区域变黑）。"
-
-#: templates/tabs/images.php
-msgid "Default: 80. Recommended range: 75–90. Higher values produce better quality but larger file sizes."
+msgid ""
+"Default: 80. Recommended range: 75–90. Higher values produce better quality "
+"but larger file sizes."
 msgstr "默认值：80。推荐范围：75–90。值越高质量越好，但文件体积越大。"
 
 #: templates/tabs/overview.php
@@ -800,4 +824,3 @@ msgstr "备用数据库驱动"
 #: templates/tabs/overview.php
 msgid "Image processing fallback"
 msgstr "图片处理后备方案"
-

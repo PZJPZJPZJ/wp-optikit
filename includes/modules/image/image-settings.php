@@ -15,7 +15,7 @@ final class ImageSettings
         return array(
             'enabled'          => true,
             'output_format'    => 'webp',
-            'formats'          => array('jpg', 'png', 'gif'),
+            'formats'          => array('jpg', 'png'),
             'engine'           => 'imagick',
             'quality'          => 80,
             'max_file_size_kb' => 512,

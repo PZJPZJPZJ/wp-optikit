@@ -1,0 +1,10 @@
+{
+  "name": "wp-optikit-languages",
+  "private": true,
+  "scripts": {
+    "build": "node update-translations.js"
+  },
+  "devDependencies": {
+    "gettext-parser": "^7.0.0"
+  }
+}

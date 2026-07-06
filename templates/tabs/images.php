@@ -4,7 +4,6 @@
  * @var string $engine
  * @var bool $gdAvailable
  * @var bool $imagickAvailable
- * @var bool $hasAnimatedWebp
  */
 $formats = (array) ($imageSettings['formats'] ?? array());
 $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
@@ -43,18 +42,9 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <span><?php esc_html_e('Source formats', 'wp-optikit'); ?></span>
                 <div class="wpok-pill-group">
                     <?php foreach (array('jpg' => 'JPG', 'png' => 'PNG', 'gif' => 'GIF') as $value => $label) : ?>
-                        <?php
-                        $isGif       = $value === 'gif';
-                        $gifDisabled = $isGif && (($engine === 'gd') || ($engine === 'imagick' && !$hasAnimatedWebp));
-                        ?>
-                        <label class="wpok-pill<?php echo $gifDisabled ? ' is-disabled' : ''; ?>">
-                            <input type="checkbox" name="wpok_image_settings[formats][]" value="<?php echo esc_attr($value); ?>" <?php checked(in_array($value, $formats, true)); ?> <?php disabled($gifDisabled); ?>>
+                        <label class="wpok-pill">
+                            <input type="checkbox" name="wpok_image_settings[formats][]" value="<?php echo esc_attr($value); ?>" <?php checked(in_array($value, $formats, true)); ?>>
                             <span><?php echo esc_html($label); ?></span>
-                            <?php if ($gifDisabled) : ?>
-                                <span class="wpok-pill-note"><?php echo $engine === 'gd'
-                                    ? esc_html__('(GD cannot convert animated GIFs)', 'wp-optikit')
-                                    : esc_html__('(Imagick lacks animated WebP support)', 'wp-optikit'); ?></span>
-                            <?php endif; ?>
                         </label>
                     <?php endforeach; ?>
                 </div>
@@ -78,7 +68,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                         <?php endif; ?>
                     </label>
                 </div>
-                <p class="wpok-engine-description"><?php esc_html_e('Imagick offers better quality, animated GIF to WebP conversion, and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black).', 'wp-optikit'); ?></p>
+                <p class="wpok-engine-description"><?php esc_html_e('Imagick offers better quality and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black). Animated GIF to WebP conversion requires Imagick with animated WebP support (libwebp-anim); GIFs are skipped automatically when the engine does not support animated conversion.', 'wp-optikit'); ?></p>
             </div>
 
             <div class="wpok-field-row">
