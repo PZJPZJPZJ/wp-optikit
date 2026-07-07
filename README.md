@@ -2,7 +2,6 @@
 
 **All-in-One WordPress Speed Optimization Toolkit** — supercharge your WordPress site with automatic image optimization, and more performance modules on the way.
 
-[![Plugin Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/AzzDev/wp-optikit/releases)
 [![PHP](https://img.shields.io/badge/PHP-8.1+-%23777BB4.svg)](https://php.net)
 [![WordPress](https://img.shields.io/badge/WordPress-6.7+-%2321759B.svg)](https://wordpress.org)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-green.svg)](LICENSE)
