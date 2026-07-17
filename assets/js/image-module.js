@@ -127,7 +127,7 @@
                 html += '<li class="wpok-job-item" data-attachment-id="' + item.id + '" data-size-bytes="' + item.size + '">';
                 html += '<input type="checkbox">';
                 html += '<span class="wpok-job-item-name">' + escapeHtml(item.name) + '</span>';
-                html += '<span class="wpok-job-item-status">' + escapeHtml(labels.itemReady || 'ready') + '</span>';
+                html += '<span class="wpok-job-item-status">' + escapeHtml(itemReadyStatus(item)) + '</span>';
                 html += '<span class="wpok-job-item-size">' + escapeHtml(window.WPOKUtils.formatBytes(item.size)) + '</span>';
                 html += '</li>';
             });
@@ -180,10 +180,28 @@
 
         var total = panel.querySelectorAll('.wpok-job-item').length;
         var selected = panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
-        var isRecompress = panel.getAttribute('data-job-type') === 'image_recompress';
-        var baseLabel = isRecompress ? (labels.qRecompress || 'Queue Re-compression Job') : (labels.qConvert || 'Queue Conversion Job');
+        var jobType = panel.getAttribute('data-job-type');
+        var baseLabel = labels.qConvert || 'Queue Conversion Job';
+
+        if (jobType === 'image_recompress') {
+            baseLabel = labels.qRecompress || 'Queue Re-compression Job';
+        } else if (jobType === 'thumbnail_regenerate') {
+            baseLabel = labels.qRegenerateThumbnails || 'Regenerate Missing Thumbnails';
+        }
 
         button.textContent = baseLabel + ' (' + selected + '/' + total + ')';
+    }
+
+    function itemReadyStatus(item) {
+        if (item.issue_type === 'main_missing') {
+            return labels.missingMainFile || 'main file missing';
+        }
+
+        if (item.missing_count && parseInt(item.missing_count, 10) > 0) {
+            return String(item.missing_count) + ' ' + (labels.thumbnailIssues || 'missing thumbnails');
+        }
+
+        return labels.itemReady || 'ready';
     }
 
     /* ============================================================
@@ -405,6 +423,17 @@
 
             var statusNode = row.querySelector('.wpok-job-item-status');
             statusNode.textContent = humanizeItemStatus(item.status);
+
+            if (item.result && typeof item.result.regenerated_count !== 'undefined') {
+                var regenerated = parseInt(item.result.regenerated_count || 0, 10) || 0;
+                var resultMessage = item.result.message || '';
+
+                if (regenerated > 0) {
+                    statusNode.textContent = humanizeItemStatus(item.status) + ': ' + regenerated + ' ' + (labels.regeneratedLower || 'regenerated');
+                } else if (resultMessage) {
+                    statusNode.textContent = humanizeItemStatus(item.status) + ': ' + resultMessage;
+                }
+            }
 
             if (item.result && typeof item.result.new_size_bytes !== 'undefined') {
                 var oldSize = parseInt(item.result.old_size_bytes || 0, 10) || 0;

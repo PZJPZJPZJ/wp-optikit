@@ -104,6 +104,8 @@ final class AdminController
                     'cancelReq'     => __('Job cancellation requested.', 'wp-optikit'),
                     'qConvert'      => __('Queue Conversion Job', 'wp-optikit'),
                     'qRecompress'   => __('Queue Re-compression Job', 'wp-optikit'),
+                    'qRegenerateThumbnails' => __('Regenerate Missing Thumbnails', 'wp-optikit'),
+                    'thumbnailIssues' => __('missing thumbnails', 'wp-optikit'),
                     'sizeArrow'       => __('->', 'wp-optikit'),
                     'noChange'        => __('No change', 'wp-optikit'),
 
@@ -115,6 +117,7 @@ final class AdminController
                     'deleteResult'    => __('Delete completed.', 'wp-optikit'),
                     'successLower'    => __('succeeded', 'wp-optikit'),
                     'failedLower'     => __('failed', 'wp-optikit'),
+                    'regeneratedLower' => __('regenerated', 'wp-optikit'),
                     'totalLower'      => __('total', 'wp-optikit'),
 
                     // Missing Files

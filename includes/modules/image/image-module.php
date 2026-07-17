@@ -13,6 +13,7 @@ final class ImageModule implements ModuleInterface
     private ImageSettings $settings;
     private ImageProcessor $processor;
     private ImageScanner $scanner;
+    private ThumbnailMissingScanner $thumbnailScanner;
     private ImageJobHandler $jobHandler;
     private ImageRestController $restController;
     private ImageJobFinalizer $jobFinalizer;
@@ -25,8 +26,9 @@ final class ImageModule implements ModuleInterface
         $this->settings       = new ImageSettings($options);
         $this->processor      = new ImageProcessor($this->settings);
         $this->scanner        = new ImageScanner($this->settings);
+        $this->thumbnailScanner = new ThumbnailMissingScanner($GLOBALS['wpdb']);
         $this->jobHandler     = new ImageJobHandler($this->processor);
-        $this->restController = new ImageRestController($this->scanner);
+        $this->restController = new ImageRestController($this->scanner, $this->thumbnailScanner);
         $this->jobFinalizer   = new ImageJobFinalizer($this->settings, new ElementorCacheBridge());
 
         /** @var JobRegistry $jobRegistry */

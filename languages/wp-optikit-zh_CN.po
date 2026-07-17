@@ -152,6 +152,10 @@ msgid "failed"
 msgstr "失败"
 
 #: includes/core/admin/admin-controller.php
+msgid "regenerated"
+msgstr "已重新生成"
+
+#: includes/core/admin/admin-controller.php
 msgid "total"
 msgstr "共计"
 
@@ -200,6 +204,28 @@ msgid ""
 "Clean %d missing records? Only attachments with missing main files will be "
 "deleted."
 msgstr "清理 %d 条缺失记录？只有主文件缺失的附件会被删除。"
+
+#: templates/tabs/images.php
+msgid "Missing Thumbnails"
+msgstr "缩略图缺失"
+
+#: templates/tabs/images.php
+msgid ""
+"Find missing attachment thumbnails and queue WordPress to regenerate the "
+"affected image sizes or PDF previews."
+msgstr "查找缺失的附件缩略图，并让 WordPress 排队重新生成受影响的图片尺寸或 PDF 预览图。"
+
+#: templates/tabs/images.php
+msgid "Scan Missing Thumbnails"
+msgstr "扫描缺失缩略图"
+
+#: templates/tabs/images.php includes/core/admin/admin-controller.php
+msgid "Regenerate Missing Thumbnails"
+msgstr "重新生成缺失缩略图"
+
+#: includes/core/admin/admin-controller.php
+msgid "missing thumbnails"
+msgstr "个缩略图缺失"
 
 #: templates/tabs/overview.php
 msgid "Plain"

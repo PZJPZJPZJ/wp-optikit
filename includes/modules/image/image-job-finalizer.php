@@ -21,7 +21,7 @@ final class ImageJobFinalizer
 
         $jobType = (string) ($job['job_type'] ?? '');
 
-        if (!in_array($jobType, array('image_convert', 'image_recompress'), true)) {
+        if (!in_array($jobType, array('image_convert', 'image_recompress', 'thumbnail_regenerate'), true)) {
             return;
         }
 

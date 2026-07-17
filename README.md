@@ -17,6 +17,7 @@
 | **Auto WebP Conversion** | Newly uploaded JPG, PNG, and GIF images are automatically converted to WebP — no manual steps needed. |
 | **Batch Convert Existing** | Scan your entire Media Library and queue all unconverted images for bulk WebP conversion in one click. |
 | **Re-compress Oversized** | Find images above your configured size threshold and re-compress them to reduce file sizes. |
+| **Repair Missing Thumbnails** | Scan for missing attachment thumbnails and queue WordPress to regenerate image sizes or PDF previews. |
 | **Adjustable Quality** | Fine-tune output quality from 1–100 to balance visual fidelity vs. file size. |
 | **Replace Source Files** | Successful conversions replace the original source-format file with the generated WebP file. |
 | **Background Queue** | All batch jobs run in a background queue with real-time progress tracking — no browser blocking. |

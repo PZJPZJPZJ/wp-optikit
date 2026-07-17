@@ -87,8 +87,7 @@ final class MediaOrphanScanner
              FROM {$this->wpdb->postmeta} pm
              INNER JOIN {$this->wpdb->posts} p ON p.ID = pm.post_id
              WHERE pm.meta_key = '_wp_attached_file'
-               AND p.post_type = 'attachment'
-               AND p.post_mime_type LIKE 'image/%'",
+               AND p.post_type = 'attachment'",
             ARRAY_A
         );
 
@@ -110,9 +109,9 @@ final class MediaOrphanScanner
             }
         }
 
-        /* 1b: Check metadata sizes */
+        /* 1b: Check attachment metadata sizes and original images */
         $attachmentIds = $this->wpdb->get_col(
-            "SELECT ID FROM {$this->wpdb->posts} WHERE post_type = 'attachment' AND post_mime_type LIKE 'image/%'"
+            "SELECT ID FROM {$this->wpdb->posts} WHERE post_type = 'attachment'"
         );
 
         foreach ($attachmentIds as $id) {
@@ -219,9 +218,9 @@ final class MediaOrphanScanner
             }
         }
 
-        /* Image metadata: main file + sizes + original_image */
+        /* Attachment metadata: main file + sizes + original_image */
         $attachmentIds = $this->wpdb->get_col(
-            "SELECT ID FROM {$this->wpdb->posts} WHERE post_type = 'attachment' AND post_mime_type LIKE 'image/%'"
+            "SELECT ID FROM {$this->wpdb->posts} WHERE post_type = 'attachment'"
         );
 
         foreach ($attachmentIds as $id) {

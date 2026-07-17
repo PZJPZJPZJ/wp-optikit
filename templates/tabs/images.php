@@ -142,7 +142,22 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </div>
     </section>
 
-    <!-- 5. Orphan Files -->
+    <!-- 5. Missing Thumbnails -->
+    <section class="wpok-card" data-job-panel="missing-thumbnails" data-job-type="thumbnail_regenerate" data-scan-endpoint="thumbnail-missing/scan">
+        <div class="wpok-job-panel-head">
+            <div>
+                <h3><?php esc_html_e('Missing Thumbnails', 'wp-optikit'); ?></h3>
+                <p><?php esc_html_e('Find missing attachment thumbnails and queue WordPress to regenerate the affected image sizes or PDF previews.', 'wp-optikit'); ?></p>
+            </div>
+            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Missing Thumbnails', 'wp-optikit'); ?></button>
+        </div>
+        <div class="wpok-job-results" data-role="results"></div>
+        <div class="wpok-job-toolbar" data-role="toolbar" hidden>
+            <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Regenerate Missing Thumbnails', 'wp-optikit'); ?></button>
+        </div>
+    </section>
+
+    <!-- 6. Orphan Files -->
     <section class="wpok-card" data-orphan-panel data-orphan-endpoint="media-orphan">
         <div class="wpok-job-panel-head">
             <div>
@@ -155,7 +170,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         <div class="wpok-job-toolbar" data-role="toolbar" hidden></div>
     </section>
 
-    <!-- 6. Missing Files -->
+    <!-- 7. Missing Files -->
     <section class="wpok-card" data-missing-panel data-missing-endpoint="media-missing">
         <div class="wpok-job-panel-head">
             <div>
