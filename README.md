@@ -18,7 +18,7 @@
 | **Batch Convert Existing** | Scan your entire Media Library and queue all unconverted images for bulk WebP conversion in one click. |
 | **Re-compress Oversized** | Find images above your configured size threshold and re-compress them to reduce file sizes. |
 | **Adjustable Quality** | Fine-tune output quality from 1–100 to balance visual fidelity vs. file size. |
-| **Keep Originals** | Optionally preserve the original uploaded file alongside the WebP version. |
+| **Replace Source Files** | Successful conversions replace the original source-format file with the generated WebP file. |
 | **Background Queue** | All batch jobs run in a background queue with real-time progress tracking — no browser blocking. |
 | **Elementor Integration** | Automatically clears the Elementor CSS cache after batch image jobs complete, so your builder-built site stays fast. |
 
@@ -72,7 +72,7 @@ Navigate to **Settings → WP OptiKit** to access the admin dashboard.
 | **Source Formats** | JPG, PNG, GIF | Which image types to convert |
 | **Quality** | 80 | WebP compression quality (1–100) |
 | **Max File Size** | 512 KB | Threshold for "oversized" image detection |
-| **Keep Original** | Off | Store the original file in attachment meta |
+| **Source Files** | Replace on success | Original source-format files are removed only after WebP conversion and metadata updates complete |
 
 ---
 

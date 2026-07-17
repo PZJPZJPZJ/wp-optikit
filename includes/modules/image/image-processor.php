@@ -25,9 +25,9 @@ final class ImageProcessor
             return $upload;
         }
 
-        $oldPath      = (string) $upload['file'];
-        $oldSize      = file_exists($oldPath) ? (int) filesize($oldPath) : 0;
-        $savedImage   = $this->convertFileToWebp($oldPath, true);
+        $oldPath    = (string) $upload['file'];
+        $oldSize    = file_exists($oldPath) ? (int) filesize($oldPath) : 0;
+        $savedImage = $this->convertFileToWebp($oldPath);
 
         if ($savedImage === null) {
             return $upload;
@@ -56,26 +56,9 @@ final class ImageProcessor
                 '_wpok_last_conversion',
                 $this->buildResult('succeeded', $attachmentId, $conversion['old_path'], $attachedFile, $conversion['old_size'])
             );
+            $this->deleteFiles(array($conversion['old_path']), array($attachedFile));
             unset($this->pendingUploadConversions[$attachedFile]);
         }
-
-        if (!$this->settings->isEnabled() || empty($metadata['original_image']) || !is_string($attachedFile)) {
-            return $metadata;
-        }
-
-        $originalFile = dirname($attachedFile) . '/' . $metadata['original_image'];
-
-        if (!file_exists($originalFile) || preg_match('/\.webp$/i', $originalFile)) {
-            return $metadata;
-        }
-
-        $converted    = $this->convertFileToWebp($originalFile, true);
-
-        if ($converted === null) {
-            return $metadata;
-        }
-
-        $metadata['original_image'] = basename($converted['path']);
 
         return $metadata;
     }
@@ -95,38 +78,10 @@ final class ImageProcessor
         $oldSize      = (int) filesize($filePath);
         $metadata     = wp_get_attachment_metadata($attachmentId);
         $metadata     = is_array($metadata) ? $metadata : array();
-        $dirname      = dirname($filePath);
-
-        if (!empty($metadata['original_image'])) {
-            $originalFile = $dirname . '/' . $metadata['original_image'];
-
-            if (file_exists($originalFile) && !preg_match('/\.webp$/i', $originalFile)) {
-                $convertedOriginal = $this->convertFileToWebp($originalFile, true);
-
-                if ($convertedOriginal !== null) {
-                    $metadata['original_image'] = basename($convertedOriginal['path']);
-                }
-            }
-        }
-
-        if (!empty($metadata['sizes'])) {
-            foreach ($metadata['sizes'] as $sizeData) {
-                if (empty($sizeData['file'])) {
-                    continue;
-                }
-
-                $thumbnailPath = $dirname . '/' . $sizeData['file'];
-
-                if (file_exists($thumbnailPath)) {
-                    @unlink($thumbnailPath);
-                }
-            }
-        }
-
-        $savedImage = $this->convertFileToWebp($filePath, true);
+        $oldMimeType  = (string) get_post_mime_type($attachmentId);
+        $savedImage   = $this->convertFileToWebp($filePath);
 
         if ($savedImage === null) {
-            // GIF 引擎不支持时标记为跳过而非失败
             if (strtolower((string) pathinfo($filePath, PATHINFO_EXTENSION)) === 'gif') {
                 return $this->buildResult('skipped', $attachmentId, $filePath, $filePath);
             }
@@ -134,23 +89,75 @@ final class ImageProcessor
             throw new \RuntimeException('Attachment conversion failed.');
         }
 
-        update_attached_file($attachmentId, $savedImage['path']);
-        wp_update_post(
-            array(
-                'ID'             => $attachmentId,
-                'post_mime_type' => 'image/webp',
-            )
-        );
+        try {
+            $convertedOriginal = $this->convertOriginalImage($filePath, $metadata);
+        } catch (\Throwable $exception) {
+            $this->deleteGeneratedConversionFiles($savedImage, null, array());
+            throw $exception;
+        }
 
         require_once ABSPATH . 'wp-admin/includes/image.php';
         $newMetadata = wp_generate_attachment_metadata($attachmentId, $savedImage['path']);
-        $newMetadata = is_array($newMetadata) ? $newMetadata : array();
 
-        if (!empty($metadata['original_image'])) {
-            $newMetadata['original_image'] = $metadata['original_image'];
+        if (!is_array($newMetadata)) {
+            $this->deleteGeneratedConversionFiles($savedImage, $convertedOriginal, array());
+            throw new \RuntimeException('Attachment metadata generation failed.');
         }
 
-        wp_update_attachment_metadata($attachmentId, $newMetadata);
+        if (is_array($convertedOriginal)) {
+            $newMetadata['original_image'] = basename($convertedOriginal['path']);
+        }
+
+        $newFiles = $this->metadataFilePaths($newMetadata);
+        $dbChanged = false;
+
+        try {
+            if (!update_attached_file($attachmentId, $savedImage['path'])) {
+                throw new \RuntimeException('Unable to update attachment file.');
+            }
+
+            $dbChanged = true;
+
+            $postId = wp_update_post(
+                array(
+                    'ID'             => $attachmentId,
+                    'post_mime_type' => 'image/webp',
+                ),
+                true
+            );
+
+            if (is_wp_error($postId) || (int) $postId <= 0) {
+                throw new \RuntimeException('Unable to update attachment mime type.');
+            }
+
+            if (wp_update_attachment_metadata($attachmentId, $newMetadata) === false) {
+                throw new \RuntimeException('Unable to update attachment metadata.');
+            }
+        } catch (\Throwable $exception) {
+            if ($dbChanged) {
+                update_attached_file($attachmentId, $filePath);
+                wp_update_attachment_metadata($attachmentId, $metadata);
+                wp_update_post(
+                    array(
+                        'ID'             => $attachmentId,
+                        'post_mime_type' => $oldMimeType,
+                    )
+                );
+            }
+
+            $this->deleteGeneratedConversionFiles($savedImage, $convertedOriginal, $newFiles);
+            throw $exception;
+        }
+
+        $oldFiles = $this->metadataFilePaths($metadata, dirname($filePath));
+        $oldFiles[] = $filePath;
+        $protectedFiles = array_merge($newFiles, array($savedImage['path']));
+
+        if (is_array($convertedOriginal)) {
+            $protectedFiles[] = $convertedOriginal['path'];
+        }
+
+        $this->deleteFiles($oldFiles, $protectedFiles);
 
         $result = $this->buildResult('succeeded', $attachmentId, $filePath, $savedImage['path'], $oldSize);
         update_post_meta($attachmentId, '_wpok_last_conversion', $result);
@@ -166,8 +173,10 @@ final class ImageProcessor
             throw new \RuntimeException('Attachment file does not exist.');
         }
 
-        $oldSize = (int) filesize($filePath);
-        $saved   = $this->recompressFile($filePath);
+        $oldSize     = (int) filesize($filePath);
+        $oldMetadata = wp_get_attachment_metadata($attachmentId);
+        $oldMetadata = is_array($oldMetadata) ? $oldMetadata : array();
+        $saved       = $this->recompressFile($filePath);
 
         if ($saved === null) {
             throw new \RuntimeException('Image recompression failed.');
@@ -175,7 +184,13 @@ final class ImageProcessor
 
         require_once ABSPATH . 'wp-admin/includes/image.php';
         $newMetadata = wp_generate_attachment_metadata($attachmentId, $filePath);
-        wp_update_attachment_metadata($attachmentId, is_array($newMetadata) ? $newMetadata : array());
+        $newMetadata = is_array($newMetadata) ? $newMetadata : array();
+
+        if (!empty($oldMetadata['original_image']) && empty($newMetadata['original_image'])) {
+            $newMetadata['original_image'] = $oldMetadata['original_image'];
+        }
+
+        wp_update_attachment_metadata($attachmentId, $newMetadata);
 
         $result = $this->buildResult('succeeded', $attachmentId, $filePath, $filePath, $oldSize);
         update_post_meta($attachmentId, '_wpok_last_recompress', $result);
@@ -183,19 +198,17 @@ final class ImageProcessor
         return $result;
     }
 
-    private function convertFileToWebp(string $filePath, bool $deleteOriginal): ?array
+    private function convertFileToWebp(string $filePath): ?array
     {
         if (!file_exists($filePath) || !$this->hasImageEditorSupport()) {
             return null;
         }
 
-        // GIF → WebP 转换仅 Imagick + libwebp-anim 支持
         if (strtolower((string) pathinfo($filePath, PATHINFO_EXTENSION)) === 'gif') {
             if ($this->settings->getEngine() === 'imagick' && $this->hasAnimatedWebpSupport()) {
-                return $this->convertAnimatedGifToWebp($filePath, $deleteOriginal);
+                return $this->convertAnimatedGifToWebp($filePath);
             }
 
-            // GD 或 Imagick 不支持动画 WebP -> 跳过转换
             return null;
         }
 
@@ -208,14 +221,15 @@ final class ImageProcessor
         $editor->set_quality($this->settings->getQuality());
         $fileInfo = pathinfo($filePath);
         $webpPath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '.webp';
+
+        if (file_exists($webpPath)) {
+            return null;
+        }
+
         $saved    = $editor->save($webpPath, 'image/webp');
 
         if (is_wp_error($saved) || empty($saved['path']) || !file_exists($saved['path'])) {
             return null;
-        }
-
-        if ($deleteOriginal && $filePath !== $saved['path']) {
-            @unlink($filePath);
         }
 
         return array(
@@ -257,6 +271,120 @@ final class ImageProcessor
             'path' => $filePath,
             'file' => basename($filePath),
         );
+    }
+
+    private function convertOriginalImage(string $filePath, array $metadata): ?array
+    {
+        if (empty($metadata['original_image'])) {
+            return null;
+        }
+
+        $originalFile = dirname($filePath) . '/' . $metadata['original_image'];
+
+        if (!file_exists($originalFile) || preg_match('/\.webp$/i', $originalFile)) {
+            return null;
+        }
+
+        $converted = $this->convertFileToWebp($originalFile);
+
+        if ($converted === null) {
+            throw new \RuntimeException('Original image conversion failed.');
+        }
+
+        return $converted;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function metadataFilePaths(array $metadata, ?string $fallbackDirectory = null): array
+    {
+        $paths = array();
+        $directory = $fallbackDirectory;
+
+        if (!empty($metadata['file'])) {
+            $mainFile = $this->absoluteUploadPath((string) $metadata['file']);
+            $paths[] = $mainFile;
+            $directory = dirname($mainFile);
+        }
+
+        if ($directory === null || $directory === '') {
+            return array_values(array_unique(array_map(array($this, 'normalizePath'), $paths)));
+        }
+
+        if (!empty($metadata['sizes']) && is_array($metadata['sizes'])) {
+            foreach ($metadata['sizes'] as $size) {
+                if (!empty($size['file'])) {
+                    $paths[] = $directory . '/' . (string) $size['file'];
+                }
+            }
+        }
+
+        if (!empty($metadata['original_image'])) {
+            $paths[] = $directory . '/' . (string) $metadata['original_image'];
+        }
+
+        return array_values(array_unique(array_map(array($this, 'normalizePath'), $paths)));
+    }
+
+    private function absoluteUploadPath(string $path): string
+    {
+        if ($this->isAbsolutePath($path)) {
+            return $this->normalizePath($path);
+        }
+
+        $uploadDir = wp_get_upload_dir();
+
+        return $this->normalizePath((string) $uploadDir['basedir'] . '/' . ltrim($path, '/\\'));
+    }
+
+    private function isAbsolutePath(string $path): bool
+    {
+        return str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\/\\\\]/', $path) === 1;
+    }
+
+    private function normalizePath(string $path): string
+    {
+        return wp_normalize_path($path);
+    }
+
+    /**
+     * @param array{path:string,file:string} $savedImage
+     * @param array{path:string,file:string}|null $convertedOriginal
+     * @param array<int, string> $metadataFiles
+     */
+    private function deleteGeneratedConversionFiles(array $savedImage, ?array $convertedOriginal, array $metadataFiles): void
+    {
+        $files = array_merge($metadataFiles, array((string) $savedImage['path']));
+
+        if (is_array($convertedOriginal)) {
+            $files[] = (string) $convertedOriginal['path'];
+        }
+
+        $this->deleteFiles($files);
+    }
+
+    /**
+     * @param array<int, string> $files
+     * @param array<int, string> $protectedFiles
+     */
+    private function deleteFiles(array $files, array $protectedFiles = array()): void
+    {
+        $protected = array();
+
+        foreach ($protectedFiles as $protectedFile) {
+            if ($protectedFile !== '') {
+                $protected[$this->normalizePath($protectedFile)] = true;
+            }
+        }
+
+        foreach (array_unique(array_map(array($this, 'normalizePath'), $files)) as $file) {
+            if ($file === '' || isset($protected[$file]) || is_dir($file) || !file_exists($file)) {
+                continue;
+            }
+
+            @unlink($file);
+        }
     }
 
     /**
@@ -357,17 +485,21 @@ final class ImageProcessor
     /**
      * 使用 Imagick 将动画 GIF 转换为动画 WebP
      */
-    private function convertAnimatedGifToWebp(string $filePath, bool $deleteOriginal): ?array
+    private function convertAnimatedGifToWebp(string $filePath): ?array
     {
         try {
+            $fileInfo = pathinfo($filePath);
+            $webpPath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '.webp';
+
+            if (file_exists($webpPath)) {
+                return null;
+            }
+
             $source     = new \Imagick($filePath);
             $iterations = $source->getImageIterations();
             $imagick    = $source->coalesceImages();
 
             $source->clear();
-
-            $fileInfo = pathinfo($filePath);
-            $webpPath = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '.webp';
 
             $imagick->setImageFormat('webp');
             $imagick->setImageCompressionQuality($this->settings->getQuality());
@@ -386,10 +518,6 @@ final class ImageProcessor
             if (!file_exists($webpPath) || !$this->isAnimatedWebpFile($webpPath)) {
                 @unlink($webpPath);
                 return null;
-            }
-
-            if ($deleteOriginal) {
-                @unlink($filePath);
             }
 
             return array(

@@ -63,6 +63,8 @@ final class MediaOrphanRestController
             return new WP_REST_Response(array('success' => 0, 'fail' => 0, 'errors' => array(array('file' => '', 'reason' => 'Upload dir not found'))), 500);
         }
 
+        $baseDir = wp_normalize_path($baseDir);
+
         $success = 0;
         $fail    = 0;
         $errors  = array();
@@ -80,10 +82,10 @@ final class MediaOrphanRestController
                 continue;
             }
 
-            /* Security: only allow files inside wp-content/uploads */
             $fullPath = realpath($filePath);
+            $fullPath = $fullPath !== false ? wp_normalize_path($fullPath) : false;
 
-            if ($fullPath === false || strpos($fullPath, $baseDir) !== 0) {
+            if ($fullPath === false || !$this->isPathInsideDirectory($fullPath, $baseDir)) {
                 $fail++;
                 $errors[] = array('file' => $filePath, 'reason' => 'File outside uploads directory');
                 continue;
@@ -92,6 +94,12 @@ final class MediaOrphanRestController
             if (!file_exists($fullPath)) {
                 $fail++;
                 $errors[] = array('file' => $filePath, 'reason' => 'File not found');
+                continue;
+            }
+
+            if ($this->scanner->isReferencedFile($fullPath)) {
+                $fail++;
+                $errors[] = array('file' => $filePath, 'reason' => 'File is still referenced by attachment metadata');
                 continue;
             }
 
@@ -113,5 +121,10 @@ final class MediaOrphanRestController
     public function canManage(): bool
     {
         return current_user_can('manage_options');
+    }
+
+    private function isPathInsideDirectory(string $path, string $directory): bool
+    {
+        return $path !== $directory && str_starts_with($path, trailingslashit($directory));
     }
 }

@@ -100,11 +100,12 @@ final class MediaOrphanScanner
             if (!file_exists($fullPath)) {
                 $dirName = dirname($relPath);
                 $missingByDir[$dirName][] = array(
-                    'id'      => $id,
-                    'name'    => basename($relPath),
-                    'size'    => 0,
-                    'path'    => $fullPath,
-                    'missing' => true,
+                    'id'           => $id,
+                    'name'         => basename($relPath),
+                    'size'         => 0,
+                    'path'         => $fullPath,
+                    'missing'      => true,
+                    'missing_type' => 'main',
                 );
             }
         }
@@ -117,7 +118,7 @@ final class MediaOrphanScanner
         foreach ($attachmentIds as $id) {
             $meta = wp_get_attachment_metadata((int) $id);
 
-            if (!is_array($meta) || empty($meta['sizes'])) {
+            if (!is_array($meta)) {
                 continue;
             }
 
@@ -127,24 +128,27 @@ final class MediaOrphanScanner
                 $dir = ($dir === '.') ? '' : $dir . '/';
             }
 
-            foreach ($meta['sizes'] as $sizeName => $size) {
-                if (empty($size['file'])) {
-                    continue;
-                }
+            if (!empty($meta['sizes']) && is_array($meta['sizes'])) {
+                foreach ($meta['sizes'] as $sizeName => $size) {
+                    if (empty($size['file'])) {
+                        continue;
+                    }
 
-                $relPath  = $dir . (string) $size['file'];
-                $fullPath = $baseDir . '/' . $relPath;
+                    $relPath  = $dir . (string) $size['file'];
+                    $fullPath = $baseDir . '/' . $relPath;
 
-                if (!file_exists($fullPath)) {
-                    $dirName = dirname($relPath);
-                    $missingByDir[$dirName][] = array(
-                        'id'       => (int) $id,
-                        'name'     => basename($relPath),
-                        'size'     => 0,
-                        'path'     => $fullPath,
-                        'sizeName' => $sizeName,
-                        'missing'  => true,
-                    );
+                    if (!file_exists($fullPath)) {
+                        $dirName = dirname($relPath);
+                        $missingByDir[$dirName][] = array(
+                            'id'           => (int) $id,
+                            'name'         => basename($relPath),
+                            'size'         => 0,
+                            'path'         => $fullPath,
+                            'sizeName'     => $sizeName,
+                            'missing'      => true,
+                            'missing_type' => 'size',
+                        );
+                    }
                 }
             }
 
@@ -156,17 +160,43 @@ final class MediaOrphanScanner
                 if (!file_exists($fullPath)) {
                     $dirName = dirname($relPath);
                     $missingByDir[$dirName][] = array(
-                        'id'      => (int) $id,
-                        'name'    => basename($relPath),
-                        'size'    => 0,
-                        'path'    => $fullPath,
-                        'missing' => true,
+                        'id'           => (int) $id,
+                        'name'         => basename($relPath),
+                        'size'         => 0,
+                        'path'         => $fullPath,
+                        'missing'      => true,
+                        'missing_type' => 'original',
                     );
                 }
             }
         }
 
         return $missingByDir;
+    }
+
+    public function isReferencedFile(string $filePath): bool
+    {
+        $uploadDir = wp_get_upload_dir();
+        $baseRealPath = realpath((string) $uploadDir['basedir']);
+
+        if ($baseRealPath === false) {
+            return false;
+        }
+
+        $baseDir   = wp_normalize_path($baseRealPath);
+        $path      = wp_normalize_path($filePath);
+
+        if (!str_starts_with($path, trailingslashit($baseDir))) {
+            return false;
+        }
+
+        $relative = ltrim(substr($path, strlen($baseDir)), '/');
+
+        if ($relative === '') {
+            return false;
+        }
+
+        return isset($this->buildKnownFileMap()[$relative]);
     }
 
     /**

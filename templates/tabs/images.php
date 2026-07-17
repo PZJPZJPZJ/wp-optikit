@@ -160,7 +160,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         <div class="wpok-job-panel-head">
             <div>
                 <h3><?php esc_html_e('Missing Files', 'wp-optikit'); ?></h3>
-                <p><?php esc_html_e('Find attachment records whose files are missing from the disk.', 'wp-optikit'); ?></p>
+                <p><?php esc_html_e('Find missing attachment files and clean only the affected records or metadata.', 'wp-optikit'); ?></p>
             </div>
             <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Missing Files', 'wp-optikit'); ?></button>
         </div>

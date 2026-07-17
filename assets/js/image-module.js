@@ -849,7 +849,7 @@
             return;
         }
 
-        var totalIdCount = 0;
+        var totalItemCount = 0;
         var html = '<div class="wpok-job-tree">';
         html += '<div class="wpok-job-tree-toolbar">';
         html += '<label><input type="checkbox" data-role="select-all"> ' + escapeHtml(labels.selectAll || 'Select all') + '</label>';
@@ -867,18 +867,17 @@
             html += '</div>';
             html += '<ul class="wpok-job-item-list">';
 
-            var seen = {};
-
             items.forEach(function (item) {
-                if (item.id && item.id > 0 && !seen[item.id]) {
-                    seen[item.id] = true;
-                    totalIdCount++;
+                var type = missingItemType(item);
+
+                if (item.id && item.id > 0) {
+                    totalItemCount++;
                 }
 
-                html += '<li class="wpok-job-item' + (item.id && item.id > 0 ? ' wpok-missing-has-id' : '') + '" data-attachment-id="' + (item.id || 0) + '" data-size-name="' + escapeHtml(item.sizeName || '') + '">';
+                html += '<li class="wpok-job-item' + (item.id && item.id > 0 ? ' wpok-missing-has-id' : '') + '" data-attachment-id="' + (item.id || 0) + '" data-missing-type="' + escapeHtml(type) + '" data-size-name="' + escapeHtml(item.sizeName || '') + '">';
                 html += '<input type="checkbox">';
                 html += '<span class="wpok-job-item-name">' + escapeHtml(item.name) + '</span>';
-                html += '<span class="wpok-job-item-status wpok-missing-badge">' + escapeHtml(labels.fileMissing || 'missing') + '</span>';
+                html += '<span class="wpok-job-item-status wpok-missing-badge">' + escapeHtml(missingStatusLabel(type)) + '</span>';
                 html += '</li>';
             });
 
@@ -892,17 +891,15 @@
         results.innerHTML = html;
         toolbar.hidden = false;
 
-        toolbar.innerHTML = '<button type="button" class="button wpok-btn-danger" data-action="delete-missing">' + escapeHtml(labels.deleteMissingRecords || 'Delete Attachment Records') + ' (' + totalIdCount + ')</button>';
+        toolbar.innerHTML = '<button type="button" class="button wpok-btn-danger" data-action="delete-missing">' + escapeHtml(labels.cleanMissingRecords || 'Clean Missing Records') + ' (' + totalItemCount + ')</button>';
     }
 
     function updateMissingDeleteBtn(panel) {
-        var seen = {};
         var count = 0;
 
         panel.querySelectorAll('.wpok-job-item:not(.is-deleted) input[type="checkbox"]:checked').forEach(function (cb) {
             var id = parseInt(cb.closest('.wpok-job-item').getAttribute('data-attachment-id'), 10) || 0;
-            if (id > 0 && !seen[id]) {
-                seen[id] = true;
+            if (id > 0) {
                 count++;
             }
         });
@@ -910,7 +907,7 @@
         var delBtn = panel.querySelector('[data-action="delete-missing"]');
 
         if (delBtn) {
-            delBtn.textContent = (labels.deleteMissingRecords || 'Delete Attachment Records') + ' (' + count + ')';
+            delBtn.textContent = (labels.cleanMissingRecords || 'Clean Missing Records') + ' (' + count + ')';
         }
     }
 
@@ -934,7 +931,7 @@
                 clearInterval(missingConfirmTimer);
                 missingConfirmTimer = null;
                 btn.disabled = false;
-                btn.textContent = 'Confirm Delete' + originalText.slice(originalText.indexOf('('));
+                btn.textContent = (labels.confirmClean || 'Confirm Clean') + originalText.slice(originalText.indexOf('('));
             }
         }, 1000);
     }
@@ -956,14 +953,19 @@
     }
 
     function deleteMissingRecords(panel) {
-        var seen = {};
         var items = [];
 
         panel.querySelectorAll('.wpok-job-item:not(.is-deleted) input[type="checkbox"]:checked').forEach(function (cb) {
-            var id = parseInt(cb.closest('.wpok-job-item').getAttribute('data-attachment-id'), 10) || 0;
-            if (id > 0 && !seen[id]) {
-                seen[id] = true;
-                items.push({ id: id });
+            var row = cb.closest('.wpok-job-item');
+            var id = parseInt(row.getAttribute('data-attachment-id'), 10) || 0;
+            var type = row.getAttribute('data-missing-type') || 'main';
+
+            if (id > 0) {
+                items.push({
+                    id: id,
+                    type: type,
+                    sizeName: row.getAttribute('data-size-name') || ''
+                });
             }
         });
 
@@ -987,7 +989,9 @@
             panel.querySelectorAll('.wpok-job-item:not(.is-deleted) input[type="checkbox"]:checked').forEach(function (cb) {
                 var item = cb.closest('.wpok-job-item');
                 var id = parseInt(item.getAttribute('data-attachment-id'), 10) || 0;
-                var err = errors.find(function (e) { return e.id === id; });
+                var err = errors.find(function (e) {
+                    return matchesMissingError(e, item, id);
+                });
                 cb.checked = false;
                 cb.disabled = true;
                 if (!err) {
@@ -1004,6 +1008,41 @@
             btn.disabled = false;
             updateMissingDeleteBtn(panel);
         });
+    }
+
+    function missingItemType(item) {
+        return item.missing_type || item.missingType || 'main';
+    }
+
+    function missingStatusLabel(type) {
+        if (type === 'size') {
+            return labels.missingImageSize || 'size missing';
+        }
+
+        if (type === 'original') {
+            return labels.missingOriginalImage || 'original missing';
+        }
+
+        return labels.missingMainFile || labels.fileMissing || 'missing';
+    }
+
+    function matchesMissingError(error, item, id) {
+        var type = item.getAttribute('data-missing-type') || 'main';
+        var sizeName = item.getAttribute('data-size-name') || '';
+
+        if (parseInt(error.id, 10) !== id) {
+            return false;
+        }
+
+        if (error.type && error.type !== type) {
+            return false;
+        }
+
+        if (error.sizeName && error.sizeName !== sizeName) {
+            return false;
+        }
+
+        return true;
     }
 
     /* ============================================================

@@ -160,8 +160,8 @@ msgid "Missing Files"
 msgstr "文件缺失"
 
 #: templates/tabs/images.php
-msgid "Find attachment records whose files are missing from the disk."
-msgstr "查找媒体库中有记录但磁盘上文件已丢失的附件。"
+msgid "Find missing attachment files and clean only the affected records or metadata."
+msgstr "查找缺失的附件文件，并只清理受影响的记录或元数据。"
 
 #: templates/tabs/images.php
 msgid "Scan Missing Files"
@@ -176,12 +176,30 @@ msgid "missing"
 msgstr "缺失"
 
 #: includes/core/admin/admin-controller.php
-msgid "Delete Attachment Records"
-msgstr "删除附件记录"
+msgid "main file missing"
+msgstr "主文件缺失"
 
 #: includes/core/admin/admin-controller.php
-msgid "Delete %d attachment records? Files are already missing from disk."
-msgstr "将删除 %d 条附件记录？文件已从磁盘丢失。"
+msgid "size missing"
+msgstr "尺寸图缺失"
+
+#: includes/core/admin/admin-controller.php
+msgid "original missing"
+msgstr "原始图缺失"
+
+#: includes/core/admin/admin-controller.php
+msgid "Clean Missing Records"
+msgstr "清理缺失记录"
+
+#: includes/core/admin/admin-controller.php
+msgid "Confirm Clean"
+msgstr "确认清理"
+
+#: includes/core/admin/admin-controller.php
+msgid ""
+"Clean %d missing records? Only attachments with missing main files will be "
+"deleted."
+msgstr "清理 %d 条缺失记录？只有主文件缺失的附件会被删除。"
 
 #: templates/tabs/overview.php
 msgid "Plain"

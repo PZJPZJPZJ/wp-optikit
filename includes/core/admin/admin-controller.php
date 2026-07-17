@@ -121,8 +121,13 @@ final class AdminController
                     'noMissing'           => __('No missing files were found.', 'wp-optikit'),
                     'missingFiles'        => __('missing', 'wp-optikit'),
                     'fileMissing'         => __('missing', 'wp-optikit'),
-                    'deleteMissingRecords' => __('Delete Attachment Records', 'wp-optikit'),
-                    'confirmMissing'      => __('Delete %d attachment records? Files are already missing from disk.', 'wp-optikit'),
+                    'missingMainFile'     => __('main file missing', 'wp-optikit'),
+                    'missingImageSize'    => __('size missing', 'wp-optikit'),
+                    'missingOriginalImage' => __('original missing', 'wp-optikit'),
+                    'cleanMissingRecords' => __('Clean Missing Records', 'wp-optikit'),
+                    'confirmClean'        => __('Confirm Clean', 'wp-optikit'),
+                    'deleteMissingRecords' => __('Clean Missing Records', 'wp-optikit'),
+                    'confirmMissing'      => __('Clean %d missing records? Only attachments with missing main files will be deleted.', 'wp-optikit'),
                 ),
             )
         );
