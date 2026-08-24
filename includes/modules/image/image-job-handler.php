@@ -17,7 +17,7 @@ final class ImageJobHandler implements JobHandlerInterface
 
     public function supports_job_type(string $jobType): bool
     {
-        return in_array($jobType, array('image_convert', 'image_recompress', 'thumbnail_regenerate'), true);
+        return $jobType === 'image_convert';
     }
 
     public function build_items(string $jobType, array $payload): array
@@ -49,22 +49,6 @@ final class ImageJobHandler implements JobHandlerInterface
 
             if ($jobType === 'image_convert') {
                 $result = $this->processor->convertAttachmentToWebp($attachmentId);
-                return array(
-                    'status' => (string) ($result['status'] ?? 'succeeded'),
-                    'result' => $result,
-                );
-            }
-
-            if ($jobType === 'image_recompress') {
-                $result = $this->processor->recompressAttachment($attachmentId);
-                return array(
-                    'status' => (string) ($result['status'] ?? 'succeeded'),
-                    'result' => $result,
-                );
-            }
-
-            if ($jobType === 'thumbnail_regenerate') {
-                $result = $this->processor->regenerateMissingThumbnails($attachmentId);
                 return array(
                     'status' => (string) ($result['status'] ?? 'succeeded'),
                     'result' => $result,

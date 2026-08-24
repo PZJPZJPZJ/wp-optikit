@@ -180,14 +180,7 @@
 
         var total = panel.querySelectorAll('.wpok-job-item').length;
         var selected = panel.querySelectorAll('.wpok-job-item input[type="checkbox"]:checked').length;
-        var jobType = panel.getAttribute('data-job-type');
         var baseLabel = labels.qConvert || 'Queue Conversion Job';
-
-        if (jobType === 'image_recompress') {
-            baseLabel = labels.qRecompress || 'Queue Re-compression Job';
-        } else if (jobType === 'thumbnail_regenerate') {
-            baseLabel = labels.qRegenerateThumbnails || 'Regenerate Missing Thumbnails';
-        }
 
         button.textContent = baseLabel + ' (' + selected + '/' + total + ')';
     }
@@ -195,10 +188,6 @@
     function itemReadyStatus(item) {
         if (item.issue_type === 'main_missing') {
             return labels.missingMainFile || 'main file missing';
-        }
-
-        if (item.missing_count && parseInt(item.missing_count, 10) > 0) {
-            return String(item.missing_count) + ' ' + (labels.thumbnailIssues || 'missing thumbnails');
         }
 
         return labels.itemReady || 'ready';

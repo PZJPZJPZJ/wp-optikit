@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: WP OptiKit 2.0.0\n"
+"Project-Id-Version: WP OptiKit 2.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -205,28 +205,6 @@ msgid ""
 "deleted."
 msgstr "清理 %d 条缺失记录？只有主文件缺失的附件会被删除。"
 
-#: templates/tabs/images.php
-msgid "Missing Thumbnails"
-msgstr "缩略图缺失"
-
-#: templates/tabs/images.php
-msgid ""
-"Find missing attachment thumbnails and queue WordPress to regenerate the "
-"affected image sizes or PDF previews."
-msgstr "查找缺失的附件缩略图，并让 WordPress 排队重新生成受影响的图片尺寸或 PDF 预览图。"
-
-#: templates/tabs/images.php
-msgid "Scan Missing Thumbnails"
-msgstr "扫描缺失缩略图"
-
-#: templates/tabs/images.php includes/core/admin/admin-controller.php
-msgid "Regenerate Missing Thumbnails"
-msgstr "重新生成缺失缩略图"
-
-#: includes/core/admin/admin-controller.php
-msgid "missing thumbnails"
-msgstr "个缩略图缺失"
-
 #: templates/tabs/overview.php
 msgid "Plain"
 msgstr "朴素"
@@ -421,10 +399,6 @@ msgstr "推荐：生产环境禁用"
 msgid "Batch Convert"
 msgstr "批量转换"
 
-#: templates/tabs/images.php
-msgid "Re-compress"
-msgstr "重新压缩"
-
 #: templates/tabs/overview.php
 msgid "Available"
 msgstr "可用"
@@ -588,10 +562,6 @@ msgid "Target format quality"
 msgstr "目标格式质量"
 
 #: templates/tabs/images.php
-msgid "Oversized threshold (KB)"
-msgstr "超大阈值 (KB)"
-
-#: templates/tabs/images.php
 msgid "Clear Elementor cache after completed batch jobs"
 msgstr "批处理任务完成后清理 Elementor 缓存"
 
@@ -644,24 +614,6 @@ msgstr "等待任务创建..."
 #: templates/tabs/images.php
 msgid "Cancel job"
 msgstr "取消任务"
-
-#: templates/tabs/images.php
-msgid "Re-compress Oversized Images"
-msgstr "重新压缩超大图片"
-
-#: templates/tabs/images.php
-msgid ""
-"Detect oversized attachments and re-run compression in the background using "
-"the current output settings."
-msgstr "检测超大附件，并使用当前输出设置在后台重新运行压缩。"
-
-#: templates/tabs/images.php
-msgid "Scan Oversized Images"
-msgstr "扫描超大图片"
-
-#: templates/tabs/images.php
-msgid "Queue Re-compression Job"
-msgstr "加入重新压缩任务队列"
 
 #: templates/tabs/planned.php
 msgid "Coming Soon"

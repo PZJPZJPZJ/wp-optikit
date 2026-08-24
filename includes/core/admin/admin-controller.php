@@ -103,9 +103,6 @@ final class AdminController
                     'jobFinished'   => __('Job finished with status: %s.', 'wp-optikit'),
                     'cancelReq'     => __('Job cancellation requested.', 'wp-optikit'),
                     'qConvert'      => __('Queue Conversion Job', 'wp-optikit'),
-                    'qRecompress'   => __('Queue Re-compression Job', 'wp-optikit'),
-                    'qRegenerateThumbnails' => __('Regenerate Missing Thumbnails', 'wp-optikit'),
-                    'thumbnailIssues' => __('missing thumbnails', 'wp-optikit'),
                     'sizeArrow'       => __('->', 'wp-optikit'),
                     'noChange'        => __('No change', 'wp-optikit'),
 

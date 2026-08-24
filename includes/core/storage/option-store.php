@@ -42,7 +42,6 @@ final class OptionStore
             'wpok_enabled',
             'wpok_convert_formats',
             'wpok_quality',
-            'wpok_max_file_size',
         );
 
         foreach ($legacyKeys as $key) {

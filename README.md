@@ -16,8 +16,6 @@
 |---|---|
 | **Auto WebP Conversion** | Newly uploaded JPG, PNG, and GIF images are automatically converted to WebP — no manual steps needed. |
 | **Batch Convert Existing** | Scan your entire Media Library and queue all unconverted images for bulk WebP conversion in one click. |
-| **Re-compress Oversized** | Find images above your configured size threshold and re-compress them to reduce file sizes. |
-| **Repair Missing Thumbnails** | Scan for missing attachment thumbnails and queue WordPress to regenerate image sizes or PDF previews. |
 | **Adjustable Quality** | Fine-tune output quality from 1–100 to balance visual fidelity vs. file size. |
 | **Replace Source Files** | Successful conversions replace the original source-format file with the generated WebP file. |
 | **Background Queue** | All batch jobs run in a background queue with real-time progress tracking — no browser blocking. |
@@ -36,8 +34,8 @@
 ## 🚦 How It Works
 
 1. **Install & activate** — WP OptiKit immediately begins converting newly uploaded images to WebP.
-2. **Configure** — Set your preferred output quality, max file size threshold, and source formats from the dedicated admin panel.
-3. **Scan & batch** — Run the built-in scanner to find unconverted or oversized images in your existing Media Library.
+2. **Configure** — Set your preferred output quality and source formats from the dedicated admin panel.
+3. **Scan & batch** — Run the built-in scanner to find unconverted images in your existing Media Library.
 4. **Queue & relax** — Large batch jobs process in the background. Monitor progress from the admin dashboard and let the queue handle the rest.
 
 ---
@@ -72,7 +70,6 @@ Navigate to **Settings → WP OptiKit** to access the admin dashboard.
 | **Output Format** | WebP | Target format for all conversions |
 | **Source Formats** | JPG, PNG, GIF | Which image types to convert |
 | **Quality** | 80 | WebP compression quality (1–100) |
-| **Max File Size** | 512 KB | Threshold for "oversized" image detection |
 | **Source Files** | Replace on success | Original source-format files are removed only after WebP conversion and metadata updates complete |
 
 ---

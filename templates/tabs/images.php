@@ -81,11 +81,6 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
             </div>
 
             <div class="wpok-field-row">
-                <label for="wpok-image-threshold"><?php esc_html_e('Oversized threshold (KB)', 'wp-optikit'); ?></label>
-                <input id="wpok-image-threshold" type="number" min="1" max="102400" name="wpok_image_settings[max_file_size_kb]" value="<?php echo esc_attr((string) ($imageSettings['max_file_size_kb'] ?? 512)); ?>">
-            </div>
-
-            <div class="wpok-field-row">
                 <label for="wpok-image-elementor-cache"><?php esc_html_e('Clear Elementor cache after completed batch jobs', 'wp-optikit'); ?></label>
                 <label class="wpok-inline-toggle">
                     <input id="wpok-image-elementor-cache" type="checkbox" name="wpok_image_settings[clear_elementor_cache_after_jobs]" value="1" <?php checked(!empty($imageSettings['clear_elementor_cache_after_jobs'])); ?>>
@@ -127,37 +122,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </div>
     </section>
 
-    <!-- 4. Re-compress -->
-    <section class="wpok-card" data-job-panel="recompress" data-job-type="image_recompress" data-scan-endpoint="images/scans/oversized">
-        <div class="wpok-job-panel-head">
-            <div>
-                <h3><?php esc_html_e('Re-compress Oversized Images', 'wp-optikit'); ?></h3>
-                <p><?php esc_html_e('Detect oversized attachments and re-run compression in the background using the current output settings.', 'wp-optikit'); ?></p>
-            </div>
-            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Oversized Images', 'wp-optikit'); ?></button>
-        </div>
-        <div class="wpok-job-results" data-role="results"></div>
-        <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-            <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Queue Re-compression Job', 'wp-optikit'); ?></button>
-        </div>
-    </section>
-
-    <!-- 5. Missing Thumbnails -->
-    <section class="wpok-card" data-job-panel="missing-thumbnails" data-job-type="thumbnail_regenerate" data-scan-endpoint="thumbnail-missing/scan">
-        <div class="wpok-job-panel-head">
-            <div>
-                <h3><?php esc_html_e('Missing Thumbnails', 'wp-optikit'); ?></h3>
-                <p><?php esc_html_e('Find missing attachment thumbnails and queue WordPress to regenerate the affected image sizes or PDF previews.', 'wp-optikit'); ?></p>
-            </div>
-            <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Missing Thumbnails', 'wp-optikit'); ?></button>
-        </div>
-        <div class="wpok-job-results" data-role="results"></div>
-        <div class="wpok-job-toolbar" data-role="toolbar" hidden>
-            <button type="button" class="button button-primary" data-action="start"><?php esc_html_e('Regenerate Missing Thumbnails', 'wp-optikit'); ?></button>
-        </div>
-    </section>
-
-    <!-- 6. Orphan Files -->
+    <!-- 4. Orphan Files -->
     <section class="wpok-card" data-orphan-panel data-orphan-endpoint="media-orphan">
         <div class="wpok-job-panel-head">
             <div>
@@ -170,7 +135,7 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         <div class="wpok-job-toolbar" data-role="toolbar" hidden></div>
     </section>
 
-    <!-- 7. Missing Files -->
+    <!-- 5. Missing Files -->
     <section class="wpok-card" data-missing-panel data-missing-endpoint="media-missing">
         <div class="wpok-job-panel-head">
             <div>

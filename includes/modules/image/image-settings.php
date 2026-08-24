@@ -18,7 +18,6 @@ final class ImageSettings
             'formats'          => array('jpg', 'png'),
             'engine'           => 'imagick',
             'quality'          => 80,
-            'max_file_size_kb' => 512,
             'clear_elementor_cache_after_jobs' => false,
         );
     }
@@ -72,13 +71,6 @@ final class ImageSettings
         $settings = $this->get();
 
         return max(1, min(100, (int) $settings['quality']));
-    }
-
-    public function getMaxFileSizeBytes(): int
-    {
-        $settings = $this->get();
-
-        return max(1, (int) $settings['max_file_size_kb']) * 1024;
     }
 
     public function shouldClearElementorCacheAfterJobs(): bool
@@ -153,7 +145,6 @@ final class ImageSettings
             'formats'          => $formats,
             'engine'           => $engine,
             'quality'          => max(1, min(100, (int) ($input['quality'] ?? self::defaults()['quality']))),
-            'max_file_size_kb' => max(1, min(1024 * 100, (int) ($input['max_file_size_kb'] ?? self::defaults()['max_file_size_kb']))),
             'clear_elementor_cache_after_jobs' => !empty($input['clear_elementor_cache_after_jobs']),
         );
     }
