@@ -72,6 +72,12 @@
 
 ---
 
+## 后台界面
+
+所有标签页按“分组标题与描述 → 卡片”组织，沿用统一的控件和卡片样式。屏幕宽度大于 1100px 显示三列，721–1100px 显示两列，720px 及以下显示一列；不足一行时保留空位，任务表格在卡片内部横向滚动。
+
+首页展示系统、PHP 扩展和 WordPress 环境信息。图片页依次提供设置、工具和任务记录：转换设置与 Elementor 联动共用保存按钮，三个扫描或转换工具独立成卡片。表单页按 Elementor Form 分类保留安全与功能卡片。Cache、Assets 和 Database 仍为尚未开放的规划模块。详细维护规则见 AGENTS.md。
+
 ## 🎛️ Configuration
 
 Navigate to **Settings → WP OptiKit** to access the admin dashboard.

@@ -2,24 +2,10 @@
 
 namespace WPOptiKit\Core\Admin;
 
-use WPOptiKit\Core\Compatibility;
-use WPOptiKit\Core\Contracts\ModuleInterface;
-use WPOptiKit\Core\Queue\JobRepository;
-use WPOptiKit\Core\Storage\OptionStore;
-use WPOptiKit\Modules\Image\ImageProcessor;
-use WPOptiKit\Modules\Image\ImageSettings;
-
 final class AdminController
 {
-    /**
-     * @param array<string, ModuleInterface> $modules
-     */
-    public function __construct(
-        private readonly AdminPageRegistry $registry,
-        private readonly array $modules,
-        private readonly OptionStore $options,
-        private readonly JobRepository $jobs
-    ) {
+    public function __construct(private readonly AdminPageRegistry $registry)
+    {
     }
 
     public function boot(): void
@@ -74,15 +60,12 @@ final class AdminController
 
                     // Core JS
                     'requestFailed'  => __('Request failed', 'wp-optikit'),
-                    'btnCancelling'  => __('Cancelling...', 'wp-optikit'),
                     'btnCancel'      => __('Cancel', 'wp-optikit'),
                     'noActivity'     => __('No queue activity has been recorded yet.', 'wp-optikit'),
                     'tableId'        => __('ID', 'wp-optikit'),
-                    'tableModule'    => __('Module', 'wp-optikit'),
                     'tableType'      => __('Type', 'wp-optikit'),
                     'tableStatus'    => __('Status', 'wp-optikit'),
                     'tableProgress'  => __('Progress', 'wp-optikit'),
-                    'tableUpdated'   => __('Updated', 'wp-optikit'),
                     'tableAction'    => __('Action', 'wp-optikit'),
                     'noAction'       => __('-', 'wp-optikit'),
                     'bytesB'         => __('B', 'wp-optikit'),
@@ -143,42 +126,149 @@ final class AdminController
         $activeTab = isset($_GET['tab']) ? sanitize_key((string) $_GET['tab']) : 'overview';
         $tab       = $this->registry->get($activeTab) ?? reset($tabs);
 
-        // 计算图片引擎状态
-        $imageSettings = new ImageSettings($this->options);
-        $imageProcessor = new ImageProcessor($imageSettings);
-        $engineStatus   = $imageProcessor->getEngineStatus();
-
         $context   = array(
             'tabs'            => $tabs,
             'active_tab'      => $tab,
             'plugin_version'  => WPOK_VERSION,
-            'modules'         => $this->moduleSummary(),
-            'recent_jobs'     => $this->jobs->getRecentJobs(),
-            'environment'     => array(
-                'php_current' => PHP_VERSION,
-                'php_min'     => Compatibility::MIN_PHP,
-                'wp_current'  => get_bloginfo('version'),
-                'wp_min'      => Compatibility::MIN_WP,
-            ),
-            'image_settings'  => $this->options->get(OptionStore::IMAGE_OPTION, ImageSettings::defaults()),
-            'engine_status'   => $engineStatus,
+            'overview'        => $this->prepareOverview(),
         );
 
         include WPOK_DIR . 'templates/layout.php';
     }
 
-    private function moduleSummary(): array
+    /** @return array<string, mixed> */
+    private function prepareOverview(): array
     {
-        $summary = array();
+        /* Server Environment */
+        global $wpdb;
 
-        foreach ($this->modules as $module) {
-            $summary[] = array(
-                'id'      => $module->get_id(),
-                'label'   => $module->get_label(),
-                'enabled' => $module->is_enabled(),
-            );
-        }
+        $serverOs       = PHP_OS_FAMILY . ' (' . php_uname('r') . ')';
+        $serverSoft     = $_SERVER['SERVER_SOFTWARE'] ?? __('Unknown', 'wp-optikit');
+        $mysqlVer       = $wpdb->db_version() ?: __('Unknown', 'wp-optikit');
+        $phpVer         = PHP_VERSION;
+        $phpMemLimit    = ini_get('memory_limit') ?: __('Unknown', 'wp-optikit');
+        $phpMaxInput    = ini_get('max_input_vars') ?: __('Unknown', 'wp-optikit');
+        $phpMaxPost     = ini_get('post_max_size') ?: __('Unknown', 'wp-optikit');
+        $wpUploadDir    = wp_get_upload_dir();
+        $uploadWritable = $wpUploadDir['error'] === false && wp_is_writable($wpUploadDir['basedir']);
 
-        return $summary;
+        /* WordPress Environment */
+        $wpVer          = get_bloginfo('version');
+        $siteUrl        = get_site_url();
+        $homeUrl        = get_home_url();
+        $isMultisite    = is_multisite();
+        $maxUploadSize  = size_format(wp_max_upload_size());
+        $wpMemLimit     = defined('WP_MEMORY_LIMIT') ? WP_MEMORY_LIMIT : __('Unknown', 'wp-optikit');
+        $wpMaxMemLimit  = defined('WP_MAX_MEMORY_LIMIT') ? WP_MAX_MEMORY_LIMIT : __('Unknown', 'wp-optikit');
+        $permalinkStr   = get_option('permalink_structure');
+        $locale         = get_locale();
+        $timezone       = wp_timezone_string();
+        $adminEmail     = get_option('admin_email');
+        $wpDebug        = defined('WP_DEBUG') && WP_DEBUG;
+
+        $extensions = array(
+            'exif' => array(
+                'loaded'   => extension_loaded('exif'),
+                'label'    => 'EXIF',
+                'note'     => __('Reads image metadata', 'wp-optikit'),
+                'required' => false,
+            ),
+            'igbinary' => array(
+                'loaded'   => extension_loaded('igbinary'),
+                'label'    => 'igbinary',
+                'note'     => __('Alternative PHP serializer', 'wp-optikit'),
+                'required' => false,
+            ),
+            'imagick' => array(
+                'loaded'   => extension_loaded('imagick'),
+                'label'    => 'Imagick',
+                'note'     => __('Image processing engine', 'wp-optikit'),
+                'required' => false,
+            ),
+            'intl' => array(
+                'loaded'   => extension_loaded('intl'),
+                'label'    => 'intl',
+                'note'     => __('Internationalization support', 'wp-optikit'),
+                'required' => false,
+            ),
+            'zip' => array(
+                'loaded'   => extension_loaded('zip'),
+                'label'    => 'ZIP',
+                'note'     => __('Package operations', 'wp-optikit'),
+                'required' => true,
+            ),
+            'apcu' => array(
+                'loaded'   => extension_loaded('apcu'),
+                'label'    => 'APCu',
+                'note'     => __('Local cache store', 'wp-optikit'),
+                'required' => false,
+            ),
+            'memcached' => array(
+                'loaded'   => extension_loaded('memcached'),
+                'label'    => 'Memcached',
+                'note'     => __('Distributed cache', 'wp-optikit'),
+                'required' => false,
+            ),
+            'opcache' => array(
+                'loaded'   => extension_loaded('Zend OPcache'),
+                'label'    => 'OPcache',
+                'note'     => __('PHP bytecode cache', 'wp-optikit'),
+                'required' => false,
+            ),
+            'redis' => array(
+                'loaded'   => extension_loaded('redis'),
+                'label'    => 'Redis',
+                'note'     => __('Object cache backend', 'wp-optikit'),
+                'required' => false,
+            ),
+            'shmop' => array(
+                'loaded'   => extension_loaded('shmop'),
+                'label'    => 'shmop',
+                'note'     => __('Shared memory operations', 'wp-optikit'),
+                'required' => false,
+            ),
+            'mysqli' => array(
+                'loaded'   => extension_loaded('mysqli'),
+                'label'    => 'MySQLi',
+                'note'     => __('Database driver', 'wp-optikit'),
+                'required' => true,
+            ),
+            'pdo_mysql' => array(
+                'loaded'   => extension_loaded('pdo_mysql'),
+                'label'    => 'PDO MySQL',
+                'note'     => __('Alternative database driver', 'wp-optikit'),
+                'required' => false,
+            ),
+            'gd' => array(
+                'loaded'   => extension_loaded('gd'),
+                'label'    => 'GD',
+                'note'     => __('Image processing fallback', 'wp-optikit'),
+                'required' => false,
+            ),
+        );
+
+        return compact(
+            'serverOs',
+            'serverSoft',
+            'mysqlVer',
+            'phpVer',
+            'phpMemLimit',
+            'phpMaxInput',
+            'phpMaxPost',
+            'uploadWritable',
+            'wpVer',
+            'siteUrl',
+            'homeUrl',
+            'isMultisite',
+            'maxUploadSize',
+            'wpMemLimit',
+            'wpMaxMemLimit',
+            'permalinkStr',
+            'locale',
+            'timezone',
+            'adminEmail',
+            'wpDebug',
+            'extensions'
+        );
     }
 }

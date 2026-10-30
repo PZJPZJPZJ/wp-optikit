@@ -402,19 +402,6 @@ final class ImageProcessor
     }
 
     /**
-     * 获取引擎支持状态（供 UI 使用）
-     *
-     * @return array<string, bool>
-     */
-    public function getEngineStatus(): array
-    {
-        return array(
-            'gd_loaded'      => extension_loaded('gd'),
-            'imagick_loaded' => extension_loaded('imagick'),
-        );
-    }
-
-    /**
      * 使用 Imagick 将动画 GIF 转换为动画 WebP
      */
     private function convertAnimatedGifToWebp(string $filePath): ?array

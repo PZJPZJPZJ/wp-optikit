@@ -11,77 +11,6 @@
     padding-bottom: 24px;
 }
 
-.wpok-admin-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    margin: 24px 0 20px;
-    gap: 24px;
-    padding: 26px 28px;
-    border-radius: 22px;
-    background:
-        radial-gradient(circle at top left, rgba(77, 187, 255, 0.18), transparent 38%),
-        linear-gradient(135deg, #0f243b 0%, #153a58 52%, #1b4f73 100%);
-    color: #fff;
-    box-shadow: 0 22px 44px rgba(8, 29, 53, 0.18);
-}
-
-.wpok-admin-hero-copy {
-    max-width: 760px;
-}
-
-.wpok-admin-kicker {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
-    color: #d6ecff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.wpok-admin-hero h1 {
-    margin: 14px 0 8px;
-    font-size: 34px;
-    line-height: 1.05;
-    color: #fff;
-}
-
-.wpok-admin-hero p {
-    margin: 0;
-    color: #d5e5f2;
-    font-size: 15px;
-    max-width: 680px;
-    line-height: 1.6;
-}
-
-.wpok-admin-hero-side {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-}
-
-.wpok-admin-badge {
-    background: rgba(255, 255, 255, 0.16);
-    color: #f7fbff;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.wpok-admin-hero-meta {
-    color: #dcecf8;
-    font-size: 13px;
-    font-weight: 500;
-}
-
 .wpok-admin-content {
     margin-top: 18px;
 }
@@ -139,131 +68,37 @@
     display: block;
 }
 
-.wpok-grid {
-    display: grid;
-    gap: 20px;
+.wpok-section + .wpok-section {
+    margin-top: 32px;
 }
 
-.wpok-grid-overview {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+.wpok-section-heading {
     margin-bottom: 20px;
 }
 
-.wpok-grid-images {
-    grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 20px;
-}
-
-.wpok-grid-images-bottom {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.wpok-overview-hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.wpok-overview-hero-main {
-    min-height: 100%;
-}
-
-.wpok-platform-modules {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 4px;
-}
-
-.wpok-platform-modules .wpok-module-card {
-    flex: 0 1 260px;
-    min-width: 0;
-}
-
-.wpok-jobs-status-card {
-    display: flex;
-    flex-direction: column;
-}
-
-.wpok-jobs-status-grid {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    margin-top: 8px;
-}
-
-.wpok-job-stat-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    min-height: 80px;
-}
-
-.wpok-job-stat-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    opacity: 0.75;
-}
-
-.wpok-job-stat-box strong {
-    font-size: 26px;
-    line-height: 1.1;
-    color: inherit;
-}
-
-.wpok-job-stat-box small {
-    font-size: 11px;
-    opacity: 0.7;
+.wpok-section-heading h2 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 22px;
     line-height: 1.4;
 }
 
-.wpok-job-stat-green {
-    background: #ecfdf3;
-    color: #166534;
-}
-
-.wpok-job-stat-yellow {
-    background: #fff6d8;
-    color: #9a6700;
-}
-
-.wpok-job-stat-red {
-    background: #fef2f2;
-    color: #b91c1c;
-}
-
-.wpok-overview-kicker,
-.wpok-card-kicker {
-    display: inline-block;
-    margin-bottom: 8px;
-    color: #0f4c81;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.wpok-overview-hero-main h2 {
-    margin-bottom: 10px;
-}
-
-.wpok-overview-hero-main p {
+.wpok-section-heading p {
     margin: 0;
     color: #526170;
     line-height: 1.7;
 }
 
+.wpok-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 20px;
+}
+
 .wpok-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
     background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
     border: 1px solid #d7dee7;
     border-radius: 18px;
@@ -271,23 +106,21 @@
     box-shadow: 0 10px 30px rgba(15, 28, 43, 0.05);
 }
 
-.wpok-card h2,
 .wpok-card h3 {
-    margin-top: 0;
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.4;
     color: #0f172a;
     overflow-wrap: break-word;
 }
 
 .wpok-card-toolbar {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 14px;
-}
-
-.wpok-card-toolbar h2 {
-    margin-bottom: 0;
 }
 
 .wpok-card-heading {
@@ -305,34 +138,6 @@
     flex-wrap: wrap;
 }
 
-.wpok-stat-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 14px;
-}
-
-.wpok-stat-list li {
-    display: grid;
-    gap: 2px;
-}
-
-.wpok-stat-list span {
-    color: #646970;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.wpok-stat-list strong {
-    font-size: 16px;
-}
-
-.wpok-stat-list small {
-    color: #646970;
-}
-
 .wpok-env-list {
     list-style: none;
     margin: 0;
@@ -343,7 +148,7 @@
 
 .wpok-env-list li {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 4px 20px;
     align-items: baseline;
     padding: 10px 0;
@@ -384,46 +189,12 @@
     line-height: 1.4;
 }
 
-.wpok-module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-}
-
-.wpok-module-card {
-    border: 1px solid #d7dee7;
-    border-radius: 16px;
-    padding: 16px;
-    background: #f8fbff;
-}
-
-.wpok-module-card.is-enabled {
-    background: linear-gradient(180deg, #f3f9ff 0%, #eef7ff 100%);
-    border-color: #97c8f5;
-}
-
-.wpok-module-card.is-planned {
-    background: linear-gradient(180deg, #fff9e9 0%, #fdf6df 100%);
-    border-color: #e5cf84;
-}
-
-.wpok-module-card p {
-    min-height: 38px;
-    color: #566271;
-    line-height: 1.6;
-}
-
-.wpok-module-state,
 .wpok-job-status {
     display: inline-block;
     border-radius: 999px;
     padding: 4px 10px;
     font-size: 12px;
     font-weight: 600;
-}
-
-.wpok-module-state {
-    background: #fff;
 }
 
 .wpok-job-status.is-pending {
@@ -471,12 +242,39 @@
     white-space: nowrap;
 }
 
+fieldset.wpok-field-row {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.wpok-field-row legend {
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+.wpok-card .description {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.wpok-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.wpok-admin-wrap :where(button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid #0f4c81;
+    outline-offset: 2px;
+}
+
 .wpok-settings-form {
     display: grid;
     gap: 16px;
 }
 
 .wpok-field-row {
+    min-width: 0;
     display: grid;
     gap: 8px;
 }
@@ -493,12 +291,13 @@
 }
 
 .wpok-range-wrap input[type="range"] {
+    min-width: 0;
+    width: 100%;
     flex: 1;
     height: 6px;
     border-radius: 999px;
     background: #d7dee7;
     appearance: none;
-    outline: none;
     cursor: pointer;
 }
 
@@ -539,7 +338,13 @@
 .wpok-inline-toggle {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
+    line-height: 1.6;
+}
+
+.wpok-inline-toggle input[type="checkbox"] {
+    flex-shrink: 0;
+    margin-top: 3px;
 }
 
 .wpok-pill-group {
@@ -586,7 +391,6 @@
 	pointer-events: none;
 }
 
-.wpok-pill-note,
 .wpok-engine-note {
 	font-size: 11px;
 	color: #8c8f94;
@@ -661,23 +465,12 @@
     100% { transform: translateX(400%); width: 30%; }
 }
 
-.wpok-job-panels {
-    display: grid;
-    gap: 20px;
-}
-
-.wpok-job-panel {
-    border: 1px solid #d7dee7;
-    border-radius: 16px;
-    padding: 16px;
-    background: linear-gradient(180deg, #fbfdff 0%, #f7fafe 100%);
-}
-
 .wpok-job-panel-head {
     display: flex;
     justify-content: space-between;
     gap: 16px;
     align-items: flex-start;
+    flex-direction: column;
 }
 
 .wpok-job-panel-head > div {
@@ -709,6 +502,8 @@
 }
 
 .wpok-job-tree-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -789,10 +584,6 @@
     word-break: break-all;
 }
 
-.wpok-job-item-status {
-    flex-shrink: 0;
-}
-
 .wpok-job-item-size {
     white-space: nowrap;
     font-weight: 600;
@@ -807,16 +598,13 @@
     color: #15803d;
 }
 
-.wpok-item-size-neutral {
-    color: #1f2937;
-}
-
 .wpok-item-size-arrow {
     color: #646970;
     margin: 0 4px;
 }
 
 .wpok-job-item-status {
+    flex-shrink: 0;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -837,17 +625,8 @@
     color: #b91c1c;
 }
 
-.wpok-job-toolbar,
-.wpok-job-progress {
+.wpok-job-toolbar {
     margin-top: 14px;
-}
-
-.wpok-job-progress-meta,
-.wpok-job-progress-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
 }
 
 .wpok-progress-bar {
@@ -890,6 +669,8 @@
 }
 
 .wpok-image-jobs-table {
+    min-width: 560px;
+    white-space: nowrap;
     width: 100%;
     border-collapse: collapse;
 }
@@ -919,40 +700,15 @@
     min-width: 100px;
 }
 
-@media (max-width: 1100px) and (min-width: 721px) {
-    .wpok-grid-overview {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 960px) {
-    .wpok-admin-hero,
-    .wpok-overview-hero {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-    }
-
-    .wpok-admin-hero-side {
-        align-items: flex-start;
-    }
-}
-
 @media (max-width: 1100px) {
-    .wpok-grid-images-bottom {
-        grid-template-columns: repeat(2, 1fr);
+    .wpok-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 720px) {
-    .wpok-admin-hero {
-        padding: 22px 20px;
-    }
-
-    .wpok-jobs-status-grid,
-    .wpok-grid-overview,
-    .wpok-grid-images,
-    .wpok-grid-images-bottom {
-        grid-template-columns: 1fr;
+    .wpok-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .wpok-admin-tab {
@@ -962,13 +718,11 @@
     }
 
     .wpok-card-toolbar,
-    .wpok-card-heading,
-    .wpok-job-panel-head {
+    .wpok-card-heading {
         flex-direction: column;
         align-items: stretch;
     }
 }
-
 
 /* ============================================================
    Deleted Items (Orphan & Missing)
@@ -992,13 +746,6 @@
     color: #b91c1c;
     font-size: 11px;
     margin-left: 28px;
-}
-
-.wpok-engine-description {
-    margin: 6px 0 0 0;
-    font-size: 12px;
-    color: #8c8f94;
-    line-height: 1.5;
 }
 
 /* ============================================================
@@ -1069,24 +816,8 @@
     letter-spacing: 0.02em;
 }
 
-/* Elementor Form settings */
-.wpok-forms-heading {
-    margin: 4px 0 22px;
-}
-
-.wpok-forms-heading h2 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 22px;
-}
-
-.wpok-forms-heading p {
-    margin: 0;
-    color: #526170;
-    line-height: 1.7;
-}
-
-.wpok-forms-heading .wpok-forms-dependency {
+/* Settings and dependencies */
+.wpok-section-heading .wpok-forms-dependency {
     margin-top: 12px;
     padding: 12px 16px;
     border-inline-start: 3px solid #dba617;
@@ -1095,55 +826,28 @@
     color: #5f4b13;
 }
 
-.wpok-forms-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: 22px;
-}
-
-.wpok-forms-grid .wpok-card-heading h3 {
-    margin: 0;
-    font-size: 17px;
-}
-
-.wpok-forms-features {
+.wpok-fields {
     display: grid;
     gap: 20px;
 }
 
-.wpok-forms-features > .wpok-field-row + .wpok-field-row {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 20px;
+.wpok-field-description {
+    margin: 0;
+    color: #526170;
+    font-size: 13px;
+    line-height: 1.7;
 }
 
-.wpok-forms-features .wpok-inline-toggle {
-    align-items: flex-start;
-    font-weight: 600;
-    line-height: 1.6;
-}
-
-.wpok-forms-features input[type="checkbox"] {
-    flex-shrink: 0;
-    margin-top: 3px;
-}
-
-.wpok-forms-description p {
+.wpok-field-description p {
     margin: 0 0 8px;
     color: #526170;
     line-height: 1.7;
 }
 
-.wpok-forms-description p:last-child {
+.wpok-field-description p:last-child {
     margin-bottom: 0;
 }
 
-.wpok-forms-actions {
+.wpok-form-actions {
     padding-top: 4px;
-}
-
-@media (max-width: 782px) {
-    .wpok-forms-grid {
-        grid-template-columns: 1fr;
-    }
 }

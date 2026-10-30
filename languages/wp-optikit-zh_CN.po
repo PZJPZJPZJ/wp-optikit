@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: WP OptiKit 2.3.0\n"
+"Project-Id-Version: WP OptiKit 2.3.1\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -61,18 +61,11 @@ msgstr "OptiKit"
 msgid "OptiKit sections"
 msgstr "OptiKit 分区"
 
-#: templates/tabs/overview.php
-msgid "Platform Status"
-msgstr "平台状态"
-
-#: templates/tabs/overview.php
-msgid "Jobs Status"
-msgstr "任务状态"
-
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Unknown"
 msgstr "未知"
 
+#: includes/modules/forms/country-code-field.php
 #: templates/tabs/overview.php
 msgid "No"
 msgstr "否"
@@ -89,29 +82,9 @@ msgstr "未连接"
 msgid "Active"
 msgstr "启用"
 
-#: templates/tabs/overview.php
-msgid "Image Format Auto Conversion"
-msgstr "图片格式自动转换"
-
-#: templates/tabs/overview.php
-msgid "Auto-convert uploads to the selected output format when enabled."
-msgstr "启用后自动将上传文件转换为选定的输出格式。"
-
-#: templates/tabs/overview.php
-msgid "Disabled. Enable in image settings to auto-convert uploads."
-msgstr "已禁用。在图片设置中启用即可自动转换上传文件。"
-
-#: templates/tabs/overview.php
-msgid "Enabled"
-msgstr "已启用"
-
-#: templates/tabs/overview.php
-msgid "Disabled"
-msgstr "已禁用"
-
 #: templates/tabs/images.php
 msgid "Orphan Files"
-msgstr "失效文件"
+msgstr "孤立文件"
 
 #: templates/tabs/images.php
 msgid ""
@@ -121,11 +94,11 @@ msgstr "查找上传目录中没有对应附件记录的文件。"
 
 #: templates/tabs/images.php
 msgid "Scan Orphan Files"
-msgstr "扫描失效文件"
+msgstr "扫描孤立文件"
 
 #: includes/core/admin/admin-controller.php
 msgid "No orphan files were found."
-msgstr "未找到失效文件。"
+msgstr "未找到孤立文件。"
 
 #: includes/core/admin/admin-controller.php
 msgid "Delete Permanently"
@@ -133,7 +106,7 @@ msgstr "永久删除"
 
 #: includes/core/admin/admin-controller.php
 msgid "Permanently delete %d orphan files? This cannot be undone."
-msgstr "将永久删除 %d 个失效文件。此操作不可撤销。"
+msgstr "将永久删除 %d 个孤立文件。此操作不可撤销。"
 
 #: includes/core/admin/admin-controller.php
 msgid "Deleting..."
@@ -161,7 +134,7 @@ msgstr "共计"
 
 #: templates/tabs/images.php
 msgid "Missing Files"
-msgstr "文件缺失"
+msgstr "缺失文件"
 
 #: templates/tabs/images.php
 msgid "Find missing attachment files and clean only the affected records or metadata."
@@ -220,28 +193,12 @@ msgid ""
 msgstr "跟踪队列活动、管理媒体操作并准备下一层性能工具，无需在多个插件之间切换。"
 
 #: templates/tabs/overview.php
-msgid "Running jobs"
-msgstr "运行中的任务"
-
-#: templates/tabs/overview.php
-msgid "Active queue operations"
-msgstr "活跃的队列操作"
-
-#: templates/tabs/overview.php
 msgid "Completed jobs"
 msgstr "已完成的任务"
 
 #: templates/tabs/overview.php
-msgid "Successful recent runs"
-msgstr "最近成功运行"
-
-#: templates/tabs/overview.php
 msgid "Image Module"
 msgstr "图片模块"
-
-#: templates/tabs/overview.php
-msgid "Server Environment"
-msgstr "服务器环境"
 
 #: templates/tabs/overview.php
 msgid "System & Runtime"
@@ -322,14 +279,6 @@ msgstr "已连接"
 #: templates/tabs/overview.php
 msgid "Required for Elementor integration"
 msgstr "Elementor 集成所需"
-
-#: templates/tabs/overview.php
-msgid "WordPress Environment"
-msgstr "WordPress 环境"
-
-#: templates/tabs/overview.php
-msgid "Site & Configuration"
-msgstr "站点与配置"
 
 #: templates/tabs/overview.php
 msgid "Recommended: 6.7+"
@@ -452,14 +401,6 @@ msgid "WordPress runtime"
 msgstr "WordPress 运行环境"
 
 #: templates/tabs/overview.php
-msgid "Recent failures"
-msgstr "最近的失败"
-
-#: templates/tabs/overview.php
-msgid "Jobs that ended with an error"
-msgstr "以错误结束的任务"
-
-#: templates/tabs/overview.php
 msgid "Queue Activity"
 msgstr "队列活动"
 
@@ -467,75 +408,47 @@ msgstr "队列活动"
 msgid "Recent Jobs"
 msgstr "最近的任务"
 
-#: templates/tabs/overview.php
+#: templates/tabs/images.php
 msgid "Clear Completed Records"
 msgstr "清除已完成记录"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "No queue activity has been recorded yet."
 msgstr "尚未记录队列活动。"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "ID"
 msgstr "ID"
 
-#: templates/tabs/overview.php
-msgid "Module"
-msgstr "模块"
-
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Type"
 msgstr "类型"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Status"
 msgstr "状态"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Progress"
 msgstr "进度"
 
-#: templates/tabs/overview.php
-msgid "Updated"
-msgstr "更新于"
-
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Action"
 msgstr "操作"
 
-#: templates/tabs/overview.php
-msgid "Cancelling..."
-msgstr "取消中..."
-
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Cancel"
 msgstr "取消"
 
-#: templates/tabs/overview.php includes/core/admin/admin-controller.php
+#: includes/core/admin/admin-controller.php
 msgid "-"
 msgstr "-"
-
-#: templates/tabs/images.php
-msgid "Image Operations"
-msgstr "图片操作"
-
-#: templates/tabs/images.php
-msgid "Images Workspace"
-msgstr "图片工作区"
 
 #: templates/tabs/images.php
 msgid ""
 "Configure delivery rules, scan the media library, and run queue-backed image "
 "optimization jobs from one workspace."
 msgstr "在单个工作区中配置分发规则、扫描媒体库并运行队列支持的图片优化任务。"
-
-#: templates/tabs/images.php
-msgid "Configuration"
-msgstr "配置"
-
-#: templates/tabs/images.php
-msgid "Image Module Settings"
-msgstr "图片模块设置"
 
 #: templates/tabs/images.php
 msgid "Enable image module"
@@ -603,6 +516,7 @@ msgstr "扫描媒体库中尚未转换为目标格式的附件，然后将它们
 msgid "Scan Media Library"
 msgstr "扫描媒体库"
 
+#: includes/core/admin/admin-controller.php
 #: templates/tabs/images.php
 msgid "Queue Conversion Job"
 msgstr "加入转换任务队列"
@@ -618,12 +532,6 @@ msgstr "取消任务"
 #: templates/tabs/planned.php
 msgid "Coming Soon"
 msgstr "即将推出"
-
-#: templates/tabs/planned.php
-msgid ""
-"This workspace is being prepared as part of the broader OptiKit platform "
-"experience."
-msgstr "该工作区正在准备中，将作为 OptiKit 平台体验的一部分。"
 
 #: includes/core/compatibility.php
 msgid ""
@@ -741,14 +649,6 @@ msgid "(not available)"
 msgstr "（不可用）"
 
 #: templates/tabs/overview.php
-msgid "PHP Extensions"
-msgstr "PHP 扩展"
-
-#: templates/tabs/overview.php
-msgid "Extension Status"
-msgstr "扩展状态"
-
-#: templates/tabs/overview.php
 msgid "(required)"
 msgstr "（必备）"
 
@@ -769,65 +669,61 @@ msgid ""
 "but larger file sizes."
 msgstr "默认值：80。推荐范围：75–90。值越高质量越好，但文件体积越大。"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Reads image metadata"
 msgstr "读取图片元数据"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Alternative PHP serializer"
 msgstr "PHP 备用序列化器"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Image processing engine"
 msgstr "图片处理引擎"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Internationalization support"
 msgstr "国际化支持"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Package operations"
 msgstr "包操作"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Local cache store"
 msgstr "本地缓存存储"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Distributed cache"
 msgstr "分布式缓存"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "PHP bytecode cache"
 msgstr "PHP 字节码缓存"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Object cache backend"
 msgstr "对象缓存后端"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Shared memory operations"
 msgstr "共享内存操作"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Database driver"
 msgstr "数据库驱动"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Alternative database driver"
 msgstr "备用数据库驱动"
 
-#: templates/tabs/overview.php
+#: includes/core/admin/admin-controller.php
 msgid "Image processing fallback"
 msgstr "图片处理后备方案"
 
 #: includes/modules/forms/forms-module.php
 msgid "Forms"
 msgstr "表单"
-
-#: templates/tabs/forms.php
-msgid "Form Settings"
-msgstr "表单设置"
 
 #: templates/tabs/forms.php
 msgid "Reject submissions with an empty referrer"
@@ -898,7 +794,6 @@ msgid ""
 msgstr "无法识别时使用默认国家。表单使用此字段期间，请保持此功能开启。"
 
 #: includes/modules/forms/country-code-field.php
-#: templates/tabs/forms.php
 msgid "Country Code"
 msgstr "国家/区号"
 
@@ -926,6 +821,7 @@ msgid "The country field could not be processed. Please try again."
 msgstr "无法处理国家/区号字段，请重试。"
 
 #: includes/modules/forms/country-code-field.php
+#: templates/tabs/overview.php
 msgid "Yes"
 msgstr "是"
 
@@ -1940,3 +1836,77 @@ msgstr "赞比亚"
 #: includes/modules/forms/countries.php
 msgid "Zimbabwe"
 msgstr "津巴布韦"
+
+#: templates/tabs/overview.php
+msgid "Environment Information"
+msgstr "环境信息"
+
+#: templates/tabs/overview.php
+msgid "Review the server runtime, PHP extensions, and WordPress configuration."
+msgstr "查看服务器运行环境、PHP 扩展和 WordPress 配置。"
+
+#: templates/tabs/images.php
+msgid "Settings"
+msgstr "设置"
+
+#: templates/tabs/images.php
+msgid "Configure image conversion and Elementor integration."
+msgstr "配置图片转换和 Elementor 联动。"
+
+#: templates/tabs/images.php
+msgid "Conversion Settings"
+msgstr "转换设置"
+
+#: templates/tabs/images.php
+msgid "Elementor Integration"
+msgstr "Elementor 联动"
+
+#: templates/tabs/images.php
+msgid "Tools"
+msgstr "工具"
+
+#: templates/tabs/images.php
+msgid ""
+"Scan images and files, then run the appropriate conversion or cleanup "
+"operation."
+msgstr "扫描图片和文件，再执行相应的转换或清理操作。"
+
+#: templates/tabs/images.php
+msgid "Task Records"
+msgstr "任务记录"
+
+#: templates/tabs/images.php
+msgid "View image task progress, cancel active tasks, and clear completed records."
+msgstr "查看图片任务进度、取消进行中的任务或清理已完成的记录。"
+
+#: templates/tabs/images.php
+msgid "Image Tasks"
+msgstr "图片任务记录"
+
+#: templates/tabs/planned.php
+msgid "This module is planned and does not provide available features yet."
+msgstr "此模块尚在规划中，暂未提供可用功能。"
+
+#: templates/tabs/overview.php
+msgid "PHP Extensions"
+msgstr "PHP 扩展"
+
+#: templates/tabs/overview.php
+msgid "WordPress Environment"
+msgstr "WordPress 环境"
+
+#: includes/core/admin/admin-controller.php
+msgid "Cancelling"
+msgstr "正在取消"
+
+#: includes/modules/image/image-settings.php
+msgid "GD"
+msgstr "GD"
+
+#: includes/modules/image/image-settings.php
+msgid "Imagick"
+msgstr "Imagick"
+
+#: templates/tabs/overview.php
+msgid "Recommended: PHP 8.1+"
+msgstr "推荐：PHP 8.1+"

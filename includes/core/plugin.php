@@ -114,10 +114,7 @@ final class Plugin
         $this->container->factory(
             'admin_controller',
             fn (Container $container) => new AdminController(
-                $container->get('admin_registry'),
-                $this->modules,
-                $container->get('options'),
-                $container->get('job_repository')
+                $container->get('admin_registry')
             )
         );
         $this->container->factory('updater', fn (Container $container) => new GithubUpdater($this->pluginFile));
