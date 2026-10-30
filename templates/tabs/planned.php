@@ -12,14 +12,9 @@
     <div class="wpok-grid">
         <section class="wpok-card">
             <div class="wpok-card-heading">
-                <div class="wpok-title-with-help">
-                    <h3><?php esc_html_e('Coming Soon', 'wp-optikit'); ?></h3>
-                    <?php
-                    $helpText = __('This module is planned and does not provide available features yet.', 'wp-optikit');
-                    include WPOK_DIR . 'templates/help-tooltip.php';
-                    ?>
-                </div>
+                <h3><?php esc_html_e('Coming Soon', 'wp-optikit'); ?></h3>
             </div>
+            <p class="description"><?php esc_html_e('This module is planned and does not provide available features yet.', 'wp-optikit'); ?></p>
         </section>
     </div>
 </section>

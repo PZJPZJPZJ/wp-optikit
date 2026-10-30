@@ -131,11 +131,15 @@
     margin-bottom: 14px;
 }
 
-.wpok-title-with-help {
+.wpok-field-label {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
+    min-width: 0;
+}
+
+.wpok-field-label > label {
     min-width: 0;
 }
 
@@ -170,8 +174,12 @@
     overflow-wrap: anywhere;
 }
 
-.wpok-help-popover p {
-    margin: 0;
+.wpok-help-paragraph {
+    display: block;
+}
+
+.wpok-help-paragraph + .wpok-help-paragraph {
+    margin-top: 8px;
 }
 
 @supports selector(:popover-open) {
@@ -193,7 +201,7 @@
 }
 
 @supports not selector(:popover-open) {
-    .wpok-title-with-help {
+    .wpok-field-label {
         flex-wrap: wrap;
     }
 
@@ -325,7 +333,8 @@ fieldset.wpok-field-row {
 }
 
 .wpok-card .description {
-    margin: 0;
+    margin: 8px 0 0;
+    color: #526170;
     line-height: 1.7;
 }
 
@@ -894,23 +903,6 @@ fieldset.wpok-field-row {
 .wpok-fields {
     display: grid;
     gap: 20px;
-}
-
-.wpok-field-description {
-    margin: 0;
-    color: #526170;
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-.wpok-field-description p {
-    margin: 0 0 8px;
-    color: #526170;
-    line-height: 1.7;
-}
-
-.wpok-field-description p:last-child {
-    margin-bottom: 0;
 }
 
 .wpok-form-actions {

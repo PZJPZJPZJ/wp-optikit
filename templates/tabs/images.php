@@ -23,11 +23,19 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-card-heading"><h3 id="wpok-conversion-title"><?php esc_html_e('Conversion Settings', 'wp-optikit'); ?></h3></div>
                 <div class="wpok-fields">
                     <div class="wpok-field-row">
-                        <label class="wpok-inline-toggle" for="wpok-image-enabled">
-                            <input id="wpok-image-enabled" aria-describedby="wpok-image-enabled-description" type="checkbox" name="wpok_image_settings[enabled]" value="1" <?php checked(!empty($imageSettings['enabled'])); ?>>
-                            <span><?php esc_html_e('Enable image module', 'wp-optikit'); ?></span>
-                        </label>
-                        <p id="wpok-image-enabled-description" class="wpok-field-description"><?php esc_html_e('Automatically convert supported uploads to the selected output format.', 'wp-optikit'); ?></p>
+                        <div class="wpok-field-label">
+                            <label class="wpok-inline-toggle" for="wpok-image-enabled">
+                                <input id="wpok-image-enabled" aria-describedby="wpok-image-enabled-description" type="checkbox" name="wpok_image_settings[enabled]" value="1" <?php checked(!empty($imageSettings['enabled'])); ?>>
+                                <span><?php esc_html_e('Enable image module', 'wp-optikit'); ?></span>
+                            </label>
+                            <?php
+                            $helpId = 'wpok-image-enabled-description';
+                            $helpParagraphs = [
+                                __('Automatically convert supported uploads to the selected output format.', 'wp-optikit'),
+                            ];
+                            include WPOK_DIR . 'templates/help-tooltip.php';
+                            ?>
+                        </div>
                     </div>
 
                     <fieldset class="wpok-field-row">
@@ -53,7 +61,18 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                     </fieldset>
 
                     <fieldset class="wpok-field-row" aria-describedby="wpok-image-engine-description">
-                        <legend><?php esc_html_e('Conversion engine', 'wp-optikit'); ?></legend>
+                        <legend>
+                            <span class="wpok-field-label">
+                                <span><?php esc_html_e('Conversion engine', 'wp-optikit'); ?></span>
+                                <?php
+                                $helpId = 'wpok-image-engine-description';
+                                $helpParagraphs = [
+                                    __('Imagick offers better quality and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black). Animated GIF to WebP conversion requires Imagick with animated WebP support (libwebp-anim); GIFs are skipped automatically when the engine does not support animated conversion.', 'wp-optikit'),
+                                ];
+                                include WPOK_DIR . 'templates/help-tooltip.php';
+                                ?>
+                            </span>
+                        </legend>
                         <div class="wpok-radio-group">
                             <label class="wpok-radio-card<?php echo !$imagickAvailable ? ' is-disabled' : ''; ?>">
                                 <input type="radio" name="wpok_image_settings[engine]" value="imagick" <?php checked($engine, 'imagick'); ?> <?php disabled(!$imagickAvailable); ?>>
@@ -70,16 +89,23 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                                 <?php endif; ?>
                             </label>
                         </div>
-                        <p id="wpok-image-engine-description" class="wpok-field-description"><?php esc_html_e('Imagick offers better quality and preserves PNG transparency. GD is a fallback when Imagick is unavailable but loses PNG alpha channel (transparency becomes black). Animated GIF to WebP conversion requires Imagick with animated WebP support (libwebp-anim); GIFs are skipped automatically when the engine does not support animated conversion.', 'wp-optikit'); ?></p>
                     </fieldset>
 
                     <div class="wpok-field-row">
-                        <label for="wpok-image-quality"><?php esc_html_e('Target format quality', 'wp-optikit'); ?></label>
+                        <div class="wpok-field-label">
+                            <label for="wpok-image-quality"><?php esc_html_e('Target format quality', 'wp-optikit'); ?></label>
+                            <?php
+                            $helpId = 'wpok-image-quality-description';
+                            $helpParagraphs = [
+                                __('Default: 80. Recommended range: 75–90. Higher values produce better quality but larger file sizes.', 'wp-optikit'),
+                            ];
+                            include WPOK_DIR . 'templates/help-tooltip.php';
+                            ?>
+                        </div>
                         <div class="wpok-range-wrap">
                             <input id="wpok-image-quality" aria-describedby="wpok-image-quality-description" type="range" min="1" max="100" name="wpok_image_settings[quality]" value="<?php echo esc_attr((string) ($imageSettings['quality'] ?? 80)); ?>" data-range-display>
                             <span class="wpok-range-value" data-role="quality-value"><?php echo esc_html((string) ($imageSettings['quality'] ?? 80)); ?></span>
                         </div>
-                        <p id="wpok-image-quality-description" class="wpok-field-description"><?php esc_html_e('Default: 80. Recommended range: 75–90. Higher values produce better quality but larger file sizes.', 'wp-optikit'); ?></p>
                     </div>
 
                 </div>
@@ -88,11 +114,19 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
                 <div class="wpok-card-heading"><h3 id="wpok-integration-title"><?php esc_html_e('Elementor Integration', 'wp-optikit'); ?></h3></div>
                 <div class="wpok-fields">
                     <div class="wpok-field-row">
-                        <label class="wpok-inline-toggle" for="wpok-image-elementor-cache">
-                            <input id="wpok-image-elementor-cache" aria-describedby="wpok-image-elementor-cache-description" type="checkbox" name="wpok_image_settings[clear_elementor_cache_after_jobs]" value="1" <?php checked(!empty($imageSettings['clear_elementor_cache_after_jobs'])); ?>>
-                            <span><?php esc_html_e('Clear Elementor cache after completed batch jobs', 'wp-optikit'); ?></span>
-                        </label>
-                        <p id="wpok-image-elementor-cache-description" class="wpok-field-description"><?php esc_html_e('After image batch jobs finish, automatically trigger Elementor\'s cache clear routine when Elementor is active.', 'wp-optikit'); ?></p>
+                        <div class="wpok-field-label">
+                            <label class="wpok-inline-toggle" for="wpok-image-elementor-cache">
+                                <input id="wpok-image-elementor-cache" aria-describedby="wpok-image-elementor-cache-description" type="checkbox" name="wpok_image_settings[clear_elementor_cache_after_jobs]" value="1" <?php checked(!empty($imageSettings['clear_elementor_cache_after_jobs'])); ?>>
+                                <span><?php esc_html_e('Clear Elementor cache after completed batch jobs', 'wp-optikit'); ?></span>
+                            </label>
+                            <?php
+                            $helpId = 'wpok-image-elementor-cache-description';
+                            $helpParagraphs = [
+                                __('After image batch jobs finish, automatically trigger Elementor\'s cache clear routine when Elementor is active.', 'wp-optikit'),
+                            ];
+                            include WPOK_DIR . 'templates/help-tooltip.php';
+                            ?>
+                        </div>
                     </div>
 
                 </div>
@@ -109,12 +143,9 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
     <div class="wpok-grid">
         <section class="wpok-card" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
             <div class="wpok-job-panel-head">
-                <div class="wpok-title-with-help">
+                <div>
                     <h3><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
-                    <?php
-                    $helpText = __('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit');
-                    include WPOK_DIR . 'templates/help-tooltip.php';
-                    ?>
+                    <p class="description"><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
             </div>
@@ -125,12 +156,9 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </section>
         <section class="wpok-card" data-orphan-panel data-orphan-endpoint="media-orphan">
             <div class="wpok-job-panel-head">
-                <div class="wpok-title-with-help">
+                <div>
                     <h3><?php esc_html_e('Orphan Files', 'wp-optikit'); ?></h3>
-                    <?php
-                    $helpText = __('Find files in the uploads directory that have no corresponding attachment record in the database.', 'wp-optikit');
-                    include WPOK_DIR . 'templates/help-tooltip.php';
-                    ?>
+                    <p class="description"><?php esc_html_e('Find files in the uploads directory that have no corresponding attachment record in the database.', 'wp-optikit'); ?></p>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Orphan Files', 'wp-optikit'); ?></button>
             </div>
@@ -139,12 +167,9 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </section>
         <section class="wpok-card" data-missing-panel data-missing-endpoint="media-missing">
             <div class="wpok-job-panel-head">
-                <div class="wpok-title-with-help">
+                <div>
                     <h3><?php esc_html_e('Missing Files', 'wp-optikit'); ?></h3>
-                    <?php
-                    $helpText = __('Find missing attachment files and clean only the affected records or metadata.', 'wp-optikit');
-                    include WPOK_DIR . 'templates/help-tooltip.php';
-                    ?>
+                    <p class="description"><?php esc_html_e('Find missing attachment files and clean only the affected records or metadata.', 'wp-optikit'); ?></p>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Missing Files', 'wp-optikit'); ?></button>
             </div>

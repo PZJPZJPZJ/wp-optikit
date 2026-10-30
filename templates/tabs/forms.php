@@ -26,14 +26,20 @@
                 </div>
                 <div class="wpok-fields">
                     <div class="wpok-field-row">
-                        <label class="wpok-inline-toggle" for="wpok-forms-referrer">
-                            <input type="hidden" name="wpok_forms_settings[reject_empty_referrer]" value="0">
-                            <input id="wpok-forms-referrer" type="checkbox" name="wpok_forms_settings[reject_empty_referrer]" value="1" aria-describedby="wpok-forms-referrer-description" <?php checked(!empty($formsSettings['reject_empty_referrer'])); ?>>
-                            <span><?php esc_html_e('Reject submissions with an empty referrer', 'wp-optikit'); ?></span>
-                        </label>
-                        <div id="wpok-forms-referrer-description" class="wpok-field-description">
-                            <p><?php esc_html_e('Reject submissions when the submitted referrer field is missing, blank, or not a string.', 'wp-optikit'); ?></p>
-                            <p><?php esc_html_e('Checks the submitted referrer field only. URLs, domains, and HTTP request headers are not validated. Disabled by default.', 'wp-optikit'); ?></p>
+                        <div class="wpok-field-label">
+                            <label class="wpok-inline-toggle" for="wpok-forms-referrer">
+                                <input type="hidden" name="wpok_forms_settings[reject_empty_referrer]" value="0">
+                                <input id="wpok-forms-referrer" type="checkbox" name="wpok_forms_settings[reject_empty_referrer]" value="1" aria-describedby="wpok-forms-referrer-description" <?php checked(!empty($formsSettings['reject_empty_referrer'])); ?>>
+                                <span><?php esc_html_e('Reject submissions with an empty referrer', 'wp-optikit'); ?></span>
+                            </label>
+                            <?php
+                            $helpId = 'wpok-forms-referrer-description';
+                            $helpParagraphs = [
+                                __('Reject submissions when the submitted referrer field is missing, blank, or not a string.', 'wp-optikit'),
+                                __('Checks the submitted referrer field only. URLs, domains, and HTTP request headers are not validated. Disabled by default.', 'wp-optikit'),
+                            ];
+                            include WPOK_DIR . 'templates/help-tooltip.php';
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -45,15 +51,21 @@
                 </div>
                 <div class="wpok-fields">
                     <div class="wpok-field-row">
-                        <label class="wpok-inline-toggle" for="wpok-forms-country-code">
-                            <input type="hidden" name="wpok_forms_settings[country_code_enabled]" value="0">
-                            <input id="wpok-forms-country-code" type="checkbox" name="wpok_forms_settings[country_code_enabled]" value="1" aria-describedby="wpok-forms-country-code-description" <?php checked(!empty($formsSettings['country_code_enabled'])); ?>>
-                            <span><?php esc_html_e('Enable Country Code field', 'wp-optikit'); ?></span>
-                        </label>
-                        <div id="wpok-forms-country-code-description" class="wpok-field-description">
-                            <p><?php esc_html_e('Adds a country/region and dialing code dropdown to Elementor Pro forms. Disabled by default.', 'wp-optikit'); ?></p>
-                            <p><?php esc_html_e('After saving, choose Country Code as the field type in the Elementor Form widget. Set the default country and Cloudflare detection for each field there.', 'wp-optikit'); ?></p>
-                            <p><?php esc_html_e('Detection falls back to the default country when unavailable. Keep this feature enabled while your forms use this field.', 'wp-optikit'); ?></p>
+                        <div class="wpok-field-label">
+                            <label class="wpok-inline-toggle" for="wpok-forms-country-code">
+                                <input type="hidden" name="wpok_forms_settings[country_code_enabled]" value="0">
+                                <input id="wpok-forms-country-code" type="checkbox" name="wpok_forms_settings[country_code_enabled]" value="1" aria-describedby="wpok-forms-country-code-description" <?php checked(!empty($formsSettings['country_code_enabled'])); ?>>
+                                <span><?php esc_html_e('Enable Country Code field', 'wp-optikit'); ?></span>
+                            </label>
+                            <?php
+                            $helpId = 'wpok-forms-country-code-description';
+                            $helpParagraphs = [
+                                __('Adds a country/region and dialing code dropdown to Elementor Pro forms. Disabled by default.', 'wp-optikit'),
+                                __('After saving, choose Country Code as the field type in the Elementor Form widget. Set the default country and Cloudflare detection for each field there.', 'wp-optikit'),
+                                __('Detection falls back to the default country when unavailable. Keep this feature enabled while your forms use this field.', 'wp-optikit'),
+                            ];
+                            include WPOK_DIR . 'templates/help-tooltip.php';
+                            ?>
                         </div>
                     </div>
                 </div>
