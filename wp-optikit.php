@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP OptiKit
  * Description: All-in-one WordPress Speed Optimization Toolkit
- * Version: 2.3.1
+ * Version: 2.3.3
  * Author: AzzDev
  * Requires PHP: 8.1
  * Requires at least: 6.7

@@ -145,6 +145,92 @@
         return /^[a-z0-9_-]+$/.test(value) ? value : '';
     }
 
+    function initHelpTooltips() {
+        if (typeof HTMLElement.prototype.showPopover !== 'function') {
+            return;
+        }
+
+        document.querySelectorAll('.wpok-help-trigger').forEach(function (trigger) {
+            var popover = document.getElementById(trigger.getAttribute('popovertarget'));
+            var hideTimer;
+
+            function show() {
+                window.clearTimeout(hideTimer);
+                popover.showPopover();
+                positionHelpTooltip(trigger, popover);
+            }
+
+            function scheduleHide() {
+                window.clearTimeout(hideTimer);
+                hideTimer = window.setTimeout(function () {
+                    if (!trigger.matches(':hover') && !popover.matches(':hover') && document.activeElement !== trigger) {
+                        popover.hidePopover();
+                    }
+                }, 150);
+            }
+
+            trigger.addEventListener('pointerenter', function (event) {
+                if (event.pointerType === 'mouse') {
+                    show();
+                }
+            });
+            trigger.addEventListener('pointerleave', scheduleHide);
+            trigger.addEventListener('focus', function () {
+                if (trigger.matches(':focus-visible')) {
+                    show();
+                }
+            });
+            trigger.addEventListener('blur', scheduleHide);
+            popover.addEventListener('pointerenter', function () {
+                window.clearTimeout(hideTimer);
+            });
+            popover.addEventListener('pointerleave', scheduleHide);
+            popover.addEventListener('toggle', function (event) {
+                if (event.newState === 'open') {
+                    positionHelpTooltip(trigger, popover);
+                }
+            });
+        });
+
+        function repositionTooltips(event) {
+            if (event.target instanceof Element && event.target.closest('.wpok-help-popover')) {
+                return;
+            }
+            document.querySelectorAll('.wpok-help-trigger').forEach(function (trigger) {
+                var popover = document.getElementById(trigger.getAttribute('popovertarget'));
+                if (!popover.matches(':popover-open')) {
+                    return;
+                }
+                var anchor = trigger.getBoundingClientRect();
+                if (!trigger.getClientRects().length || anchor.bottom < 0 || anchor.top > document.documentElement.clientHeight) {
+                    popover.hidePopover();
+                } else {
+                    positionHelpTooltip(trigger, popover);
+                }
+            });
+        }
+
+        window.addEventListener('resize', repositionTooltips);
+        window.addEventListener('scroll', repositionTooltips, { capture: true, passive: true });
+    }
+
+    function positionHelpTooltip(trigger, popover) {
+        var anchor = trigger.getBoundingClientRect();
+        var box = popover.getBoundingClientRect();
+        var viewportWidth = document.documentElement.clientWidth;
+        var viewportHeight = document.documentElement.clientHeight;
+        var left = Math.max(12, Math.min(anchor.left, viewportWidth - box.width - 12));
+        var top = anchor.bottom + 8;
+
+        if (top + box.height > viewportHeight - 12) {
+            top = anchor.top - box.height - 8;
+        }
+        popover.style.inset = 'auto';
+        popover.style.margin = '0';
+        popover.style.left = left + 'px';
+        popover.style.top = Math.max(12, top) + 'px';
+    }
+
     function escapeHtml(value) {
         return String(value)
             .replace(/&/g, '&amp;')
@@ -172,5 +258,6 @@
         });
 
         initTabs();
+        initHelpTooltips();
     });
 })();

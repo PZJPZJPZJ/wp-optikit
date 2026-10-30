@@ -109,9 +109,12 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
     <div class="wpok-grid">
         <section class="wpok-card" data-job-panel="convert" data-job-type="image_convert" data-scan-endpoint="images/scans/non-webp">
             <div class="wpok-job-panel-head">
-                <div>
+                <div class="wpok-title-with-help">
                     <h3><?php esc_html_e('Batch Convert Existing Images', 'wp-optikit'); ?></h3>
-                    <p><?php esc_html_e('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit'); ?></p>
+                    <?php
+                    $helpText = __('Scan the media library for attachments that have not yet been converted to the target format, then queue them for background processing.', 'wp-optikit');
+                    include WPOK_DIR . 'templates/help-tooltip.php';
+                    ?>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Media Library', 'wp-optikit'); ?></button>
             </div>
@@ -122,9 +125,12 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </section>
         <section class="wpok-card" data-orphan-panel data-orphan-endpoint="media-orphan">
             <div class="wpok-job-panel-head">
-                <div>
+                <div class="wpok-title-with-help">
                     <h3><?php esc_html_e('Orphan Files', 'wp-optikit'); ?></h3>
-                    <p><?php esc_html_e('Find files in the uploads directory that have no corresponding attachment record in the database.', 'wp-optikit'); ?></p>
+                    <?php
+                    $helpText = __('Find files in the uploads directory that have no corresponding attachment record in the database.', 'wp-optikit');
+                    include WPOK_DIR . 'templates/help-tooltip.php';
+                    ?>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Orphan Files', 'wp-optikit'); ?></button>
             </div>
@@ -133,9 +139,12 @@ $outputFormat = (string) ($imageSettings['output_format'] ?? 'webp');
         </section>
         <section class="wpok-card" data-missing-panel data-missing-endpoint="media-missing">
             <div class="wpok-job-panel-head">
-                <div>
+                <div class="wpok-title-with-help">
                     <h3><?php esc_html_e('Missing Files', 'wp-optikit'); ?></h3>
-                    <p><?php esc_html_e('Find missing attachment files and clean only the affected records or metadata.', 'wp-optikit'); ?></p>
+                    <?php
+                    $helpText = __('Find missing attachment files and clean only the affected records or metadata.', 'wp-optikit');
+                    include WPOK_DIR . 'templates/help-tooltip.php';
+                    ?>
                 </div>
                 <button type="button" class="button button-secondary" data-action="scan"><?php esc_html_e('Scan Missing Files', 'wp-optikit'); ?></button>
             </div>

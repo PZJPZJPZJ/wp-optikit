@@ -92,7 +92,7 @@
 .wpok-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: start;
+    align-items: stretch;
     gap: 20px;
 }
 
@@ -129,6 +129,77 @@
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 14px;
+}
+
+.wpok-title-with-help {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    min-width: 0;
+}
+
+.wpok-help-trigger {
+    display: none;
+    flex: 0 0 20px;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #b8c4d3;
+    border-radius: 50%;
+    background: #fff;
+    color: #526170;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.wpok-help-trigger:hover {
+    color: #0f4c81;
+    border-color: #0f4c81;
+}
+
+.wpok-help-popover {
+    color: #526170;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.wpok-help-popover p {
+    margin: 0;
+}
+
+@supports selector(:popover-open) {
+    .wpok-help-trigger {
+        display: inline-flex;
+    }
+
+    .wpok-help-popover {
+        position: fixed;
+        width: min(320px, calc(100vw - 24px));
+        max-height: calc(100vh - 24px);
+        padding: 12px 14px;
+        overflow-y: auto;
+        border: 1px solid #d7dee7;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(15, 28, 43, 0.12);
+    }
+}
+
+@supports not selector(:popover-open) {
+    .wpok-title-with-help {
+        flex-wrap: wrap;
+    }
+
+    .wpok-help-popover {
+        flex-basis: 100%;
+    }
 }
 
 .wpok-toolbar-actions {
@@ -479,12 +550,6 @@ fieldset.wpok-field-row {
 
 .wpok-job-panel-head .button {
     flex-shrink: 0;
-}
-
-.wpok-job-panel-head p {
-    margin-bottom: 0;
-    color: #566271;
-    line-height: 1.6;
 }
 
 .wpok-job-results {
