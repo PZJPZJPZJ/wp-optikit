@@ -2,6 +2,7 @@
 
 namespace WPOptiKit\Core\Storage;
 
+use WPOptiKit\Modules\Forms\FormsSettings;
 use WPOptiKit\Modules\Image\ImageSettings;
 
 final class SchemaManager
@@ -76,6 +77,7 @@ final class SchemaManager
         );
 
         add_option(OptionStore::IMAGE_OPTION, ImageSettings::defaults(), '', false);
+        add_option(OptionStore::FORMS_OPTION, FormsSettings::defaults(), '', false);
         add_option(OptionStore::CACHE_OPTION, array('enabled' => false, 'status' => 'planned'), '', false);
         add_option(OptionStore::ASSETS_OPTION, array('enabled' => false, 'status' => 'planned'), '', false);
         add_option(OptionStore::DATABASE_OPTION, array('enabled' => false, 'status' => 'planned'), '', false);

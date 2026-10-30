@@ -4,7 +4,7 @@
 
 ## 项目定位与运行要求
 
-WP OptiKit 是 WordPress 性能优化插件。当前主要能力是上传时自动转换 WebP、批量转换媒体库图片、后台任务队列、Elementor 缓存清理，以及孤立媒体和缺失媒体记录扫描与清理。
+WP OptiKit 是 WordPress 性能优化插件。当前主要能力是上传时自动转换 WebP、批量转换媒体库图片、后台任务队列、Elementor 缓存清理，以及孤立媒体和缺失媒体记录扫描与清理。表单模块支持按设置拦截 Elementor Pro 表单中 referrer 缺失或为空的提交，默认关闭。
 
 - WordPress：6.7+
 - PHP：8.1+
@@ -48,6 +48,7 @@ includes/
 │   └── plugin.php                 # 服务装配、模块注册与启动
 └── modules/
     ├── image/                     # WebP 设置、扫描、转换、任务与 Elementor 缓存桥接
+    ├── forms/                     # 表单设置与 Elementor Pro referrer 校验
     ├── media-orphan/              # 孤立文件、缺失文件扫描及清理 REST
     └── support/                   # 规划模块的后台占位实现
 assets/
@@ -118,6 +119,7 @@ POST /wp-optikit/v1/jobs (job_type=image_convert)
 
 - `wpok_core_settings`
 - `wpok_image_settings`
+- `wpok_forms_settings`（referrer 校验默认关闭）
 - `wpok_cache_settings`（规划状态）
 - `wpok_assets_settings`（规划状态）
 - `wpok_database_settings`（规划状态）

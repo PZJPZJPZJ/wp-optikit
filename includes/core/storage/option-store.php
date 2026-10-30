@@ -6,6 +6,7 @@ final class OptionStore
 {
     public const CORE_OPTION     = 'wpok_core_settings';
     public const IMAGE_OPTION    = 'wpok_image_settings';
+    public const FORMS_OPTION    = 'wpok_forms_settings';
     public const CACHE_OPTION    = 'wpok_cache_settings';
     public const ASSETS_OPTION   = 'wpok_assets_settings';
     public const DATABASE_OPTION = 'wpok_database_settings';

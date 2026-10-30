@@ -21,6 +21,14 @@
 | **Background Queue** | All batch jobs run in a background queue with real-time progress tracking — no browser blocking. |
 | **Elementor Integration** | Automatically clears the Elementor CSS cache after batch image jobs complete, so your builder-built site stays fast. |
 
+### 表单校验
+
+后台 **OptiKit → 表单** 提供“拦截 referrer 为空的提交”开关，默认关闭。启用并保存后，校验全站 Elementor Pro 表单提交数据中的 `referrer` 字段；字段缺失、空字符串、仅含空白或非字符串时拒绝提交，显示表单整体错误“提交已被拒绝。”。
+
+该功能检查表单提交字段，不校验 URL、来源域名或 HTTP `Referer` 请求头。Elementor Pro 未启用时不执行校验，设置页仍可访问；该开关不作用于其他表单插件。
+
+新增设置保存在 `wpok_forms_settings`，已有站点更新插件后无需重新激活，首次使用仍默认关闭。后续表单功能可在同一标签页增加独立设置和处理逻辑。
+
 ### 🗂️ Planned Modules
 
 | Module | Status |

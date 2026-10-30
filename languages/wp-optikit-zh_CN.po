@@ -820,3 +820,41 @@ msgstr "备用数据库驱动"
 #: templates/tabs/overview.php
 msgid "Image processing fallback"
 msgstr "图片处理后备方案"
+
+#: includes/modules/forms/forms-module.php
+msgid "Forms"
+msgstr "表单"
+
+#: templates/tabs/forms.php
+msgid "Form Settings"
+msgstr "表单设置"
+
+#: templates/tabs/forms.php
+msgid ""
+"These settings apply to all Elementor Pro forms. Elementor Pro must be active "
+"for validation to run."
+msgstr "这些设置适用于全站 Elementor Pro 表单。校验仅在 Elementor Pro 启用时执行。"
+
+#: templates/tabs/forms.php
+msgid "Reject submissions with an empty referrer"
+msgstr "拦截 referrer 为空的提交"
+
+#: templates/tabs/forms.php
+msgid ""
+"Reject submissions when the submitted referrer field is missing, blank, or not "
+"a string."
+msgstr "提交的 referrer 字段缺失、为空、仅含空白或不是字符串时，拒绝提交。"
+
+#: templates/tabs/forms.php
+msgid ""
+"Checks the submitted referrer field only. URLs, domains, and HTTP request "
+"headers are not validated. Disabled by default."
+msgstr "仅检查提交数据中的 referrer 字段，不校验 URL、域名或 HTTP 请求头。默认关闭。"
+
+#: templates/tabs/forms.php
+msgid "Save Form Settings"
+msgstr "保存表单设置"
+
+#: includes/modules/forms/elementor-form-validator.php
+msgid "Submission rejected."
+msgstr "提交已被拒绝。"

@@ -12,6 +12,7 @@ use WPOptiKit\Core\Rest\JobsController;
 use WPOptiKit\Core\Storage\OptionStore;
 use WPOptiKit\Core\Storage\SchemaManager;
 use WPOptiKit\Core\Updater\GithubUpdater;
+use WPOptiKit\Modules\Forms\FormsModule;
 use WPOptiKit\Modules\Image\ImageModule;
 use WPOptiKit\Modules\MediaOrphan\MediaMissingRestController;
 use WPOptiKit\Modules\MediaOrphan\MediaOrphanRestController;
@@ -126,6 +127,7 @@ final class Plugin
     {
         $modules = array(
             new ImageModule($this->container),
+            new FormsModule($this->container),
             new PlannedModule('cache', __('Cache', 'wp-optikit'), __('Coordinate cache orchestration, purge flows, and delivery control from a dedicated workspace.', 'wp-optikit')),
             new PlannedModule('assets', __('Assets', 'wp-optikit'), __('Prepare CSS, JavaScript, and frontend delivery optimization in one controlled surface.', 'wp-optikit')),
             new PlannedModule('database', __('Database', 'wp-optikit'), __('Manage cleanup, diagnostics, and maintenance routines through a focused operations panel.', 'wp-optikit')),
