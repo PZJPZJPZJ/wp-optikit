@@ -7,3 +7,6 @@
 # Node.js
 node_modules/
 package-lock.json
+
+# Local release packages and temporary files
+/.temp/

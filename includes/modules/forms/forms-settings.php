@@ -12,7 +12,10 @@ final class FormsSettings
 
     public static function defaults(): array
     {
-        return array('reject_empty_referrer' => false);
+        return array(
+            'reject_empty_referrer' => false,
+            'country_code_enabled'  => false,
+        );
     }
 
     public function register(): void
@@ -43,12 +46,18 @@ final class FormsSettings
         return $this->get()['reject_empty_referrer'] === true;
     }
 
+    public function isCountryCodeEnabled(): bool
+    {
+        return $this->get()['country_code_enabled'] === true;
+    }
+
     public function sanitize(mixed $input): array
     {
         $input = is_array($input) ? $input : array();
 
         return array(
             'reject_empty_referrer' => in_array($input['reject_empty_referrer'] ?? false, array(true, 1, '1'), true),
+            'country_code_enabled'  => in_array($input['country_code_enabled'] ?? false, array(true, 1, '1'), true),
         );
     }
 }

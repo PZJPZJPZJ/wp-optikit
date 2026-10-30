@@ -4,7 +4,7 @@
 
 ## 项目定位与运行要求
 
-WP OptiKit 是 WordPress 性能优化插件。当前主要能力是上传时自动转换 WebP、批量转换媒体库图片、后台任务队列、Elementor 缓存清理，以及孤立媒体和缺失媒体记录扫描与清理。表单模块支持按设置拦截 Elementor Pro 表单中 referrer 缺失或为空的提交，默认关闭。
+WP OptiKit 是 WordPress 性能优化插件。当前主要能力是上传时自动转换 WebP、批量转换媒体库图片、后台任务队列、Elementor 缓存清理，以及孤立媒体和缺失媒体记录扫描与清理。表单模块在 Elementor Form 分类下按“安全”和“功能”组织设置，支持 referrer 空值拦截及国家/区号字段，两个功能默认关闭。国家字段支持逐字段默认国家、Cloudflare 浏览器端识别，以及提交动作前的服务端校验与格式化。
 
 - WordPress：6.7+
 - PHP：8.1+
@@ -48,12 +48,12 @@ includes/
 │   └── plugin.php                 # 服务装配、模块注册与启动
 └── modules/
     ├── image/                     # WebP 设置、扫描、转换、任务与 Elementor 缓存桥接
-    ├── forms/                     # 表单设置与 Elementor Pro referrer 校验
+    ├── forms/                     # 表单设置、Elementor Pro referrer 校验与国家/区号字段
     ├── media-orphan/              # 孤立文件、缺失文件扫描及清理 REST
     └── support/                   # 规划模块的后台占位实现
 assets/
 ├── css/admin.css                  # 后台样式
-└── js/                            # 后台核心与图片模块原生 JavaScript
+└── js/                            # 后台核心、图片模块与 Elementor 国家字段原生 JavaScript
 templates/                         # 后台布局和标签页；只负责展示准备好的数据
 languages/                         # zh_CN PO/MO 与翻译编译脚本
 .github/workflows/release.yml      # 推送 v* Tag 时创建 GitHub Release
@@ -100,6 +100,13 @@ POST /wp-optikit/v1/jobs (job_type=image_convert)
 
 当前 ImageJobHandler 只支持 `image_convert`。不得重新假设已经删除的重新压缩或缺失缩略图任务仍然存在。
 
+表单运行链路：
+
+- `ElementorCountryCode` 仅在开关启用且 Elementor Pro 字段基类可用时注册 `wpok_country_code`；前端资源通过字段依赖加载。
+- `CountryCodeField::validation()` 校验国家代码及原始提交结构，`elementor_pro/forms/process/wpok_country_code` 在提交动作前更新 `raw_value` 和 `value`。不得移到动作执行后的 `new_record`。
+- 浏览器从本站 `/cdn-cgi/trace` 读取访客国家；渲染阶段始终使用逐字段默认国家，避免整页缓存保存访客国家。
+- 国家名称通过 `CountryResolver` 翻译；修改国家数据时需人工同步对应 PO 词条。
+
 媒体清理链路：
 
 - `/wp-optikit/v1/media-orphan/scan` 与 `/delete`：扫描 uploads 年份目录中未被附件标准元数据记录的图片并永久删除选中项。
@@ -119,7 +126,7 @@ POST /wp-optikit/v1/jobs (job_type=image_convert)
 
 - `wpok_core_settings`
 - `wpok_image_settings`
-- `wpok_forms_settings`（referrer 校验默认关闭）
+- `wpok_forms_settings`（`reject_empty_referrer`、`country_code_enabled` 均默认关闭）
 - `wpok_cache_settings`（规划状态）
 - `wpok_assets_settings`（规划状态）
 - `wpok_database_settings`（规划状态）
@@ -182,6 +189,8 @@ Schema 修改必须幂等，并考虑已安装站点升级，而不只是新激�
 - 同步更新 `languages/wp-optikit-zh_CN.po` 的 `Project-Id-Version`，然后重新编译 MO。
 - 创建 Release 时 Tag 使用同一版本，例如插件 `2.2.1` 对应 `v2.2.1`。
 - 交付说明必须写明实际版本和本次递增的是哪一位。
+- 用户明确同意递增正式版位 `Y` 后，完成版本同步及必要回归和发布验收，必须在项目根目录的 `.temp/release/` 中打包插件，文件命名为 `wp-optikit-X.Y.Z.zip`，版本号与插件头一致。
+- 安装包顶层目录必须为 `wp-optikit/`，包含运行所需文件；排除 `.temp/`、`.git/`、`node_modules/` 等临时、版本控制和开发依赖目录。打包后检查 ZIP 目录结构与插件版本，交付说明中提供安装包实际路径。
 
 ## 最低验证要求
 
@@ -191,6 +200,8 @@ Schema 修改必须幂等，并考虑已安装站点升级，而不只是新激�
 Get-ChildItem -Recurse -Filter *.php | ForEach-Object { php -l $_.FullName }
 node --check assets/js/core.js
 node --check assets/js/image-module.js
+node --check assets/js/country-code.js
+node --check assets/js/country-code-editor.js
 git diff --check
 ```
 
